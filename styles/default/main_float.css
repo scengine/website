@@ -1,0 +1,399 @@
+/* LICENSE
+ * 
+ * BanSE - a site base (designed to be the SCEngine website)
+ * Copyright (C) 2007 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+/* default style for the SCE's site */
+
+body {
+    background-color: #fcfcff;
+    color: #333;
+    font-family: "DejaVu Sans", sans-serif;
+    
+    margin: 0;
+}
+
+
+a {
+    color: #7AA4BD;
+    text-decoration: none;
+    cursor: pointer;
+}
+a:hover {
+/*     color: #999; */
+    text-decoration: underline;
+}
+a img {
+    border: none;
+}
+a[href^="http://"]:after
+{
+padding-left: 3px;
+content: url('external_link.png');
+}
+
+cite:before {
+   content: "«";
+   padding-right: 3px;
+}
+cite {font-style: italic;}
+cite:after {
+   content: "»";
+   padding-left: 3px;
+}
+
+hr {
+   border: 1px solid #20639a;
+   margin: 50px 0;
+}
+
+h1 {font-size: 32px;}
+h2 {font-size: 22px;}
+h3 {font-size: 18px;}
+h4 {font-size: 16px;}
+h5 {font-size: 14px;}
+h6 {font-size: 12px;}
+
+h3,h4,h5,h6 {
+    color: #20639a;
+    text-align: left;
+}
+h1,h2 {
+   color: #20639a;
+   text-align: center;
+}
+
+ul {
+   padding-left: 20px;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+   background-color: #dfdfdf;
+   border: 1px solid #bfbfbf;
+   color: #20639a;
+   margin: 1px;
+}
+input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover {
+   background-color: #f5f5f5;
+   cursor: pointer;
+}
+textarea, input[type=text], input[type=password] {
+   width: 90%;
+   background-color: #fafafa;
+   border: 1px solid #bfbfbf;
+   font-family: sans-serif;
+   padding: 0 2px;
+}
+select {
+   color: #333;
+   font-size: 90%;
+   background-color: #fafafa;
+   border: 1px solid #bfbfbf;
+   font-family: sans-serif;
+}
+select option {
+   font-size: 90%;
+}
+select option:hover {
+   background-color: #333;
+   color: #fafafa;
+}
+
+form  {
+    text-align: left;
+}
+
+acronym, abbr {
+    cursor: help;
+    border-bottom: 1px dotted #20639a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th {
+    font-weight: bold;
+    text-align: center;
+    color: #20639a;
+}
+td {
+    border: 1px solid #bfbfbf;
+    background-color: #fafafa;
+    padding: 2px 4px;
+}
+caption {
+   color: #20639a;
+   text-align: center;
+   font-size: 18px;
+   font-weight: bold;
+   padding: 20px 0 5px 0;
+}
+
+
+#header {
+    height: 50px;
+/*     background-color: #000; */
+    padding: 10px;
+/*     margin-bottom: 10px; */
+}
+#header h1 {
+    margin: 0px;
+}
+
+
+
+#menu {
+    height: 30px;
+    background-color: #eee;
+    border-top: 1px solid #83C9FC;
+    border-bottom: 1px solid #83C9FC;
+    font-size: 14px;
+}
+#menu a {
+   color: #111;
+   display: block;
+   font-weight: bold;
+   margin: 0;
+   padding: 5px 10px;
+   height: 20px;
+}
+#menu a:hover {
+   text-decoration: none;
+}
+#menu ul {
+   list-style-type: none;
+   margin: 0 10px;
+   padding: 0;
+   
+}
+#menu>ul>li {
+   float: left;
+   height: 30px;
+   border-left: 1px solid #bbb;
+}
+#menu li:hover {
+   background-color: #fafafa;
+}
+#menu ul li ul {
+    display: none;
+}
+#menu ul li:hover ul {
+    background-color: #eee;
+    display: block;
+    position: absolute;
+    margin: -1px;
+    border: 1px solid #bbb;
+}
+#menu ul li:hover ul li {
+    float: none;
+    font-size: 80%;
+    border: none;
+}
+#menu ul li ul li a {
+    height: 15px;
+}
+
+
+#lmenu {
+    float: left;
+
+    width: 17%;
+    margin: 10px;
+    border: 1px solid #83C9FC;
+    background-color: #eee;
+    -moz-border-radius: 0 12px 12px 0;
+    font-size: 11px;
+}
+#rmenu {
+    float: right;
+
+    width: 15%;
+    margin: 10px 9px;
+    border: 1px solid #83C9FC;
+    background-color: #eee;
+    -moz-border-radius: 12px 0 0 12px;
+    font-size: 11px;
+}
+.lsmenu, .rsmenu {
+    padding: 0 12px;
+    margin-bottom: 10px;
+}
+.lsmenu h3, .rsmenu h3 {
+    background-color: #dfdfdf;
+    border: 1px solid #bfbfbf;
+    font-size: 14px;
+    margin: 20px -5px 20px -6px;
+    text-align: center;
+}
+.lsmenu h4, .rsmenu h4 {
+    margin: 20px 0px 3px 0px;
+    font-size: 11px;
+}
+.rsmenu p {
+    margin: auto;
+    margin-left: -4px;
+}
+.lsmenu textarea, .rsmenu textarea {
+    width: 100%;
+    font-size: 90%;
+}
+.rsmenu .admin {
+    float: right;
+    text-align: right;
+    width: 100%;
+}
+.rsmenu .formedit {
+    margin-top: -1px;
+}
+
+
+#body {
+    margin-left: 17%;
+    margin-right: 15%;
+}
+
+#content, #presentation {
+    
+    text-align: justify;
+    border: 1px solid #83C9FC;
+    background-color: #eee;
+    
+    margin: 10px;
+    margin-left: 21px; /*!!*/
+    margin-right: 21px; /*!!*/
+    
+    padding: 10px;
+}
+
+#presentation {
+    -moz-border-radius: 12px 12px 0 0;
+    margin-bottom: 9px; /*!!*/
+}
+#content {
+    -moz-border-radius: 0 0 12px 12px;
+    margin-top: 9px; /*!!*/
+}
+
+#content img {
+/*
+   border: 1px solid black;
+   max-width: 100%;
+*/
+}
+
+.new {
+    background-color: #fafafa;
+    font-size: 16px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #83C9FC;
+    -moz-border-radius: 10px;
+}
+.new h3, .new h3 a {
+    margin: 2px;
+    color: #20639a;
+}
+.new .author{
+    color: #666;
+    font-size: 80%;
+    
+    font-style: italic;
+    position: relative;
+}
+.new img {
+   margin: 10px;
+   border: 1px solid /*#83C9FC*/ black;
+}
+
+.new .admin {
+    font-size: 90%;
+    float: right;
+}
+
+
+
+#footer {
+    clear: both;
+    background-color: #eee;
+    border-top: 1px solid #83C9FC;
+    border-bottom: 1px solid #83C9FC;
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+#hour {
+    font-weight: bold;
+    padding: 5px 10px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+}
+
+.nolist {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.right {text-align: right;}
+.left {text-align: left;}
+.fright {float: right;}
+.fleft {float: left;}
+
+.b {font-weight: bold;}
+.i {font-style: italic;}
+.u {text-decoration: underline;}
+
+.ok {
+   color: green;
+   font-weight: bold;
+}
+.warning {
+   color: yellow;
+   font-weight: bold;
+}
+.error {
+   color: red;
+   font-weight: bold;
+}
+
+
+/* medias */
+/*
+.mediatitle {
+   clear: left;
+}
+.mediacontainer {
+   float: left;
+   margin: 5px;
+}
+*/
+.mediacontainer img {
+   border: 1px solid black;
+}
+.mediacontainer .links,
+.mediacontainer .comment {
+   font-size: 75%;
+}
+
+

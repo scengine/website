@@ -1,0 +1,58 @@
+/* LICENSE
+ * 
+ * BanSE - a site base (designed to be the SCEngine website)
+ * Copyright (C) 2007-2008 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+body {
+    background-color: #fcfcff;
+    color: #333;
+    font-family: sans-serif;
+    
+    margin: 10px 0;
+}
+
+
+a {
+    color: #7AA4BD;
+    text-decoration: none;
+}
+a:hover {
+/*     color: #999; */
+    text-decoration: underline;
+}
+
+h2 {
+    font-family: sans-serif;
+    color: #20639a;
+    text-align: center;
+}
+
+.message {
+    margin: 15% auto 0 auto;
+    padding: 0 10px;
+    width: 33%;
+/*     padding: 0 10px; */
+    border: 1px solid #83C9FC;
+    background-color: #eee;
+    -moz-border-radius: 12px;
+    
+    text-align: justify;
+}
+
+.small { font-size: 70%; }
+.center { text-align: center; }

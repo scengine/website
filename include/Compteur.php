@@ -1,0 +1,171 @@
+<?php
+/* LICENSE
+ * 
+ * BanSE - a site base (designed to be the SCEngine website)
+ * Copyright (C) 2007 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+/*
+ * Compteur::
+ */
+
+require_once ('include/defines.php');
+
+
+class CounterIP {
+	protected $file = COUNTER_FILE;
+	protected $ips = array();
+	
+	public function __construct ($count=false, $counter=COUNTER_FILE) {
+		$this->file = $counter;
+		
+		$this->data_load ();
+		/*
+		echo 'I know ',$this->get_n_ip (), ' IPs.',"\n";
+		echo 'Total count is ',$this->get_n_total (), '.',"\n";
+		
+		$ip = $this->get_ip ();
+		echo 'I have seen this IP (', $ip, ') ',$this->get_n_for_ip ($ip),' times.',"\n";
+		*/
+		if ($count)
+			$this->count ();
+	}
+	
+	public function __destruct () {
+		$this->data_write ();
+	}
+	
+	private function data_load () {
+		$fp = @fopen ($this->file, 'r');
+		
+		if ($fp) {
+			while ($line = fgets ($fp)) {
+				$line = split (' ', $line);
+				settype ($line[1], int);
+				$this->ips[$line[0]] = $line[1];
+			}
+			
+			fclose ($fp);
+		}
+	}
+	
+	private function data_write () {
+		$fp = @fopen ($this->file, 'w');
+		
+		if ($fp) {
+			foreach ($this->ips as $ip => $count) {
+				fputs ($fp, $ip.' '.$count."\n");
+			}
+			
+			fclose ($fp);
+			return true;
+		}
+		return false;
+	}
+	
+	protected function ip_is_known ($ip) {
+		return (array_key_exists ($ip, $this->ips));
+	}
+	
+	protected function increment_ip ($ip) {
+		if (!$this->ip_is_known ($ip))
+			$this->ips[$ip] = 0;
+		
+		return $this->ips[$ip] += 1;
+	}
+	
+	public function get_ip () {
+		return $_SERVER['REMOTE_ADDR'];
+	}
+	
+	public function get_n_for_ip ($ip) {
+		if ($this->ip_is_known ($ip))
+			return $this->ips[$ip];
+		else
+			return 0;
+	}
+	
+	public function get_n_ip () {
+		return count ($this->ips);
+	}
+	
+	public function get_n_total () {
+		return array_sum ($this->ips);
+	}
+	
+	public function count () {
+		$this->increment_ip ($this->get_ip ());
+	}
+}
+
+/*
+function newfile ($file, $mode = 0644) {
+	$rv = true;
+
+	$f = fopen ($file, 'x');
+	if ($f) {
+		fclose ($f);
+		chmod ($file, $mode);
+	}
+	else
+		$rv = false;
+
+	return $rv;
+}
+
+class Compteur {
+	private $dir = 'cmptdata/';
+	private $file = 'count';
+
+	private $n = 0;
+
+	public function __construct ($count = true, $prefix = '') {
+		// accpet a prefix for datadir
+		if ($prefix)
+			$this->dir = $prefix.$this->dir;
+		
+		// concatenation of filename & datadir
+		$this->file = $this->dir.$this->file;
+		
+		// count if it is not unactivated
+		if ($count)
+			$this->count ();
+	}
+
+	public function count () {
+		if (file_exists ($this->file))
+			$this->n = file_get_contents ($this->file);
+		else
+			newfile ($this->file, 0640);
+		
+		return file_put_contents ($this->file, ++$this->n);
+	}
+
+	public function get_n () {
+		if (!$this->n)
+			$this->n = file_get_contents ($this->file);
+		
+		return ($this->n) ? $this->n : 0;
+	}
+}
+*/
+/*
+$c = new CounterIP (false, '/tmp/counter');
+$c->count ();
+*/
+
+?>

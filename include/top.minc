@@ -1,0 +1,242 @@
+<?php
+/* LICENSE
+ * 
+ * BanSE - a site base (designed to be the SCEngine website)
+ * Copyright (C) 2007-2008 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+/*
+ * top of all pages
+ * the "top" contain HTML header, left & right menus
+ */
+
+require_once ('defines.php');
+require_once ('include/engine_news.php');
+require_once ('include/User.php');
+require_once ('include/Compteur.php');
+require_once ('include/string.php');
+require_once ('include/Metadata.php'); /* gave MDI instance */
+
+
+function print_head_adds ($adds) {
+	$added = array ();
+	
+	foreach ($adds as $add) {
+		if (!in_array ($add, $added)) {
+			echo $add;
+			$added[] = $add;
+		}
+	}
+	
+	unset ($added, $add);
+}
+
+?>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
+	<head>
+		<title><?php echo TITLE,' - ',$MDI->get_name (); ?></title>
+		
+		<link rel="start" title="Accueil" href="index.html" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="description" content="<?php echo DESCRIPTION; ?>" />
+		
+		<link rel="start" title="Accueil" href="index.php" />
+		<link rel="icon" href="styles/default/icon.png" type="image/png" />
+<!-- Feuille de style par défaut -->
+		<link rel="stylesheet" media="screen" type="text/css" title="default" href="styles/default/main.css" />
+		
+		<!--script type="text/javascript" src="include/js/hour.js"></script-->
+		<?php
+			if (isset ($HEAD_ADDS) && is_array ($HEAD_ADDS)) {
+				print_head_adds ($HEAD_ADDS);
+			}
+		?>
+	</head>
+
+ <body>
+		<div id="header">
+			<h1><span><a href="index.php"><?php echo $MDI->get_name (); ?></a></span></h1> <!-- TODO A remplacer par une image d'en-tete /-->
+		</div>
+		
+		<div id="menu">
+			<ul>
+				<li><a href="index.php">Accueil</a></li>
+				<li><a href="medias.php">Médias</a>
+					<ul>
+						<li><a href="medias.php#screens">Screenshots</a></li>
+						<li><a href="medias.php#movies">Vidéos</a></li>
+					</ul>
+				</li>
+				<li><a href="downloads.php">Téléchargements</a></li>
+				<li><a href="forums/index.php">Forums</a></li>
+				<li><a href="doc/index.html">Documentation</a></li>
+				<li><a href="licence.php">Licence</a></li>
+				<li><a href="about.php">À propos</a></li>
+				
+				<?php if (User::get_logged ()) { // administration menu
+					$dir = opendir ('include'); // dossier contenant les pages
+					$tpages = Array (); // tableau des pages
+				
+					// getting files from directory
+					for ($i = 0; False !== ($file = readdir ($dir)); $i++) {
+						// vreifying filename
+						if (file_getext ($file) == 'inc')
+							 $tpages[$i] = file_getname ($file);
+					}
+					
+					closedir ($dir); // fermeture du répertoire
+					
+					sort ($tpages); // sorting array
+					
+					// base admin entry
+					echo '<li><a href="admin.php">Admin</a><ul>';
+					
+					// dispaying result
+					foreach ($tpages as $tpage) {
+						$tname = ucfirst ($tpage);
+						
+						echo '<li><a href="admin.php?page=', $tpage, '">', $tname, '</a></li>';
+					}
+					
+					// end of adin menu
+					echo '</ul></li>';
+				} ?>
+
+			<!--li><span id="hour">Loading...</span></li-->
+			</ul>
+		</div>
+
+		<div id="lmenu">
+			<!-- dernières versions du moteur -->
+			<div class="lsmenu">
+				<h3>Dernières versions</h3>
+				<p>
+					 La version <span class="b"><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></span> est disponible !
+				</p>
+			</div>
+			
+			<!-- liste de moteurs 3D libres -->
+			<div class="lsmenu">
+				<h3>Moteurs 3D libres</h3>
+				<ul>
+					<!-- <li><span class="b"><a href="http://nxengine.developpez.com">nxEngine</a></span>&nbsp;: moteur full shaders en C# utilisant DirectX, bientôt peut-être OpenGL.</li> -->
+					<li><span class="b"><a href="http://www.ogre3d.org">Ogre</a></span>&nbsp;: moteur en C++ mature compatible OpenGL et DirectX.</li>
+					<li><span class="b"><a href="http://irrlicht.sourceforge.net/">Irrlicht</a></span>&nbsp;: codé en C++, ce moteur est également compatible avec OpenGL et DirectX.</li>
+					<li><span class="b"><a href="http://www.crystalspace3d.org/">Crystal Space</a></span>&nbsp;: ce moteur 3D, sous licence LGPL, fonctionne uniquement avec OpenGL.</li>
+				</ul>
+			</div>
+			
+			<!-- partenaires -->
+			<div class="lsmenu">
+				<h3>SCEngine avec...</h3>
+				<ul class="nolist">
+					<li><img src="images/icons/gnu.png" alt="-" title="GNU"/>
+						&nbsp;<a href="http://www.gnu.org/">GNU</a></li>
+					<li><img src="images/icons/debian.png" alt="-" title="Debian"/>
+						&nbsp;<a href="http://www.debian.org">Debian GNU/Linux</a></li>
+					<!-- <li><img src="images/icons/ubuntu.png" alt="-" title="Ubuntu"/>
+						&nbsp;<a href="http://www.ubuntu.com">Ubuntu GNU/Linux</a></li> -->
+					<li><img src="images/icons/ogl.png" alt="-" title="OpenGL"/>
+						&nbsp;<a href="http://opengl.org">OpenGL</a></li>
+					<li><img src="images/icons/devil.png" alt="-" title="DevIL"/>
+						&nbsp;<a href="http://openil.sourceforge.net/">DevIL</a></li>
+					<li><img src="images/icons/blender.png" alt="-" title="Blender"/>
+						&nbsp;<a href="http://www.blender.org/">Blender</a></li>
+					<li><img src="images/icons/php.png" alt="-" title="PHP"/>
+						&nbsp;<a href="http://www.php.net/">PHP</a></li>
+					<!-- <li><img src="images/icons/gimp.png" alt="-" title="Gimp"/>
+						&nbsp;<a href="http://www.gimp.org/">Gimp</a></li> -->
+				</ul>
+			</div>
+				
+			<?php
+				if (User::get_logged ()) {
+			?>
+				
+			<div class="lsmenu">
+				<h3>Administration</h3>
+				<p>
+					Bienvenue <span class="b"><?php echo User::get_name ();?></span>&nbsp;!
+				</p>
+				<ul>
+					<li><a href="admin.php">Administration</a></li>
+					<li><a href="admin.php?page=actualités">Éditer les news.</a></li>
+					<li><a href="admin.php?page=administrateurs">Gérer les administrateurs.</a></li>
+				</ul>
+				<p>
+					<a href="connexion.php?act=logout"
+						onclick="window.location.replace(this.href)">
+						<input type="button" value="Déconnexion" />
+					</a>
+				</p>
+			</div>
+			<?php
+				} // fin de vérification admin
+				else {
+			?>
+			<div class="lsmenu">
+				<h3>Connexion</h3>
+				<form method="post" action="connexion.php">
+					<p>
+						<label>Nom d'utilisateur&nbsp;: <input type="text" name="username" /></label><br />
+						<label>Mot de passe&nbsp;: <input type="password" name="password" /></label><br />
+						<label><input type="checkbox" name="remember" />Se souvenir de moi</label><br />
+						<input type="submit" value="Valider" />
+					</p>
+				</form>
+			</div>
+			<?php
+				}
+				
+				$compteur = new CounterIP (false);
+				if (User::get_logged ()) {
+			?>
+			<div class="lsmenu">
+				<h3>Compteur</h3>
+				<p>
+				<?php
+					$n = $compteur->get_n_total ();
+					$nv = $compteur->get_n_ip ();
+					
+					echo 'Il y a eu ', $n, ' visite', ($n > 1) ? 's' : '',
+					     ' par ', $nv, ' visiteur', ($nv > 1) ? 's' : '', ' sur le site.';
+				?>
+				</p>
+			</div>
+			<?php
+				} // fin du compteur si connecté
+				else {
+					$compteur->count ();
+				}
+				unset ($compteur);
+				
+			?>
+		</div>
+
+		<div id="rmenu">
+			<div class="rsmenu">
+				<h3>Avancement du moteur</h3>
+				<?php
+					print_engine_news ();
+				?>
+			</div>
+		</div>
+
+		<div id="body">
