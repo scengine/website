@@ -87,6 +87,7 @@ function print_head_adds ($adds) {
 				<li><a href="downloads.php">Téléchargements</a></li>
 				<li><a href="forums/index.php">Forums</a></li>
 				<li><a href="doc/index.html">Documentation</a></li>
+				<li><a href="tuto.php">Tutoriel</a></li>
 				<li><a href="licence.php">Licence</a></li>
 				<li><a href="about.php">À propos</a></li>
 				
