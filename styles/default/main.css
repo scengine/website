@@ -45,6 +45,11 @@ a[href^="http://"]:after
 padding-left: 3px;
 content: url('external_link.png');
 }
+/* hack to remove external link image is queried */
+a.noicon:after
+{
+content: '';
+}
 
 cite:before {
 content: "«";
@@ -433,6 +438,7 @@ padding: 0px;
 
 .right {text-align: right;}
 .left {text-align: left;}
+.center {text-align: center;}
 .fright {float: right;}
 .fleft {float: left;}
 
