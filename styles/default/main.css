@@ -23,7 +23,7 @@ body {
 background-color: #fcfcff;
 color: #333;
 font-family: "DejaVu Sans", Verdana, sans-serif;
-font-size: 12pt;
+font-size: 14px;
 
 margin: 0;
 }
@@ -353,7 +353,7 @@ clear: left;
 
 .new {
 background-color: #fafafa;
-font-size: 16px;
+/*font-size: 16px;*/
 margin: 10px;
 padding: 10px;
 border: 1px solid #83C9FC;
