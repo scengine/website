@@ -2,7 +2,7 @@
 /* LICENSE
  * 
  * BanSE - a site base (designed to be the SCEngine website)
- * Copyright (C) 2007 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ * Copyright (C) 2007-2009 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ define (TITLE, 'Licence');
 require_once ('include/string.php');
 require_once ('include/top.minc');
 
-//define (LICENSE_FILE, 'http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt');
-define (LICENSE_FILE, 'LICENSE.txt');
+//define (LICENSE_FILE, 'http://www.gnu.org/licenses/gpl.txt');
+define (LICENSE_FILE, 'COPYING');
 
 function print_gpl () {
 	$gpl = @file_get_contents (LICENSE_FILE);
