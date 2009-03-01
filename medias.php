@@ -419,7 +419,10 @@ else
       print_medias (SCREENS);
    
    echo '<h2 id="movies">Vidéos</h2>';
-      print_medias (MOVIES);
+   echo '<p>Section du site non fonctionnelle. Vous pourrez trouver quelques petites
+et vieilles vidéos à <a href="http://downloads.goldzoneweb.info/scengine/movies">
+cette adresse</a>.</p>';
+//   print_medias (MOVIES);
 }
 ?>
 

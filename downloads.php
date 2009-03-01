@@ -216,27 +216,34 @@ require_once ('include/top.minc');
 <div id="presentation">
 	<h2><?php echo TITLE; ?></h2>
 	<p>
-		<span class="u">Avertissement :</span> aucune version du moteur n'est sortie officiellement !<br />
-		Dans la mesure où le moteur est en constant développement et que son interface
-		est modifiée chaque jour, il n'est pas conseillé de s'inspirer des sources
-		disponibles en téléchargement pour le moment, et encore moins de se familiariser avec
-		cette première ébauche en vue d'utiliser le moteur par la suite. La plupart des fichiers disponibles
-		servent principalement à tester le module de téléchargements du site.<br />
-		Toutefois, cela ne dispense pas les fichiers en téléchargement d'être soumis à la licence GNU GPL,
-		vous serez donc prié de bien vouloir la respecter dans le cadre d'une utilisation,
-		totale ou partielle, des fichiers téléchargés. Pour plus d'informations sur la licence du moteur,
-		rendez-vous sur la page <a href="licence.php">licence</a> du site.<br />
-		Merci de votre compréhension.
+<span class="u">Avertissement :</span> dans la mesure où le moteur est en constant
+développement et que son interface est modifiée chaque jour, il n'est pas conseillé
+de s'inspirer des sources disponibles en téléchargement pour le moment,
+et encore moins de se familiariser avec les versions actuelles en vue d'utiliser
+le moteur par la suite.<br />
+En revanche je vous conseille vivement de préférer le dépôt SVN aux archives disponibles
+sur cette page, elle est très souvent moins buggée.
 	</p>
 </div>
 
 <div id="content">
 	<h3>Version de développement</h3>
+        <p>
 	Vous pouvez obtenir la version de développement en utilisant
-	<a href="http://fr.wikipedia.org/wiki/Git">Git</a>&nbsp;:<br />
-	<code>git clone git://git.tuxfamily.org/gitroot/scengine/scengine.git master</code>
-	
+	<a href="http://fr.wikipedia.org/wiki/Subversion_(logiciel)">SVN</a>&nbsp;:<br />
+	<code>svn co svn://svn.tuxfamily.org/svnroot/scengine/scengine scengine</code>
+	</p>
+
 	<h3>Versions publiées</h3>
+        <p>
+<span class="b">Attention :</span> le système du site ne permet pas encore l'hébergement
+des fichiers directement sur le serveur de téléchargements de mon hébergeur.
+Veuillez donc aller les récupérer directement sur le serveur à cette adresse :<br />
+<a href="http://downloads.goldzoneweb.info/scengine/downloads">
+http://downloads.goldzoneweb.info/scengine/downloads</a>.<br />
+Sauf vous souhaitez voir la vitesse de votre téléchargement bridée
+(genre si vous cliquez sur un des liens ci dessous, ça va aller lentement \o/).
+        </p>
 	<?php
 		$versions = array ();
 		$i = 0; $j = 0;
@@ -244,24 +251,24 @@ require_once ('include/top.minc');
 		$array = array_from_dir (DWLDIR);
 		
 		// s'il y a des fichiers à proposer
-		if (!empty ($array)) {
-			// on classe les fichiers
-			$array = array_multisort_2nd ($array, 'os', SORT_ASC);
+    if (!empty ($array)) {
+        // on classe les fichiers
+        $array = array_multisort_2nd ($array, 'os', SORT_ASC);
 			
-			// on récupre les versions disponibles
-			foreach ($array as $file) {
-				if (!in_array ($file['version'], $versions)) {
-					$versions[$i] = $file['version'];
-					$i++;
-				}
-			}
+        // on récupre les versions disponibles
+        foreach ($array as $file) {
+            if (!in_array ($file['version'], $versions)) {
+                $versions[$i] = $file['version'];
+                $i++;
+            }
+        }
 			
-			// tri des version par ordre décroissant
-			rsort ($versions);
+        // tri des version par ordre décroissant
+        rsort ($versions);
 			
-			// affichage des tableaux pour les versions
-			foreach ($versions as $version) {
-				echo '<table>
+        // affichage des tableaux pour les versions
+        foreach ($versions as $version) {
+            echo '<table>
 							<caption id="v',str_replace (array('.','-'), '_',$version),'">Version ', $version, '</caption>
 							<tr>
 								<th>Fichier</th>
@@ -269,19 +276,19 @@ require_once ('include/top.minc');
 								<th>Taille</th>
 								<th>Date</th>
 							</tr>';
-				foreach ($array as $file) {
-					if ($file['version'] == $version) {
-						echo '<tr>';
-						echo '<td><a href="?f=', $file['file'], '">', $file['file'], '</a></td>';
-						echo '<td>', $file['osimg'], ' (', $file['arch'], ')</td>';
-						echo '<td>', round ($file['size']/1024.0, 2), ' Kio</td>';
-						echo '<td>', date ('d/m/Y', $file['date']), '</td>';
-						echo '</tr>';
-					}
-				}
-				echo '</table>';
-			}
-		} // empty ($array)
+            foreach ($array as $file) {
+                if ($file['version'] == $version) {
+                    echo '<tr>';
+                    echo '<td><a href="?f=', $file['file'], '">', $file['file'], '</a></td>';
+                    echo '<td>', $file['osimg'], ' (', $file['arch'], ')</td>';
+                    echo '<td>', round ($file['size']/1024.0, 2), ' Kio</td>';
+                    echo '<td>', date ('d/m/Y', $file['date']), '</td>';
+                    echo '</tr>';
+                }
+            }
+            echo '</table>';
+        }
+    } // empty ($array)
 		else {
 			echo '<p>Aucun fichier n\'est disponible pour le moment.</p>';
 		}
