@@ -29,4 +29,5 @@ define (NEWSLEVEL, 1);
 define (ENGINE, 'SCEngine'); // :D
 
 define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
-define (COUNTER_FILE,  dirname (__FILE__).'/../data/counter');
+
+define (COUNTER_TABLE, 'counter');

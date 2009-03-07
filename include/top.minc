@@ -167,7 +167,7 @@ function print_head_adds ($adds) {
 				</ul>
 				<p class="center">
 					<a href="http://wikimediafoundation.org/wiki/Donate/fr" class="noicon">
-						<img border="0" alt="Wikipedia Affiliate Button"
+						<img alt="Wikipedia Affiliate Button"
 							src="http://upload.wikimedia.org/wikipedia/foundation/c/ca/2008_fundraiser_micro_button-fr.png" />
 					</a>
 				</p>

@@ -25,8 +25,8 @@
 
 require_once ('include/defines.php');
 
-
-class CounterIP {
+/*
+class CounterIP_ {
 	protected $file = COUNTER_FILE;
 	protected $ips = array();
 	
@@ -34,13 +34,11 @@ class CounterIP {
 		$this->file = $counter;
 		
 		$this->data_load ();
-		/*
-		echo 'I know ',$this->get_n_ip (), ' IPs.',"\n";
-		echo 'Total count is ',$this->get_n_total (), '.',"\n";
-		
-		$ip = $this->get_ip ();
-		echo 'I have seen this IP (', $ip, ') ',$this->get_n_for_ip ($ip),' times.',"\n";
-		*/
+		// echo 'I know ',$this->get_n_ip (), ' IPs.',"\n";
+		// echo 'Total count is ',$this->get_n_total (), '.',"\n";
+		// 
+		// $ip = $this->get_ip ();
+		// echo 'I have seen this IP (', $ip, ') ',$this->get_n_for_ip ($ip),' times.',"\n";
 		if ($count)
 			$this->count ();
 	}
@@ -111,6 +109,74 @@ class CounterIP {
 		$this->increment_ip ($this->get_ip ());
 	}
 }
+*/
+
+
+require_once ('include/DB.php');
+
+define (COUNTER_TABLE, 'counter');
+
+class CounterIP {
+	protected $db;
+	
+	public function __construct ($count=false, $counter=COUNTER_TABLE) {
+		$this->db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
+		$this->db->select_table ($counter);
+		
+		if ($count)
+			$this->count ();
+	}
+	
+	public function __destruct () {
+		unset ($this->db);
+	}
+	
+	protected function ip_is_known ($ip) {
+		if ($this->db->select ('ip', 'ip=\''.$ip.'\'')) {
+			return $this->db->fetch_response () ? true : false;
+		}
+		return false;
+	}
+	
+	protected function increment_ip ($ip) {
+		if ($this->ip_is_known ($ip)) {
+			$n = $this->get_n_for_ip ($ip) + 1;
+			return $this->db->update ('count=\''.$n.'\'', 'ip=\''.$ip.'\'');
+		}
+		else
+			return $this->db->insert ('\''.$ip.'\', \'1\'');
+	}
+	
+	public function get_ip () {
+		return $_SERVER['REMOTE_ADDR'];
+	}
+	
+	public function get_n_for_ip ($ip) {
+		$this->db->select ('*', 'ip=\''.$ip.'\'');
+		$response = $this->db->fetch_response ();
+		if ($response !== false)
+			return $response['count'];
+		else
+			return 0;
+	}
+	
+	public function get_n_ip () {
+		return $this->db->count ();
+	}
+	
+	public function get_n_total () {
+		$n = 0;
+		$this->db->select ('*');
+		while (($response = $this->db->fetch_response ()) !== false) {
+			$n += $response['count'];
+		}
+		return $n;
+	}
+	
+	public function count () {
+		$this->increment_ip ($this->get_ip ());
+	}
+}
 
 /*
 function newfile ($file, $mode = 0644) {
@@ -164,7 +230,8 @@ class Compteur {
 }
 */
 /*
-$c = new CounterIP (false, '/tmp/counter');
+$c = new CounterIP_ (false, '/tmp/counter');
+$_SERVER['REMOTE_ADDR'] = $c->get_n_ip ();
 $c->count ();
 */
 
