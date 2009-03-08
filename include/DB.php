@@ -78,7 +78,8 @@ class DB
 	
 	private function close ()
 	{
-		mysql_close ($this->link);
+		if ($this->link !== false)
+			mysql_close ($this->link);
 	}
 	
 	public function __sleep ()
