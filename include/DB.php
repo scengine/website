@@ -63,11 +63,12 @@ class DB
 		$this->server = $server;
 		$this->username = $username;
 		$this->password = $password;
-		$this->connect ();
-		if ($charset !== null)
-			$this->set_charset ($charset);
-		if ($db !== null)
-			$this->select_db ($db);
+		if ($this->connect () !== false) {
+			if ($charset !== null)
+				$this->set_charset ($charset);
+			if ($db !== null)
+				$this->select_db ($db);
+		}
 	}
 	
 	private function connect ()
@@ -87,9 +88,10 @@ class DB
 	
 	public function __wakeup ()
 	{
-		$this->connect ();
-		if ($this->charset !== null)
-			$this->set_charset ($this->charset);
+		if ($this->connect () !== false) {
+			if ($this->charset !== null)
+				$this->set_charset ($this->charset);
+		}
 	}
 	
 	public function __destruct ()
