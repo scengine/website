@@ -44,7 +44,13 @@ if ($_SERVER['HTTP_REFERER']) {
 		$refresh = $_SERVER['HTTP_REFERER'];
 		
 		if ($_GET['id'] && ctype_digit ($_GET['id']))
-		  $refresh .= '#n'.$_GET['id'];
+		{
+			if (Devel::SECTION == $_GET['sec'])
+				$refresh .= '#m';
+			else
+				$refresh .= '#n';
+			$refresh .= $_GET['id'];
+		}
 	}
 }
 
