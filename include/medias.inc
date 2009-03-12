@@ -258,7 +258,7 @@ define (MAX_TB_SIZE,   1048576); // maximum filesize to be uploaded (in bytes).
 
 function print_upload_form ($action, $fillwith=false, $upload=true)
 {
-	$DPATHS = array ('/screens/', '/movies/', '/downloads/');
+	$DPATHS = array ('screens/', 'movies/', 'downloads/');
 	
 	?>
 	<script type="text/javascript">
@@ -590,10 +590,10 @@ function add_media_query ()
 				$prefix = '' /*time ()*/;
 				$tmp_path = $_FILES[FFIELD]['tmp_name'];
 				$old_name = $_FILES[FFIELD]['name'];
-				$path = $_POST['dest'].'/'.$prefix.$old_name;
+				$path = path_clean ($_POST['dest'].'/'.$prefix.$old_name);
 				$r_path = MEDIA_DIR_R.'/'.$path;
 				$w_path = MEDIA_DIR_W.'/'.$path;
-				$tb_path = $_POST['dest'].'/tb_'.$prefix.$old_name;
+				$tb_path = path_clean ($_POST['dest'].'/tb_'.$prefix.$old_name);
 				$tb_r_path = MEDIA_DIR_R.'/'.$tb_path;
 				$tb_w_path = MEDIA_DIR_W.'/'.$tb_path;
 				

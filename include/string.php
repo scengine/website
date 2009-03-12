@@ -121,3 +121,19 @@ function strshortcut ($str, $maxlen)
   
   return $str;
 }
+
+function path_clean ($str)
+{
+  $c = '';
+  $clean = '';
+  $strlen = strlen ($str);
+  for ($i = 0; $i < $strlen; $i++)
+  {
+    if (! ($c == '/' && $c == $str[$i]))
+    {
+      $clean .= $str[$i];
+    }
+    $c = $str[$i];
+  }
+  return $clean;
+}

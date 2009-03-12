@@ -36,5 +36,5 @@ define (COUNTER_TABLE, '`counter`');
 
 define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
 
-define (MEDIA_DIR_R, './');
-define (MEDIA_DIR_W, './');
+define (MEDIA_DIR_R, './medias');
+define (MEDIA_DIR_W, './medias');
