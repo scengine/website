@@ -220,9 +220,13 @@ class MyDB
 	}
 	
 	public function set_charset ($csname) {
+		/* disable this since mysql_set_charset() is not available on TF servers */
+		/*
 		if (($rv = mysql_set_charset ($csname, $this->link)) !== false)
 			$this->charset = $csname;
 		
 		return $rv;
+		*/
+		return true;
 	}
 }
