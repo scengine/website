@@ -20,6 +20,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('include/MyDB.php');
 
 define (MEDIA_THUMBNAIL_WIDTH,  160.0);
 define (MEDIA_THUMBNAIL_HEIGHT, 120.0);
@@ -91,7 +92,7 @@ function media_escape_db_array (array &$arr)
  */
 function media_get_by_id ($media_id)
 {
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (MEDIA_TABLE);
 	
 	$db->select ('*', '`id`=\''.$media_id.'\'');
@@ -159,7 +160,7 @@ function media_set ($id, array $values)
 	                     'tags', 'desc', 'comment');
 	media_escape_db_array ($values);
 	
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (MEDIA_TABLE);
 	if ($id < 0)
 	{
@@ -179,7 +180,7 @@ function media_set ($id, array $values)
 
 function media_remove ($id, $rm_files=true)
 {
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (MEDIA_TABLE);
 	
 	$db->select ('`uri`,`tb_uri`', "`id`='$id'");
@@ -211,7 +212,7 @@ function media_get_array_tags ($type)
 	$medias = array ();
 	settype ($type, int) or die ('$type must be integer');
 	
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (MEDIA_TABLE);
 	$db->select ('*', '`type`=\''.$type.'\'');
 	while (($resp = $db->fetch_response ()) !== false)

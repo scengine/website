@@ -21,7 +21,7 @@
 
 
 require_once ('defines.php');
-require_once ('include/DB.php');
+require_once ('include/MyDB.php');
 require_once ('include/User.php');
 require_once ('include/string.php');
 
@@ -37,7 +37,7 @@ function get_engine_news ($start=0, $end=ENGINE_NEWS_OFFSET) {
 	if ($end < 0)
 		$end = $start + ENGINE_NEWS_OFFSET;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
 
@@ -57,7 +57,7 @@ function get_engine_n_news ($reload=false)
 	
 	if (!$init || $reload)
 	{
-		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 		$db->select_table (DEVEL_TABLE);
 		
 		$n = $db->count ();

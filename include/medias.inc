@@ -23,6 +23,7 @@ define (PAGE, 'medias');
 
 
 require_once ('include/misc.php');
+require_once ('include/MyDB.php');
 require_once ('include/medias.php');
 
 
@@ -187,7 +188,7 @@ function print_media_tables ()
 		</a>
 	</p>';
 	
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (MEDIA_TABLE);
 	for ($type = 1; $type < MediaType::N_TYPES; $type++)
 	{

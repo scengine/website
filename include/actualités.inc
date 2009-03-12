@@ -1,13 +1,13 @@
 <?php
 
-require_once ('DB.php');
+require_once ('MyDB.php');
 require_once ('BCode.php');
 require_once ('User.php');
 require_once ('defines.php');
 
 
 /* DEBUG : */
-//DB::set_die (True);
+//MyDB::set_die (True);
 
 /* this function adds a new news in the DB */
 function add_message ($title, $source, $author) {
@@ -25,7 +25,7 @@ function add_message ($title, $source, $author) {
 	$rv = True;
 	$date = mktime ();
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	$rv = $db->insert ("'', '$date', '$title', '$content', '$source', '$author'");
 
@@ -47,7 +47,7 @@ function update_message ($id, $title, $source, $author) {
 	
 	$rv = True;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	$rv = $db->update ("`titre`='$title', `contenu`='$content', `source`='$source', `auteur`='$author'", "`id`=$id");
 
@@ -60,7 +60,7 @@ function remove_message ($id) {
 	if (empty ($id))
 		return False;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	$rv = $db->delete ("`id`='$id'");
 
@@ -75,7 +75,7 @@ function display_table ($title='', $source='', $author='', $action='new', $id=''
 		$author = User::get_name ();
 
 /*
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (USERS_TABLE);
 	$db->select ('`username`');
 */
@@ -138,7 +138,7 @@ function get_message ($id) {
 
 	$rv = False;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	if ($db->select ('*', "`id`=$id")) {
 		$rv = $db->fetch_response ();
@@ -152,7 +152,7 @@ function get_message ($id) {
 function get_all_messages () {
 	$rv = false;
 	
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	if ($db->select ('*', '', 'id')) {
 		$rv = array ();

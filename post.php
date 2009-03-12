@@ -28,7 +28,7 @@
 
 require_once ('include/defines.php');
 require_once ('include/User.php');
-require_once ('include/DB.php');
+require_once ('include/MyDB.php');
 require_once ('include/BCode.php');
 require_once ('include/TypedDialog.class.php');
 
@@ -71,10 +71,10 @@ abstract class Devel {
 		// la date ne devrait-elle pas être cérée ici ?
 		$content = addslashes (self::parse ($content));
 		
-		//DB::set_die (true);
+		//MyDB::set_die (true);
 		
 		if (!empty ($date) && !empty ($content) ) {
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->insert ("'', '$date', '$content'")) {
@@ -98,7 +98,7 @@ abstract class Devel {
 		global $dialog;
 		
 		if (!empty ($id)) {
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->delete ("`id`='$id'")) {
@@ -124,7 +124,7 @@ abstract class Devel {
 		if (!empty ($id) && !empty ($date) && !empty ($content)) {
 			$content = addslashes (self::parse ($content));
 			
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->update ("`date`='$date', `content`='$content'", "`id`=$id")) {
@@ -162,10 +162,10 @@ abstract class News {
 		$title = addslashes ($title);
 		$author = addslashes ($author);
 		
-		//DB::set_die (true);
+		//MyDB::set_die (true);
 		
 		if (!empty ($date) && !empty ($title) && !empty ($content) && !empty ($source) && !empty ($author)) {
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->insert ("'', '$date', '$title', '$content', '$source', '$author'")) {
@@ -185,7 +185,7 @@ abstract class News {
 		global $dialog;
 		
 		if (!empty ($id)) {
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->delete ("`id`='$id'")) {
@@ -212,7 +212,7 @@ abstract class News {
 		if (!empty ($id) && !empty ($date) && !empty ($title) && !empty ($content)) {
 //			$content = parse ($content);
 			
-			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
 			if ($db->update ("`date`='$date', `titre`='$title', `contenu`='$content', `source`='$source'", "`id`=$id"))

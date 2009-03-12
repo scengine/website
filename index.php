@@ -28,7 +28,7 @@ define (NEWS_OFFSET, 8);
 
 require_once ('include/defines.php');
 require_once ('include/top.minc');
-require_once ('include/DB.php');
+require_once ('include/MyDB.php');
 require_once ('include/BCode.php');
 
 
@@ -41,7 +41,7 @@ function get_news ($start=0, $end=NEWS_OFFSET) {
 	if ($end < 0)
 		$end = $start + NEWS_OFFSET;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
 
@@ -58,7 +58,7 @@ function get_n_news ()
 {
 	$n = 0;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 /*
 	if ($db->query('SELECT COUNT(*) AS n FROM news') !== false)
 	{

@@ -31,7 +31,7 @@
  * facilement s'imbriquer pour créer un bug.
  * Par exemple, prennont une fonction qui va afficher des news.
  * 
- * foreach (($news=DB::get_response ()) as $new) {
+ * foreach (($news=MyDB::get_response ()) as $new) {
  *    # une fonction qui utilise la classe DB
  *    echo $news['texte'];
  * }
@@ -40,7 +40,7 @@
  * chose. Sauf si on a une classe qui mémorise le buffer de retour d'une
  * requête, comme ci-dessus. On se rendra vite compte que lors du
  * deuxième passage de la boucle, ce n'est plus la requête des news qui 
- * est retournée par DB::get_response() mais celle de la fonction
+ * est retournée par MyDB::get_response() mais celle de la fonction
  * appellée entre-temps. Et donc, ça ne marche plus.
  * 
  * Je pense que celà est suffiusamment dérangeant pour prétendre qu'une
@@ -53,7 +53,7 @@
 
 # Une classe non-abstraide de gestion de la DB
 
-class DB
+class MyDB
 {
 	protected $link, $response, $die;
 	private $server, $username, $password, $db = null, $charset = null, $table;
@@ -113,7 +113,7 @@ class DB
 	
 	public function query ($query)
 	{
-		//echo '<pre>DB: q is: ',$query,'</pre>';
+		//echo '<pre>MyDB: q is: ',$query,'</pre>';
 		$this->response = mysql_query ($query, $this->link) or die ($this->error ());
 		return $this->response;
 	}

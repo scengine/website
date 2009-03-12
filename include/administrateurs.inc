@@ -3,7 +3,7 @@
 
 require_once ('defines.php');
 require_once ('User.php');
-require_once ('DB.php');
+require_once ('MyDB.php');
 
 
 
@@ -11,7 +11,7 @@ function display_table()
 {
 	global $master;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table(USERS_TABLE);
 	$db->select('*', '');
 
@@ -66,7 +66,7 @@ function display_user($pseudo)
 {
 	global $master;
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table(USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
 
@@ -115,7 +115,7 @@ function edit_user($pseudo)
 
 	if($master || User::get_name() == $_GET['pseudo'])
 	{
-		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 		$db->select_table (USERS_TABLE);
 		$db->select ('*', "`username`='$pseudo'");
 		
@@ -214,7 +214,7 @@ function save_edit_user($oldpseudo, $pseudo,
 
 	// si tout est OK, on commence les choses sérieuses :
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (USERS_TABLE);
 
 	echo '<h3>Données mises à jour</h3>';
@@ -364,7 +364,7 @@ function remove_user_query($pseudo)
 	}
 
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
 	$response = $db->fetch_response ();
@@ -420,7 +420,7 @@ function remove_user($pseudo)
 		return false;
 	}
 
-	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 	$db->select_table (USERS_TABLE);
 	if(!$db->delete ("`username`='$pseudo'"))
 		$return = false;
@@ -524,7 +524,7 @@ function add_user($pseudo, $pass, $passconf, $level)
 		$pass = md5($pass);
 		//$passconf = md5($passconf);
 		
-		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 		$db->select_table (USERS_TABLE);
 		$return = $db->insert("'$pseudo', '$pass', '$level', 'false'");
 		unset ($db);
@@ -557,7 +557,7 @@ function add_user($pseudo, $pass, $passconf, $level)
 		</p>
 		<fieldset class="error">
 			<legend>Erreur&nbsp;:</legend>
-				SQL query failed. The response of <span class="phpfunc">DB::insert()</span> is: 
+				SQL query failed. The response of <span class="phpfunc">MyDB::insert()</span> is: 
 				<span class="phpbool">', ($return) ? 'true' : 'false' , '</span> <br />
 				The values of variables are: <br />
 				<span class="phpvar">$pseudo</span>: &nbsp; <span class="phpval">',$pseudo,'</span>;<br />

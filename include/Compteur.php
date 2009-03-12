@@ -112,7 +112,7 @@ class CounterIP_ {
 */
 
 
-require_once ('include/DB.php');
+require_once ('include/MyDB.php');
 
 define (COUNTER_TABLE, 'counter');
 
@@ -120,7 +120,7 @@ class CounterIP {
 	protected $db;
 	
 	public function __construct ($count=false, $counter=COUNTER_TABLE) {
-		$this->db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
+		$this->db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
 		$this->db->select_table ($counter);
 		
 		if ($count)

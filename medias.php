@@ -26,8 +26,6 @@
 define (TITLE, 'Médias');
 
 require_once ('include/defines.php');
-require_once ('include/DB.php');
-require_once ('include/string.php');
 require_once ('include/medias.php');
 
 
