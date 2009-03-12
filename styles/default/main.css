@@ -47,7 +47,9 @@ padding-left: 3px;
 content: url('external_link.png');
 }
 /* hack to remove external link image is queried */
-a.noicon:after
+a.noicon:after,
+/* another hack to show dwl.tf.o as local paths */
+a[href^="http://download.tuxfamily.org"]:after
 {
 content: '';
 }
