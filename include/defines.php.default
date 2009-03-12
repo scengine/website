@@ -28,5 +28,13 @@ define (DB_PASSWORD, 'password');
 define (NEWSLEVEL, 1);
 define (ENGINE, 'SCEngine'); // :D
 
+define (USERS_TABLE, '`admins`');
+define (DEVEL_TABLE, '`devel`');
+define (NEWS_TABLE, '`news`');
+define (MEDIA_TABLE, '`medias`');
+define (COUNTER_TABLE, '`counter`');
+
 define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
-define (COUNTER_TABLE, 'counter');
+
+define (MEDIA_DIR_R, './');
+define (MEDIA_DIR_W, './');

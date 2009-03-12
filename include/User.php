@@ -27,7 +27,6 @@ session_start ();
 require_once ('defines.php');
 require_once ('DB.php');
 
-define (TABLE, 'admins');
 define (COOKIE_EXPIRE, 0);
 
 abstract class User
@@ -45,8 +44,8 @@ abstract class User
 			
 			$username = mysql_real_escape_string ($_POST['username'], $db->get_link ());
 			
-			$db->select_table (TABLE);
-			$db->select ('*', 'username=\''.$username.'\'');
+			$db->select_table (USERS_TABLE);
+			$db->select ('*', '`username`=\''.$username.'\'');
 			$response = $db->fetch_response();
 			if ($response['password'] == md5($_POST['password']))
 			{
@@ -56,7 +55,7 @@ abstract class User
 				setcookie ('logged', 1, self::$time);
 				
 				
-				$db->update('logged=1', 'username=\''.$username.'\'');
+				$db->update('`logged`=1', '`username`=\''.$username.'\'');
 				
 				self::$logged = true;
 			}
@@ -70,8 +69,8 @@ abstract class User
 
 	public static function logout() {
 		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-		$db->select_table(TABLE);
-		$db->update('logged=0', 'username=\''.$_SESSION['username'].'\'');
+		$db->select_table(USERS_TABLE);
+		$db->update('`logged`=0', '`username`=\''.$_SESSION['username'].'\'');
 		unset ($db);
 		
 		
@@ -105,8 +104,8 @@ abstract class User
 		{
 			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			
-			$db->select_table (TABLE);
-			$db->select ('*', 'username=\''.mysql_real_escape_string ($_COOKIE['username'], $db->get_link ()).'\'');
+			$db->select_table (USERS_TABLE);
+			$db->select ('*', '`username`=\''.mysql_real_escape_string ($_COOKIE['username'], $db->get_link ()).'\'');
 			$response = $db->fetch_response ();
 			if ($response['password'] == $_COOKIE['password'])
 				$return = true;

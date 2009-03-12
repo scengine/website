@@ -54,7 +54,7 @@ $dialog = &new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 /* abstract class to update devel news */
 abstract class Devel {
-	private static $table = 'devel';
+	private static $table = DEVEL_TABLE;
 	
 	protected static function parse ($str) {
 		$str = &htmlspecialchars (&$str, ENT_COMPAT, 'UTF-8');
@@ -101,7 +101,7 @@ abstract class Devel {
 			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
-			if ($db->delete ("id='$id'")) {
+			if ($db->delete ("`id`='$id'")) {
 				//Msg::info ('Message supprimé avec succès.');
 				$dialog->add_info_message ('Message supprimé avec succès.');
 			}
@@ -127,7 +127,7 @@ abstract class Devel {
 			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
-			if ($db->update ("date='$date', content='$content'", "id=$id")) {
+			if ($db->update ("`date`='$date', `content`='$content'", "`id`=$id")) {
 				//Msg::info ('Message édité avec succès.');
 				$dialog->add_info_message ('Message édité avec succès.');
 			}
@@ -151,7 +151,7 @@ abstract class Devel {
 
 /* abstract class to update news */
 abstract class News {
-	private static $table = 'news';
+	private static $table = NEWS_TABLE;
 
 	public static function save ($date, $title, $content, $author) {
 		global $dialog;
@@ -188,7 +188,7 @@ abstract class News {
 			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
-			if ($db->delete ("id='$id'")) {
+			if ($db->delete ("`id`='$id'")) {
 				$dialog->add_info_message ('News supprimée avec succès.');
 			}
 			else {
@@ -215,7 +215,7 @@ abstract class News {
 			$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
 			$db->select_table (self::$table);
 			
-			if ($db->update ("date='$date', titre='$title', contenu='$content', source='$source'", "id=$id"))
+			if ($db->update ("`date`='$date', `titre`='$title', `contenu`='$content', `source`='$source'", "`id`=$id"))
 				$dialog->add_info_message  ('News éditée avec succès.');
 			else
 				$dialog->add_error_message  ('Erreur lors de l\'édition de la news.');

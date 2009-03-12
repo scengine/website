@@ -113,6 +113,7 @@ class DB
 	
 	public function query ($query)
 	{
+		//echo '<pre>DB: q is: ',$query,'</pre>';
 		$this->response = mysql_query ($query, $this->link) or die ($this->error ());
 		return $this->response;
 	}

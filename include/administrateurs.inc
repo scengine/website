@@ -5,7 +5,6 @@ require_once ('defines.php');
 require_once ('User.php');
 require_once ('DB.php');
 
-define (TABLE, 'admins');
 
 
 function display_table()
@@ -13,7 +12,7 @@ function display_table()
 	global $master;
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table(TABLE);
+	$db->select_table(USERS_TABLE);
 	$db->select('*', '');
 
 	echo '<table>
@@ -68,8 +67,8 @@ function display_user($pseudo)
 	global $master;
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table(TABLE);
-	$db->select('*', "username='$pseudo'");
+	$db->select_table(USERS_TABLE);
+	$db->select('*', "`username`='$pseudo'");
 
 	$response = $db->fetch_response ();
 
@@ -117,8 +116,8 @@ function edit_user($pseudo)
 	if($master || User::get_name() == $_GET['pseudo'])
 	{
 		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-		$db->select_table (TABLE);
-		$db->select ('*', "username='$pseudo'");
+		$db->select_table (USERS_TABLE);
+		$db->select ('*', "`username`='$pseudo'");
 		
 		$response = $db->fetch_response ();
 		
@@ -216,7 +215,7 @@ function save_edit_user($oldpseudo, $pseudo,
 	// si tout est OK, on commence les choses sérieuses :
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table (TABLE);
+	$db->select_table (USERS_TABLE);
 
 	echo '<h3>Données mises à jour</h3>';
 
@@ -226,7 +225,7 @@ function save_edit_user($oldpseudo, $pseudo,
 		if (gettype($pseudo) == 'string' && // si le pseudo est une chaîne de caractères
 			strlen($pseudo) >= 3) // et qu'il fait au moins 3 caractères de long
 		{
-			if ($db->update("username='$pseudo'", "username='$oldpseudo'"))
+			if ($db->update("`username`='$pseudo'", "`username`='$oldpseudo'"))
 				echo '<p>Login mis à jour avec succès !</p>';
 			else
 				echo '<p><span class="error">Erreur de modification du login&nbsp;:</span> il est probable que vous ayez choisi un login déjà utilisé par un autre administrateur.</p>';
@@ -259,7 +258,7 @@ function save_edit_user($oldpseudo, $pseudo,
 			strlen($mdp) >= 6 && // et que le nouveau pass fait au moins 6 caractères de long
 			$mdp === $mdp2) // et que le nouveau pass est identique à la confirmation
 		{
-			$db->update("password='".md5($mdp)."'", "username='$oldpseudo'");
+			$db->update("`password`='".md5($mdp)."'", "`username`='$oldpseudo'");
 			/* si on modifie l'utilisateur connecté, on met aussi le mdp de la 
 				session à jour pour ne pas être automatiquement déconnecté */
 			if(User::get_name() == $oldpseudo)
@@ -295,7 +294,7 @@ function save_edit_user($oldpseudo, $pseudo,
 			// il n'y a que les maîtres qui ont le droit de changer le niveau d'admin
 			if($master)
 			{
-				$db->update("level='$level'", "username='$oldpseudo'");
+				$db->update("`level`='$level'", "`username`='$oldpseudo'");
 				/* si on modifie l'utilisateur connecté, on met aussi le niveau de la 
 					session à jour pour effectuer le modif tout de suite */
 				if(User::get_name() == $oldpseudo)
@@ -366,8 +365,8 @@ function remove_user_query($pseudo)
 
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table (TABLE);
-	$db->select('*', "username='$pseudo'");
+	$db->select_table (USERS_TABLE);
+	$db->select('*', "`username`='$pseudo'");
 	$response = $db->fetch_response ();
 	unset ($db);
 
@@ -422,8 +421,8 @@ function remove_user($pseudo)
 	}
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table (TABLE);
-	if(!$db->delete ("username='$pseudo'"))
+	$db->select_table (USERS_TABLE);
+	if(!$db->delete ("`username`='$pseudo'"))
 		$return = false;
 	unset ($db);
 
@@ -526,7 +525,7 @@ function add_user($pseudo, $pass, $passconf, $level)
 		//$passconf = md5($passconf);
 		
 		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-		$db->select_table (TABLE);
+		$db->select_table (USERS_TABLE);
 		$return = $db->insert("'$pseudo', '$pass', '$level', 'false'");
 		unset ($db);
 	}

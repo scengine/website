@@ -25,40 +25,41 @@
 /* string-related functions */
 
 
-function file_getext ($filename)
+function filename_getext ($filename)
 {
-   $f = basename ($filename);
-   
-   $e = strrchr ($f, '.');
-   if ($e !== false)
-      $e = substr ($e, 1);
-   
-   unset ($f);
-   
-   return $e;
+  $f = basename ($filename);
+  
+  $e = strrchr ($f, '.');
+  if ($e !== false)
+    $e = substr ($e, 1);
+  
+  unset ($f);
+  
+  return $e;
 }
 
-function getext ($fn) { return file_getext ($fn); } // alias de file_getext;
-
+function path_add_filename_prefix ($path, $prefix) {
+  return dirname ($path).'/'.$prefix.basename ($path);
+}
 
 function str_has_prefix ($str, $prefix)
 {
-   if (substr ($str, 0, strlen ($prefix)) == $prefix)
-      return true;
-   
-   return false;
+  if (substr ($str, 0, strlen ($prefix)) == $prefix)
+    return true;
+  
+  return false;
 }
 
 /* return the start of a string until @p $c is found */
 #string sstrchr (string str, char c)
 function sstrchr ($str, $c)
 {
-   $f = '';
-   
-   for ($i = 0; $str[$i] != $c && $str[$i] !== False; $i++)
-      $f .= $str[$i];
-   
-   return $f;
+  $f = '';
+  
+  for ($i = 0; $str[$i] != $c && $str[$i] !== False; $i++)
+    $f .= $str[$i];
+  
+  return $f;
 }
 
 
@@ -73,7 +74,7 @@ function filename_has_prefix ($path, $prefix)
 #boolean file_hasext (string filename)
 function file_hasext ($filename)
 {
-   return (file_getext ($filename) === false) ? false : true;
+   return (filename_getext ($filename) === false) ? false : true;
 }
 
 function nls2p ($string)
@@ -91,7 +92,7 @@ function file_getname ($filename)
 {
    $f = basename ($filename);
    
-   $e = file_getext ($f);
+   $e = filename_getext ($f);
    $elen = ($e !== FALSE) ? strlen ($e) + 1 : 0;
    
    $n = substr ($f, 0, strlen ($f) - $elen);

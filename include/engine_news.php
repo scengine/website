@@ -38,7 +38,7 @@ function get_engine_news ($start=0, $end=ENGINE_NEWS_OFFSET) {
 		$end = $start + ENGINE_NEWS_OFFSET;
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('devel');
+	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
 
 	for ($i = 0; False !== ($content = $db->fetch_response ()); $i++) {
@@ -58,7 +58,7 @@ function get_engine_n_news ($reload=false)
 	if (!$init || $reload)
 	{
 		$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-		$db->select_table ('devel');
+		$db->select_table (DEVEL_TABLE);
 		
 		$n = $db->count ();
 		

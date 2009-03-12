@@ -26,7 +26,7 @@ function add_message ($title, $source, $author) {
 	$date = mktime ();
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('news');
+	$db->select_table (NEWS_TABLE);
 	$rv = $db->insert ("'', '$date', '$title', '$content', '$source', '$author'");
 
 	unset ($db);
@@ -48,8 +48,8 @@ function update_message ($id, $title, $source, $author) {
 	$rv = True;
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('news');
-	$rv = $db->update ("titre='$title', contenu='$content', source='$source', auteur='$author'", "id=$id");
+	$db->select_table (NEWS_TABLE);
+	$rv = $db->update ("`titre`='$title', `contenu`='$content', `source`='$source', `auteur`='$author'", "`id`=$id");
 
 	unset ($db);
 
@@ -60,11 +60,9 @@ function remove_message ($id) {
 	if (empty ($id))
 		return False;
 
-	$rv = True;
-
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('news');
-	$rv = $db->delete ("id='$id'");
+	$db->select_table (NEWS_TABLE);
+	$rv = $db->delete ("`id`='$id'");
 
 	unset ($db);
 
@@ -78,8 +76,8 @@ function display_table ($title='', $source='', $author='', $action='new', $id=''
 
 /*
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('admins');
-	$db->select ('username');
+	$db->select_table (USERS_TABLE);
+	$db->select ('`username`');
 */
 
 	$title = htmlspecialchars (stripslashes ($title));
@@ -141,8 +139,8 @@ function get_message ($id) {
 	$rv = False;
 
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('news');
-	if ($db->select ('*', "id=$id")) {
+	$db->select_table (NEWS_TABLE);
+	if ($db->select ('*', "`id`=$id")) {
 		$rv = $db->fetch_response ();
 	}
 
@@ -155,7 +153,7 @@ function get_all_messages () {
 	$rv = false;
 	
 	$db = &new DB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
-	$db->select_table ('news');
+	$db->select_table (NEWS_TABLE);
 	if ($db->select ('*', '', 'id')) {
 		$rv = array ();
 		while ($subarr = $db->fetch_response ()) {
@@ -300,16 +298,32 @@ if (User::get_level () <= NEWSLEVEL) {
 				if ($_POST['rm'])
 				{
 					if (remove_message ($_GET['id']))
-						echo '<p>« ', $titre, ' » supprimé avec succès.</p>
-								<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+					{
+						echo '
+						<p>« ', $titre, ' » supprimé avec succès.</p>
+						<p>
+							<a href="?page=', strtolower (PAGE), '"
+							   onclick="window.location.replace(this.href)">
+								<input type="button" value="Retour" />
+							</a>
+						</p>';
+					}
 					else
-						echo '<p>Erreur lors de la suppression de « ', $titre, ' »</p>
-								<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+					{
+						echo '
+						<p>Erreur lors de la suppression de « ', $titre, ' »</p>
+						<p>
+							<a href="?page=',strtolower (PAGE),'"
+							   onclick="window.location.replace(this.href)">
+								<input type="button" value="Retour" />
+							</a>
+						</p>';
+					}
 				}
 				else
 				{
 					echo '<p>voulez-vous vraiment buter tout « ', $titre, ' » ?</p>
-							<form method="post" action="?page=', strtolower (PAGE), '&action=rm&id=', $_GET['id'], '">
+							<form method="post" action="?page=', strtolower (PAGE), '&amp;action=rm&amp;id=', $_GET['id'], '">
 								<p>
 									<input type="hidden" name="rm" value="rm" />
 									<input type="submit" value="Supprimer" />
