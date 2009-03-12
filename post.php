@@ -54,6 +54,7 @@ $dialog = &new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 /* abstract class to update devel news */
 abstract class Devel {
+	const SECTION = 'devel';
 	private static $table = DEVEL_TABLE;
 	
 	protected static function parse ($str) {
@@ -151,6 +152,7 @@ abstract class Devel {
 
 /* abstract class to update news */
 abstract class News {
+	const SECTION = 'news';
 	private static $table = NEWS_TABLE;
 
 	public static function save ($date, $title, $content, $author) {
@@ -237,7 +239,7 @@ abstract class News {
 
 if (User::get_logged ())
 {
-	if (Devel::get_table () == $_GET['sec'] &&
+	if (Devel::SECTION == $_GET['sec'] &&
 			//User::get_name () == 'Yno')
 			User::get_level () == 0)
 	{
@@ -266,7 +268,7 @@ if (User::get_logged ())
 		else // invalid action request
 			$dialog->add_error_message ('Action invalide.');
 	}
-	else if (News::get_table () == $_GET['sec'])
+	else if (News::SECTION == $_GET['sec'])
 	{
 		if (User::get_level () <= 1)
 		{
