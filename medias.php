@@ -27,6 +27,7 @@ define (TITLE, 'Médias');
 
 require_once ('include/defines.php');
 require_once ('include/medias.php');
+require_once ('include/misc.php');
 
 
 function print_medias ($type)
@@ -39,6 +40,8 @@ function print_medias ($type)
 			if ($tag == '')
 				$tag = 'Non taggés';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
+			
+			$tagmedias = array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
 			
 			foreach ($tagmedias as $media)
 			{

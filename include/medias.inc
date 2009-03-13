@@ -137,6 +137,7 @@ function print_media_table_for_type ($type, array &$medias)
 					<th><acronym title="Uploader ID">UID</acronym></th>
 					<th>URI</th>
 					<th>Taille</th>
+					<th>Date</th>
 				</tr>
 			</thead>
 			<tbody>';
@@ -166,6 +167,7 @@ function print_media_table_for_type ($type, array &$medias)
 					</a>
 				</td>
 				<td>',get_size_string ($media['size']),'</td>
+				<td>',date ('d/m/Y', $media['mdate']),'</td>
 			</tr>';
 		}
 		
