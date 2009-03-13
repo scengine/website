@@ -41,7 +41,7 @@ function print_medias ($type)
 				$tag = 'Non taggés';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 			
-			$tagmedias = array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
+			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
 			
 			foreach ($tagmedias as $media)
 			{

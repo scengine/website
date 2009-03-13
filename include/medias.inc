@@ -662,7 +662,7 @@ function update_media_query ($media_id)
 		$media = media_get_by_id ($media_id);
 		if (media_set_from_values ($media_id,
 		                           $_POST[FFIELD], $_POST[TBFIELD], $media['size'],
-		                           $media['mtime'], $_POST['type'], $_POST['uid'], 
+		                           $media['mdate'], $_POST['type'], $_POST['uid'], 
 		                           $_POST['tags'], $_POST['desc'], $_POST['comment']))
 		{
 			echo '

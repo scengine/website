@@ -36,6 +36,8 @@ function print_downloads ()
 				$tag = 'Non taggés';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 			
+			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
+			
 			echo '
 			<table>
 				<tr>
