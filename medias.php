@@ -30,13 +30,16 @@ require_once ('include/medias.php');
 require_once ('include/misc.php');
 
 
-function print_medias ($type)
+function print_medias_internal ($type, $showtag=null)
 {
 	$medias = media_get_array_tags ($type);
 	if (! empty ($medias))
 	{
 		foreach ($medias as $tag => $tagmedias)
 		{
+			if ($showtag !== null && $tag !== $showtag)
+				continue;
+			
 			if ($tag == '')
 				$tag = 'Non taggés';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
@@ -61,16 +64,18 @@ function print_medias ($type)
 						[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
 					</div>';
 				/* tags if any */
+				echo '<div class="links tags">Tags&nbsp;: ';
 				if (! empty ($media['tags']))
 				{
-					echo '<div class="links tags">Tags&nbsp;: ';
 					$tags = split (' ', $media['tags']);
 					foreach ($tags as $tag)
 					{
-						echo '<a href="?showtag=',$tag,'">',$tag,'</a> ';
+						echo '<a href="?type=',$type,'&amp;showtag=',$tag,'">',$tag,'</a> ';
 					}
-					echo '</div>';
 				}
+				else
+					echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
+				echo '</div>';
 				/* comment if any */
 				if (! empty ($media['comment']))
 				{
@@ -87,6 +92,30 @@ function print_medias ($type)
 	}
 }
 
+function print_medias ($type, $tag=null)
+{
+	switch ($type)
+	{
+		case MediaType::SCREENSHOT:
+			echo '
+			<h2 id="screens">Screenshots</h2>';
+			break;
+		case MediaType::MOVIE:
+			echo '
+			<h2 id="movies">Vidéos</h2>';
+			break;
+	}
+	echo '
+	<div>
+		',print_medias_internal ($type, $tag),'
+	</div>';
+}
+
+function print_all_medias ($tag=null)
+{
+	print_medias (MediaType::SCREENSHOT, $tag);
+	print_medias (MediaType::MOVIE, $tag);
+}
 
 
 require_once ('include/top.minc');
@@ -100,8 +129,8 @@ require_once ('include/top.minc');
 			Ici sont répertoriés les divers médias du moteur. Voici la liste des catégories disponibles :
 		</p>
 			<ul>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']) ?>#screens">Screenshots</a></li>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']) ?>#movies">Vidéos</a></li>
+				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']),'?type=',MediaType::SCREENSHOT/*,'#screens'*/; ?>">Screenshots</a></li>
+				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']),'?type=',MediaType::MOVIE/*,'#movies'*/; ?>">Vidéos</a></li>
 			</ul>
 		<p>
 			Chaque catégorie classe ses médias en fonction de la version du moteur,
@@ -110,16 +139,31 @@ require_once ('include/top.minc');
 	</div>
 
 	<div id="content">
-		<h2 id="screens">Screenshots</h2>
-		<div>
-			<?php print_medias (MediaType::SCREENSHOT); ?>
-		</div>
+		<?php
 		
-		<h2 id="movies">Vidéos</h2>
-		<div>
-			<?php print_medias (MediaType::MOVIE); ?>
-		</div>
+		$type = null;
+		$tag = null;
 		
+		if (isset ($_GET['type']))
+		{
+			switch ($_GET['type'])
+			{
+				case MediaType::SCREENSHOT:
+				case MediaType::MOVIE:
+					$type = $_GET['type'];
+					break;
+			}
+		}
+		
+		if (isset ($_GET['showtag']))
+			$tag = $_GET['showtag'];
+		
+		if ($type !== null)
+			print_medias ($type, $tag);
+		else
+			print_all_medias ($tag);
+		
+		?>
 		<div style="clear: left"></div>
 	</div>
 
