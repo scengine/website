@@ -487,10 +487,10 @@ font-weight: bold;
 clear: left;
 }
 */
+.showmediacontainer,
 .mediacontainer {
-float: left;
 margin: 5px;
-
+text-align: center;
 background-color: #fafafa;
 /*
 font-size: 16px;
@@ -500,11 +500,23 @@ padding: 5px;
 border: 1px solid #83C9FC;
 -moz-border-radius: 5px;
 }
+.mediacontainer {
+float: left;
+}
 /**/
+.showmediacontainer img,
 .mediacontainer img {
 border: 1px solid black;
+}
+.mediacontainer img {
 max-width: 160px;
 max-height: 120px;
+}
+.showmediacontainer .links,
+.showmediacontainer .comment,
+.mediacontainer .links,
+.mediacontainer .comment {
+text-align: justify;
 }
 .mediacontainer .links,
 .mediacontainer .comment {

@@ -30,6 +30,163 @@ require_once ('include/medias.php');
 require_once ('include/misc.php');
 
 
+function print_screenshot (array &$media)
+{
+	$uri = MEDIA_DIR_R.'/'.$media['uri'];
+	
+	echo '
+	<h3 id="watch">',$media['desc'],'</h3>
+	<div class="showmediacontainer">
+		<div class="media">
+			<a href="',$uri,'" title="',$media['desc'],'">
+				<img src="',$uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
+			</a>
+		</div>
+		<div class="links">
+			[<a href="',$uri,'">Lien direct</a>]
+		</div>';
+	/* tags if any */
+	echo '<div class="links tags">Tags&nbsp;: ';
+	print_tag_links ($type, $media['tags']);
+	echo '</div>';
+	/* comment if any */
+	if (! empty ($media['comment']))
+	{
+		echo '<div class="comment"><p>',$media['comment'],'</p></div>';
+	}
+	echo '
+	</div>';
+}
+
+function get_video_mime_from_ext ($ext)
+{
+	$ext = strtolower ($ext);
+	$type = 'application/octet-stream';
+	
+	switch (strtolower (filename_getext ($uri)))
+	{
+		case 'ogm':
+		case 'ogg':
+		case 'ogv':
+			$type = 'video/x-ogm';
+			break;
+		case 'mkv':
+			$type = 'video/x-matroska';
+			break;
+		case 'flv':
+			$type = 'video/x-flv';
+			break;
+		case 'mpg':
+		case 'mpeg':
+			$type = 'video/mpeg';
+			break;
+		case 'mp4':
+		case 'mpeg4':
+		case 'm4v':
+			$type = 'video/mp4';
+			break;
+		case 'avi':
+			$type = 'video/avi';
+			break;
+		case 'mov':
+			$type = 'video/quicktime';
+			break;
+		case 'wmv':
+			$type = 'video/x-ms-wmv';
+			break;
+	}
+	
+	return $type;
+}
+
+function print_movie (array &$media)
+{
+	$uri = MEDIA_DIR_R.'/'.$media['uri'];
+	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
+	$type = get_video_mime_from_ext (filename_getext ($uri));
+	
+	echo '
+	<h3 id="watch">',$media['desc'],'</h3>
+	<div class="showmediacontainer">
+		<div class="media">
+			<object type="',$type,'" data="',$uri,'" width="100%" height="400">
+				<param name="src" value="',$uri,'"></param>
+				<a href="',$uri,'">
+					<img src="',$tb_uri,'" alt="',$media['desc'],'" />
+				</a>
+			</object>
+		</div>
+		<div class="links">
+			[<a href="',$uri,'">Lien direct</a>]
+		</div>';
+	/* tags if any */
+	echo '<div class="links tags">Tags&nbsp;: ';
+	print_tag_links ($type, $media['tags']);
+	echo '</div>';
+	/* comment if any */
+	if (! empty ($media['comment']))
+	{
+		echo '<div class="comment"><p>',$media['comment'],'</p></div>';
+	}
+	echo '
+	</div>';
+}
+
+function print_media ($media_id)
+{
+	$media = media_get_by_id ($media_id);
+	if ($media)
+	{
+		switch ($media['type'])
+		{
+			case MediaType::SCREENSHOT:
+				print_screenshot ($media);
+				break;
+			case MediaType::MOVIE:
+				print_movie ($media);
+				break;
+			default:
+				echo '
+				<h3>Média invalide</h3>
+				<p>
+					Le média que vous avez demandé n\'existe pas.
+				</p>';
+		}
+	}
+	
+	echo '
+	<p class="links">
+		<a href="',basename ($_SERVER['PHP_SELF']),'"
+		   onclick="window.history.back(1);return false;">
+			&lArr;&nbsp;Retour
+		</a>
+	</p>';
+}
+
+function print_tag_links ($type, $taglist)
+{
+	$tagged = true;
+	
+	if (! empty ($taglist))
+	{
+		$tags = split (' ', $taglist);
+		$n_tags = count ($tags);
+		for ($i = 0; $i < $n_tags; $i++)
+		{
+			echo '<a href="?type=',$type,'&amp;showtag=',$tags[$i],'">',$tags[$i],'</a>';
+			if ($i < ($n_tags -1))
+				echo ', ';
+		}
+	}
+	else
+	{
+		$tagged = false;
+		echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
+	}
+	
+	return $tagged;
+}
+
 function print_medias_internal ($type, $showtag=null)
 {
 	$medias = media_get_array_tags ($type);
@@ -55,26 +212,17 @@ function print_medias_internal ($type, $showtag=null)
 				echo
 				'<div class="mediacontainer">
 					<div class="media">
-						<a href="',$media['uri'],'" title="',$media['desc'],'" class="noicon">
+						<a href="?watch=',$media['id'],'#watch" title="',$media['desc'],'" class="noicon">
 							<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
 						</a>
 					</div>
 					<div class="links">
-						[<a class="noicon" href="',$media['uri'],'" title="Voir « ',$name,' »">Voir</a>]
+						[<a class="noicon" href="?watch=',$media['id'],'" title="Voir « ',$name,' »">Voir</a>]
 						[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
 					</div>';
 				/* tags if any */
 				echo '<div class="links tags">Tags&nbsp;: ';
-				if (! empty ($media['tags']))
-				{
-					$tags = split (' ', $media['tags']);
-					foreach ($tags as $tag)
-					{
-						echo '<a href="?type=',$type,'&amp;showtag=',$tag,'">',$tag,'</a> ';
-					}
-				}
-				else
-					echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
+				print_tag_links ($type, $media['tags']);
 				echo '</div>';
 				/* comment if any */
 				if (! empty ($media['comment']))
@@ -141,27 +289,36 @@ require_once ('include/top.minc');
 	<div id="content">
 		<?php
 		
-		$type = null;
-		$tag = null;
-		
-		if (isset ($_GET['type']))
+		/* watch a media if asked */
+		if (isset ($_GET['watch']) && settype ($_GET['watch'], integer))
 		{
-			switch ($_GET['type'])
-			{
-				case MediaType::SCREENSHOT:
-				case MediaType::MOVIE:
-					$type = $_GET['type'];
-					break;
-			}
+			print_media ($_GET['watch']);
 		}
-		
-		if (isset ($_GET['showtag']))
-			$tag = $_GET['showtag'];
-		
-		if ($type !== null)
-			print_medias ($type, $tag);
+		/* print media list */
 		else
-			print_all_medias ($tag);
+		{
+			$type = null;
+			$tag = null;
+			
+			if (isset ($_GET['type']))
+			{
+				switch ($_GET['type'])
+				{
+					case MediaType::SCREENSHOT:
+					case MediaType::MOVIE:
+						$type = $_GET['type'];
+						break;
+				}
+			}
+			
+			if (isset ($_GET['showtag']))
+				$tag = $_GET['showtag'];
+			
+			if ($type !== null)
+				print_medias ($type, $tag);
+			else
+				print_all_medias ($tag);
+		}
 		
 		?>
 		<div style="clear: left"></div>
