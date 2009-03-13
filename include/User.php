@@ -40,7 +40,7 @@ abstract class User
 		
 		if (isset($_POST['username'], $_POST['password']))
 		{
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			
 			$username = mysql_real_escape_string ($_POST['username'], $db->get_link ());
 			
@@ -68,7 +68,7 @@ abstract class User
 	}
 
 	public static function logout() {
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table(USERS_TABLE);
 		$db->update('`logged`=0', '`username`=\''.$_SESSION['username'].'\'');
 		unset ($db);
@@ -102,7 +102,7 @@ abstract class User
 		
 		if (isset ($_COOKIE['username'], $_COOKIE['password']))
 		{
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			
 			$db->select_table (USERS_TABLE);
 			$db->select ('*', '`username`=\''.mysql_real_escape_string ($_COOKIE['username'], $db->get_link ()).'\'');

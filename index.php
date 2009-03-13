@@ -41,7 +41,7 @@ function get_news ($start=0, $end=NEWS_OFFSET) {
 	if ($end < 0)
 		$end = $start + NEWS_OFFSET;
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
 
@@ -58,7 +58,7 @@ function get_n_news ()
 {
 	$n = 0;
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 /*
 	if ($db->query('SELECT COUNT(*) AS n FROM news') !== false)
 	{

@@ -188,7 +188,7 @@ function print_media_tables ()
 		</a>
 	</p>';
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	for ($type = 1; $type < MediaType::N_TYPES; $type++)
 	{

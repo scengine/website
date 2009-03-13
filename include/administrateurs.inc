@@ -11,7 +11,7 @@ function display_table()
 {
 	global $master;
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table(USERS_TABLE);
 	$db->select('*', '');
 
@@ -66,7 +66,7 @@ function display_user($pseudo)
 {
 	global $master;
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table(USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
 
@@ -115,7 +115,7 @@ function edit_user($pseudo)
 
 	if($master || User::get_name() == $_GET['pseudo'])
 	{
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
 		$db->select ('*', "`username`='$pseudo'");
 		
@@ -214,7 +214,7 @@ function save_edit_user($oldpseudo, $pseudo,
 
 	// si tout est OK, on commence les choses sérieuses :
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 
 	echo '<h3>Données mises à jour</h3>';
@@ -364,7 +364,7 @@ function remove_user_query($pseudo)
 	}
 
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
 	$response = $db->fetch_response ();
@@ -420,7 +420,7 @@ function remove_user($pseudo)
 		return false;
 	}
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 	if(!$db->delete ("`username`='$pseudo'"))
 		$return = false;
@@ -524,7 +524,7 @@ function add_user($pseudo, $pass, $passconf, $level)
 		$pass = md5($pass);
 		//$passconf = md5($passconf);
 		
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, 'utf8');
+		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
 		$return = $db->insert("'$pseudo', '$pass', '$level', 'false'");
 		unset ($db);

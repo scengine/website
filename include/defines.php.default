@@ -19,22 +19,40 @@
  * 
  */
 
+/* Default configuration for BanSE */
 
+/* Name of the database to use */
 define (DB_NAME, 'database');
+/* Database server uri */
 define (DB_SERVER, 'server');
+/* Database user */
 define (DB_USER, 'user');
+/* Database password */
 define (DB_PASSWORD, 'password');
+/* Database transfert encoding. You may not have to modify it */
+define (DB_TRANSFERT_ENCODING, 'utf8_bin');
 
+/* Administration level needed at least to post/edit/remove news.
+ * Higher administration level is 0 */
 define (NEWSLEVEL, 1);
+
 define (ENGINE, 'SCEngine'); // :D
 
+/* Tables names */
 define (USERS_TABLE, '`admins`');
 define (DEVEL_TABLE, '`devel`');
 define (NEWS_TABLE, '`news`');
 define (MEDIA_TABLE, '`medias`');
 define (COUNTER_TABLE, '`counter`');
 
+/* File to store metadatas */
 define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
 
+/* Base path where find medias. */
+/* Path/URI where read medias, especially used to provides links to users.
+ * This doesn't need any write access possibility. */
 define (MEDIA_DIR_R, './medias');
+/* Path/URI where write medias. It is used to upload medias and thumbnails.
+ * This is quite rarely used, meaning I/O are done not often. Obviously, this
+ * needs write access. */
 define (MEDIA_DIR_W, './medias');
