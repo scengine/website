@@ -527,4 +527,16 @@ max-width: 100%;
 max-width: 160px;
 }
 
+.bbcode_snippet {
+font-size: 80%;
+margin-top: 5px;
+padding: 5px;
+border: 1px solid #83C9FC;
+-moz-border-radius: 5px;
+overflow: hidden;
+}
+.bbcode_snippet textarea {
+font-size: 80%;
+width: 98%;
+}
 

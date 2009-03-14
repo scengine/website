@@ -28,6 +28,7 @@ define (TITLE, 'Médias');
 require_once ('include/defines.php');
 require_once ('include/medias.php');
 require_once ('include/misc.php');
+require_once ('include/User.php');
 
 
 function print_screenshot (array &$media)
@@ -35,27 +36,9 @@ function print_screenshot (array &$media)
 	$uri = MEDIA_DIR_R.'/'.$media['uri'];
 	
 	echo '
-	<h3 id="watch">',$media['desc'],'</h3>
-	<div class="showmediacontainer">
-		<div class="media">
-			<a href="',$uri,'" title="',$media['desc'],'">
-				<img src="',$uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
-			</a>
-		</div>
-		<div class="links">
-			[<a href="',$uri,'">Lien direct</a>]
-		</div>';
-	/* tags if any */
-	echo '<div class="links tags">Tags&nbsp;: ';
-	print_tag_links ($type, $media['tags']);
-	echo '</div>';
-	/* comment if any */
-	if (! empty ($media['comment']))
-	{
-		echo '<div class="comment"><p>',$media['comment'],'</p></div>';
-	}
-	echo '
-	</div>';
+	<a href="',$uri,'" title="',$media['desc'],'">
+		<img src="',$uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
+	</a>';
 }
 
 function get_video_mime_from_ext ($ext)
@@ -63,7 +46,7 @@ function get_video_mime_from_ext ($ext)
 	$ext = strtolower ($ext);
 	$type = 'application/octet-stream';
 	
-	switch (strtolower (filename_getext ($uri)))
+	switch (strtolower ($ext))
 	{
 		case 'ogm':
 		case 'ogg':
@@ -106,30 +89,12 @@ function print_movie (array &$media)
 	$type = get_video_mime_from_ext (filename_getext ($uri));
 	
 	echo '
-	<h3 id="watch">',$media['desc'],'</h3>
-	<div class="showmediacontainer">
-		<div class="media">
-			<object type="',$type,'" data="',$uri,'" width="100%" height="400">
-				<param name="src" value="',$uri,'"></param>
-				<a href="',$uri,'">
-					<img src="',$tb_uri,'" alt="',$media['desc'],'" />
-				</a>
-			</object>
-		</div>
-		<div class="links">
-			[<a href="',$uri,'">Lien direct</a>]
-		</div>';
-	/* tags if any */
-	echo '<div class="links tags">Tags&nbsp;: ';
-	print_tag_links ($type, $media['tags']);
-	echo '</div>';
-	/* comment if any */
-	if (! empty ($media['comment']))
-	{
-		echo '<div class="comment"><p>',$media['comment'],'</p></div>';
-	}
-	echo '
-	</div>';
+	<object type="',$type,'" data="',$uri,'" width="100%" height="400">
+		<param name="src" value="',$uri,'"></param>
+		<a href="',$uri,'">
+			<img src="',$tb_uri,'" alt="',$media['desc'],'" />
+		</a>
+	</object>';
 }
 
 function print_media ($media_id)
@@ -137,6 +102,13 @@ function print_media ($media_id)
 	$media = media_get_by_id ($media_id);
 	if ($media)
 	{
+		$uri = MEDIA_DIR_R.'/'.$media['uri'];
+		
+		echo '
+		<h3 id="watch">',$media['desc'],'</h3>
+		<div class="showmediacontainer">
+			<div class="media">';
+		
 		switch ($media['type'])
 		{
 			case MediaType::SCREENSHOT:
@@ -145,13 +117,86 @@ function print_media ($media_id)
 			case MediaType::MOVIE:
 				print_movie ($media);
 				break;
-			default:
-				echo '
-				<h3>Média invalide</h3>
-				<p>
-					Le média que vous avez demandé n\'existe pas.
-				</p>';
 		}
+		
+		echo '
+		</div>
+		<div class="links">
+			[<a href="',$uri,'">Lien direct</a>]
+		</div>';
+		/* tags if any */
+		echo '<div class="links tags">Tags&nbsp;: ';
+		print_tag_links ($type, $media['tags']);
+		echo '</div>';
+		/* comment if any */
+		if (! empty ($media['comment']))
+		{
+			echo '<div class="comment"><p>',$media['comment'],'</p></div>';
+		}
+		
+		if (User::get_logged ())
+		{
+			?>
+			<script type="text/javascript">
+				<!--
+				function toggle_height (b_id, id)
+				{
+					b = document.getElementById (b_id);
+					e = document.getElementById (id);
+					if (e.style.height == '1em')
+					{
+						b.innerHTML = '[-]';
+						e.style.height = '';
+					}
+					else
+					{
+						b.innerHTML = '[+]';
+						e.style.height = '1em';
+					}
+				}
+				//-->
+			</script>
+			<div class="bbcode_snippet" id="bb_spt_0">
+				<div class="fleft">
+					<a href="#" id="bb_spt_0_button"
+					   onclick="toggle_height('bb_spt_0_button', 'bb_spt_0'); return false;"
+					   title="Voir les codes pour ce média">
+						[-]
+					</a>
+				</div>
+				Code BBanCode/DokuWiki pour insérer un lien avec vignette vers ce média&nbsp;:
+			<?php
+			echo '
+				<textarea readonly="readonly" rows="2" cols="32">[[medias.php?watch=',
+					$media['id'],'#watch|{{',
+					MEDIA_DIR_R,'/',$media['tb_uri'],'|',
+					$media['desc'],'}}]]</textarea>
+				Code HTML pour insrer un lien avec vignette vers ce média&nbsp;:
+				<textarea readonly="readonly" rows="2" cols="32">&lt;a href="medias.php?watch=',
+					$media['id'],'#watch"&gt;&lt;img src="',
+						MEDIA_DIR_R,'/',$media['tb_uri'],'" alt="',
+					$media['desc'],'" /&gt;&lt;/a&gt;</textarea>';
+			?>
+			</div>
+			<script type="text/javascript">
+				<!--
+				toggle_height('bb_spt_0_button', 'bb_spt_0');
+				//-->
+			</script>
+			<?php
+		}
+		
+		/* fin du showmediacontainer */
+		echo '
+		</div>';
+	}
+	else
+	{
+		echo '
+		<h3>Média invalide</h3>
+		<p>
+			Le média que vous avez demandé n\'existe pas.
+		</p>';
 	}
 	
 	echo '
