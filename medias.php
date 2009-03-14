@@ -103,6 +103,7 @@ function print_media ($media_id)
 	if ($media)
 	{
 		$uri = MEDIA_DIR_R.'/'.$media['uri'];
+		$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
 		
 		echo '
 		<h3 id="watch">',$media['desc'],'</h3>
@@ -126,7 +127,7 @@ function print_media ($media_id)
 		</div>';
 		/* tags if any */
 		echo '<div class="links tags">Tags&nbsp;: ';
-		print_tag_links ($type, $media['tags']);
+		print_tag_links ($media['type'], $media['tags']);
 		echo '</div>';
 		/* comment if any */
 		if (! empty ($media['comment']))
@@ -137,29 +138,10 @@ function print_media ($media_id)
 		if (User::get_logged ())
 		{
 			?>
-			<script type="text/javascript">
-				<!--
-				function toggle_height (b_id, id)
-				{
-					b = document.getElementById (b_id);
-					e = document.getElementById (id);
-					if (e.style.height == '1em')
-					{
-						b.innerHTML = '[-]';
-						e.style.height = '';
-					}
-					else
-					{
-						b.innerHTML = '[+]';
-						e.style.height = '1em';
-					}
-				}
-				//-->
-			</script>
 			<div class="bbcode_snippet" id="bb_spt_0">
 				<div class="fleft">
 					<a href="#" id="bb_spt_0_button"
-					   onclick="toggle_height('bb_spt_0_button', 'bb_spt_0'); return false;"
+					   onclick="toggle_folding('bb_spt_0_button', 'bb_spt_0', true); return false;"
 					   title="Voir les codes pour ce média">
 						[-]
 					</a>
@@ -168,19 +150,16 @@ function print_media ($media_id)
 			<?php
 			echo '
 				<textarea readonly="readonly" rows="2" cols="32">[[medias.php?watch=',
-					$media['id'],'#watch|{{',
-					MEDIA_DIR_R,'/',$media['tb_uri'],'|',
-					$media['desc'],'}}]]</textarea>
+					$media['id'],'#watch|{{',$tb_uri,'|',$media['desc'],'}}]]</textarea>
 				Code HTML pour insrer un lien avec vignette vers ce média&nbsp;:
 				<textarea readonly="readonly" rows="2" cols="32">&lt;a href="medias.php?watch=',
-					$media['id'],'#watch"&gt;&lt;img src="',
-						MEDIA_DIR_R,'/',$media['tb_uri'],'" alt="',
+					$media['id'],'#watch"&gt;&lt;img src="',$tb_uri,'" alt="',
 					$media['desc'],'" /&gt;&lt;/a&gt;</textarea>';
 			?>
 			</div>
 			<script type="text/javascript">
 				<!--
-				toggle_height('bb_spt_0_button', 'bb_spt_0');
+				toggle_folding ('bb_spt_0_button', 'bb_spt_0');
 				//-->
 			</script>
 			<?php

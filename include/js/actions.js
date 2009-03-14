@@ -20,25 +20,41 @@
 /* functions for the right menu */
 
 function edit (id, el) {
-   if (document.getElementById ("f"+id).style.display == "none")
-   {
-      document.getElementById ("f"+id).style.display = "block";
-      document.getElementById ("m"+id).style.display = "none";
-      el.innerHTML = "Annuler";
-   }
-   else
-   {
-      document.getElementById ("f"+id).style.display = "none";
-      document.getElementById ("m"+id).style.display = "block";
-      el.innerHTML = "Éditer";
-   }
+	if (document.getElementById ("f"+id).style.display == "none")
+	{
+		document.getElementById ("f"+id).style.display = "block";
+		document.getElementById ("m"+id).style.display = "none";
+		el.innerHTML = "Annuler";
+	}
+	else
+	{
+		document.getElementById ("f"+id).style.display = "none";
+		document.getElementById ("m"+id).style.display = "block";
+		el.innerHTML = "Éditer";
+	}
 }
 
 function entry_more (id)
 {
-   document.getElementById(id).rows++;
+	document.getElementById(id).rows++;
 }
 function entry_lesser (id)
 {
-   document.getElementById(id).rows--;
+	document.getElementById(id).rows--;
+}
+
+function toggle_folding (button_id, element_id)
+{
+	var button = document.getElementById (button_id);
+	var element = document.getElementById (element_id);
+	if (element.style.height == '1em')
+	{
+		button.innerHTML = '[-]';
+		element.style.height = '';
+	}
+	else
+	{
+		button.innerHTML = '[+]';
+		element.style.height = '1em';
+	}
 }
