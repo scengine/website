@@ -213,12 +213,14 @@ function print_tag_links ($type, $taglist)
 
 function print_medias_internal ($type, $showtag=null)
 {
+	$tags = split (' ', $showtag);
+	
 	$medias = media_get_array_tags ($type);
 	if (! empty ($medias))
 	{
 		foreach ($medias as $tag => $tagmedias)
 		{
-			if ($showtag !== null && $tag !== $showtag)
+			if ($showtag !== null && ! in_array ($tag, $tags))
 				continue;
 			
 			if ($tag == '')

@@ -256,7 +256,6 @@ function remove_media_query ($media_id)
 define (FFIELD,  'ffield');
 define (TBFIELD, 'tbfield');
 define (MAX_FILE_SIZE, 1073741824); // maximum filesize to be uploaded (in bytes).
-define (MAX_TB_SIZE,   1048576); // maximum filesize to be uploaded (in bytes).
 
 function print_upload_form ($action, $fillwith=false, $upload=true)
 {
@@ -468,7 +467,7 @@ function upload_error_to_string ($u_err)
 {
 	switch ($u_err)
 	{
-		case 0:
+		case UPLOAD_ERR_OK:
 			return 'Pas d\'erreur.';
 		case UPLOAD_ERR_INI_SIZE:
 			return 'Le fichier téléchargé excède la taille maximale configurée sur le serveur.';
@@ -584,7 +583,7 @@ function add_media_query ()
 			if ($_POST['dest'] == 'other')
 				$_POST['dest'] = $_POST['manual_entry'];
 			
-			if ($_FILES[FFIELD]['error'] != 0)
+			if ($_FILES[FFIELD]['error'] != UPLOAD_ERR_OK)
 				$error = 'Upload error: '.upload_error_to_string ($_FILES[FFIELD]['error']);
 			else
 			{
@@ -600,7 +599,7 @@ function add_media_query ()
 				$tb_w_path = MEDIA_DIR_W.'/'.$tb_path;
 				
 				/* on crée le thumb avant pour pouvoir lire depuis le dossier temporaire */
-				if ($_FILES[TBFIELD]['error'] == 0)
+				if ($_FILES[TBFIELD]['error'] == UPLOAD_ERR_OK)
 				{
 					if (! move_uploaded_file ($_FILES[TBFIELD]['tmp_name'], $tb_w_path))
 						$error = 'Failed to move thumbnail to the final location';
@@ -635,6 +634,11 @@ function add_media_query ()
 					}
 					else
 						$error = 'Failed to move file to the final location.';
+				}
+				else
+				{
+					if (! $error)
+						$error = 'Unknown error';
 				}
 			}
 		}
