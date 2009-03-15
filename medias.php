@@ -137,32 +137,7 @@ function print_media ($media_id)
 		
 		if (User::get_logged ())
 		{
-			?>
-			<div class="bbcode_snippet" id="bb_spt_0">
-				<div class="fleft">
-					<a href="#" id="bb_spt_0_button"
-					   onclick="toggle_folding('bb_spt_0_button', 'bb_spt_0', true); return false;"
-					   title="Voir les codes pour ce média">
-						[-]
-					</a>
-				</div>
-				Code BBanCode/DokuWiki pour insérer un lien avec vignette vers ce média&nbsp;:
-			<?php
-			echo '
-				<textarea readonly="readonly" rows="2" cols="32">[[medias.php?watch=',
-					$media['id'],'#watch|{{',$tb_uri,'|',$media['desc'],'}}]]</textarea>
-				Code HTML pour insrer un lien avec vignette vers ce média&nbsp;:
-				<textarea readonly="readonly" rows="2" cols="32">&lt;a href="medias.php?watch=',
-					$media['id'],'#watch"&gt;&lt;img src="',$tb_uri,'" alt="',
-					$media['desc'],'" /&gt;&lt;/a&gt;</textarea>';
-			?>
-			</div>
-			<script type="text/javascript">
-				<!--
-				toggle_folding ('bb_spt_0_button', 'bb_spt_0');
-				//-->
-			</script>
-			<?php
+			media_print_code_snippets ($media);
 		}
 		
 		/* fin du showmediacontainer */

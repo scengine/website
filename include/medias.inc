@@ -442,7 +442,7 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 		</table>
 		
 		<p class="form_buttons">
-			<input type="submit" value="Upload" />
+			<input type="submit" value="<?php echo ($upload) ? 'Upload' : 'Mettre à jour'; ?>" />
 			<input type="reset" value="Vider" />
 			<?php print_return_link (true); ?>
 		</p>

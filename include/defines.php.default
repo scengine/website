@@ -50,9 +50,16 @@ define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
 
 /* Base path where find medias. */
 /* Path/URI where read medias, especially used to provides links to users.
- * This doesn't need any write access possibility. */
+ * This doesn't need any write access possibility.
+ * The better choice is an absolute URL to your site if you would make a massive
+ * use of link snippets feature */
 define (MEDIA_DIR_R, './medias');
 /* Path/URI where write medias. It is used to upload medias and thumbnails.
  * This is quite rarely used, meaning I/O are done not often. Obviously, this
  * needs write access. */
 define (MEDIA_DIR_W, './medias');
+
+/* Base site URL for getting absolute links to site pages right.
+ * It is not really needed but provides nice features.
+ * This path must be a complete prefix, with trailing slash, or be empty. */
+define (BSE_BASE_URL, 'http://www.mysite.com/');

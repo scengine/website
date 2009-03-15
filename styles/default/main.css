@@ -111,6 +111,7 @@ font-family: sans-serif;
 padding: 0 2px;
 }
 textarea[disabled],
+textarea[readonly],
 input[type=text][disabled],
 input[type=password][disabled] {
 color: #333;
@@ -527,17 +528,20 @@ max-width: 100%;
 max-width: 160px;
 }
 
-.bbcode_snippet {
+.code_snippet_box {
 font-size: 80%;
 margin-top: 10px;
 padding: 5px;
 border: 1px solid #83C9FC;
+background-color: #f4f4f4;
 -moz-border-radius: 5px;
 overflow: hidden;
 }
-.bbcode_snippet textarea {
-margin-top: 2px; /* hack to hide textarea when block is 1em height (folded) */
+.code_snippet textarea {
 font-size: 80%;
 width: 98%;
+}
+.code_snippet_box .code_snippet {
+margin-top: 5px;
 }
 
