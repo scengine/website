@@ -59,7 +59,7 @@ function media_unescape_db_array (array &$arr)
 	$arr['uri']     = stripslashes (rawurldecode ($arr['uri']));
 	$arr['tb_uri']  = stripslashes (rawurldecode ($arr['tb_uri']));
 	$arr['tags']    = stripslashes ($arr['tags']);
-	$arr['dsec']    = stripslashes ($arr['desc']);
+	$arr['desc']    = stripslashes ($arr['desc']);
 	$arr['comment'] = stripslashes ($arr['comment']);
 	
 	return $arr;
@@ -235,7 +235,7 @@ function __media_print_code_snippet_textarea ($content)
 {
 	echo '
 	<textarea readonly="readonly" rows="2" cols="32">',
-		htmlentities ($content),
+		htmlentities ($content, ENT_COMPAT, 'UTF-8'),
 	'</textarea>';
 }
 

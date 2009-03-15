@@ -40,7 +40,7 @@ $refresh = 'index.php';
 // on vérifie que le client a donné une adresse de page précédante
 if ($_SERVER['HTTP_REFERER']) {
 	// on vérifie que la page pérécdante correspond à une page du site
-	if (preg_match ('#^http://'.$_SERVER['SERVER_NAME'].'#U', $_SERVER['HTTP_REFERER'])) {
+	if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
 		$refresh = $_SERVER['HTTP_REFERER'];
 		
 		if ($_GET['id'] && ctype_digit ($_GET['id']))

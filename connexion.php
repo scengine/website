@@ -22,6 +22,7 @@
 /*connecxion/déconnexion*/
 
 require_once ('include/User.php');
+require_once ('include/string.php');
 require_once ('include/TypedDialog.class.php');
 
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
@@ -30,7 +31,7 @@ $refresh = 'index.php';
 // on vérifie que le client a donné une adresse de page précédante
 if ($_SERVER['HTTP_REFERER']) {
 	// on vérifie que la page pérécdante correspond à une page du site
-	if (preg_match ('#^http://'.$_SERVER['SERVER_NAME'].'#U', $_SERVER['HTTP_REFERER'])) {
+	if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
 		$refresh = '';
 		
 		// si l'utilisateur viens d'une page d'admin, il serait redirigé vers un 404
@@ -38,10 +39,13 @@ if ($_SERVER['HTTP_REFERER']) {
 			$refresh = 'index.php';
 		}
 		// sinon, on le renvoi d'où il vient (sans les args GET)
+		// heu, pourquoi sans les GET ?
 		else {
-			for ($i = 0; $_SERVER['HTTP_REFERER'][$i] && 
-			             $_SERVER['HTTP_REFERER'][$i] != '?'; $i++)
-				$refresh .= $_SERVER['HTTP_REFERER'][$i];
+			$end = strpos ($_SERVER['HTTP_REFERER'], '?');
+			if ($end === false)
+				$refresh = $_SERVER['HTTP_REFERER'];
+			else
+				$refresh = substr ($_SERVER['HTTP_REFERER'], 0, $end);
 		}
 	}
 }
