@@ -270,16 +270,16 @@ function print_medias ($types, $tag=null)
 	for ($type = 1; $type < MediaType::N_TYPES; $type++)
 	//foreach ($types as $type)
 	{
-		if ($types === null || ! in_array ($type, $types))
-			continue;
-		
-		echo '
-		<h2 id="',MediaType::to_id ($type),'">
-			',ucfirst (MediaType::to_string ($type, true)),'
-		</h2>
-		<div>
-			',print_medias_internal ($type, $tag),'
-		</div>';
+		if ($types === null || in_array ($type, $types))
+		{
+			echo '
+			<h2 id="',MediaType::to_id ($type),'">
+				',ucfirst (MediaType::to_string ($type, true)),'
+			</h2>
+			<div>
+				',print_medias_internal ($type, $tag),'
+			</div>';
+		}
 	}
 }
 
@@ -355,7 +355,11 @@ else if (isset ($_GET['showtag']))
 					<input type="hidden" name="post" value="true" />
 					<div>
 						<fieldset class="noframe">
-						<legend>Types&nbsp;:</legend>
+						<legend>Types&nbsp;:
+							<span class="small">
+								(Tout <a href="javascript:set_checked_by_name ('type[]', true);">cocher</a>/<a href="javascript:set_checked_by_name ('type[]', false);">décocher</a>)
+							</span>
+						</legend>
 						<?php
 							for ($type = 1; $type < MediaType::N_TYPES; $type++)
 							{
@@ -372,7 +376,11 @@ else if (isset ($_GET['showtag']))
 						?>
 						</fieldset>
 						<fieldset class="noframe">
-						<legend>Tags&nbsp;:</legend>
+						<legend>Tags&nbsp;:
+							<span class="small">
+								(Tout <a href="javascript:set_checked_by_name ('showtag[]', true);">cocher</a>/<a href="javascript:set_checked_by_name ('showtag[]', false);">décocher</a>)
+							</span>
+						</legend>
 						<?php
 							$list_tags = media_get_all_tags ();
 							foreach ($list_tags as $list_tag => $list_tag_name)
@@ -391,12 +399,7 @@ else if (isset ($_GET['showtag']))
 						</fieldset>
 					</div>
 					<p class="form_buttons">
-						<input type="reset" value="Réinitialiser" />
 						<input type="submit" value="Filtrer" />
-						<a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>"
-							 onclick="window.location.replace (this.href); return false;">
-							<input type="submit" value="Annuler" />
-						</a>
 					</p>
 				</fieldset>
 				<script type="text/javascript">

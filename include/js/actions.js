@@ -58,3 +58,15 @@ function toggle_folding (button_id, element_id)
 		element.style.height = '1em';
 	}
 }
+
+function set_checked_by_name (name, state)
+{
+	var els = document.getElementsByName (name);
+	if (els)
+	{
+		for (i in els)
+		{
+			els[i].checked = state;
+		}
+	}
+}
