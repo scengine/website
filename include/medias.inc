@@ -124,7 +124,7 @@ function print_media_table_for_type ($type, array &$medias)
 	if (! $empty)
 	{
 		echo '
-		<h3>',ucfirst (MediaType::to_string ($type)),'s</h3>
+		<h3>',ucfirst (MediaType::to_string ($type, true)),'</h3>
 		<table>
 			<thead>
 				<tr>
@@ -259,7 +259,7 @@ define (MAX_FILE_SIZE, 1073741824); // maximum filesize to be uploaded (in bytes
 
 function print_upload_form ($action, $fillwith=false, $upload=true)
 {
-	$DPATHS = array ('screens/', 'movies/', 'downloads/');
+	$DPATHS = array ('screens/', 'movies/', 'downloads/', 'news/');
 	
 	?>
 	<script type="text/javascript">
@@ -293,7 +293,8 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 				case '1': select.value = '<?php echo $DPATHS[0]; ?>'; break;
 				case '2': select.value = '<?php echo $DPATHS[1]; ?>'; break;
 				case '3': select.value = '<?php echo $DPATHS[2]; ?>'; break;
-				case '4': select.value = name; break;
+				case '4': select.value = '<?php echo $DPATHS[3]; ?>'; break;
+				case '5': select.value = name; break;
 			}
 			doDestListChanged (select, name, manual_e_id);
 		}

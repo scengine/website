@@ -31,20 +31,64 @@ abstract class MediaType
 	const SCREENSHOT = 1;
 	const MOVIE      = 2;
 	const RELEASE    = 3;
-	const OTHER      = 4;
-	const N_TYPES    = 5;
+	const NEWS       = 4; // for news medias, such as screens but not from engine
+	const OTHER      = 5;
+	const N_TYPES    = 6;
 	
-	public function to_string ($media_type)
+	protected static $id_names = array (
+		MediaType::UNKNOWN    => 'medias_unknowns',
+		MediaType::SCREENSHOT => 'medias_screens',
+		MediaType::MOVIE      => 'medias_movies',
+		MediaType::RELEASE    => 'medias_releases',
+		MediaType::NEWS       => 'medias_news',
+		MediaType::OTHER      => 'medias_others',
+		MediaType::N_TYPES    => 'medias_invalids'
+	);
+	protected static $names = array (
+		MediaType::UNKNOWN    => 'inconnu',
+		MediaType::SCREENSHOT => 'screenshot',
+		MediaType::MOVIE      => 'vidéo',
+		MediaType::RELEASE    => 'release',
+		MediaType::NEWS       => 'news',
+		MediaType::OTHER      => 'autre',
+		MediaType::N_TYPES    => 'type invalide'
+	);
+	protected static $names_plurials = array (
+		MediaType::UNKNOWN    => 'inconnus',
+		MediaType::SCREENSHOT => 'screenshots',
+		MediaType::MOVIE      => 'vidéos',
+		MediaType::RELEASE    => 'releases',
+		MediaType::NEWS       => 'news',
+		MediaType::OTHER      => 'autres',
+		MediaType::N_TYPES    => 'type invalides'
+	);
+	
+	private function calibrate_media_type (&$media_type)
 	{
-		switch ($media_type)
+		if (! settype ($media_type, integer) ||
+		    $media_type > MediaType::N_TYPES || $media_type < 0)
 		{
-			case self::UNKNOWN:    return 'inconnu';
-			case self::SCREENSHOT: return 'image';
-			case self::MOVIE:      return 'vidéo';
-			case self::RELEASE:    return 'release';
-			case self::OTHER:      return 'autre';
-			default:               return 'type invalide';
+			$media_type = MediaType::N_TYPES;
 		}
+		
+		return $media_type;
+	}
+	
+	public function to_string ($media_type, $plurial = false)
+	{
+		self::calibrate_media_type ($media_type);
+		
+		if ($plurial)
+			return self::$names_plurials[$media_type];
+		else
+			return self::$names[$media_type];
+	}
+	
+	public function to_id ($media_type)
+	{
+		self::calibrate_media_type ($media_type);
+		
+		return self::$id_names[$media_type];
 	}
 }
 
@@ -231,6 +275,29 @@ function media_get_array_tags ($type)
 	return $medias;
 }
 
+function media_get_all_tags ()
+{
+	$list_tags = array ();
+	
+	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db->select_table (MEDIA_TABLE);
+	$db->select ('*');
+	while (($resp = $db->fetch_response ()) !== false)
+	{
+		media_unescape_db_array ($resp);
+		$tags = split (' ', $resp['tags']);
+		foreach ($tags as $tag)
+		{
+			$list_tags[$tag] = ($tag === '') ? 'Non taggé' : $tag;
+		}
+	}
+	
+	unset ($db);
+	krsort ($list_tags);
+	
+	return $list_tags;
+}
+
 function __media_print_code_snippet_textarea ($content)
 {
 	echo '
@@ -243,12 +310,13 @@ function media_print_code_snippets (array &$media)
 {
 	$uri = MEDIA_DIR_R.'/'.$media['uri'];
 	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
+	static $n = 1;
 	
 	?>
-	<div class="code_snippet_box" id="bb_spt_0">
+	<div class="code_snippet_box" id="bb_spt_<?php echo $n; ?>">
 		<div class="fleft">
-			<a href="#" id="bb_spt_0_button"
-				 onclick="toggle_folding('bb_spt_0_button', 'bb_spt_0', true); return false;"
+			<a href="#" id="bb_spt_<?php echo $n; ?>_button"
+				 onclick="toggle_folding('bb_spt_<?php echo $n; ?>_button', 'bb_spt_<?php echo $n; ?>', true); return false;"
 				 title="Voir les codes pour ce média">
 				[-]
 			</a>
@@ -304,8 +372,10 @@ function media_print_code_snippets (array &$media)
 	</div>
 	<script type="text/javascript">
 		<!--
-		toggle_folding ('bb_spt_0_button', 'bb_spt_0');
+		toggle_folding ('bb_spt_<?php echo $n; ?>_button', 'bb_spt_<?php echo $n; ?>');
 		//-->
 	</script>
 	<?php
+	
+	$n++;
 }

@@ -30,6 +30,7 @@ require_once ('include/defines.php');
 require_once ('include/User.php');
 require_once ('include/MyDB.php');
 require_once ('include/BCode.php');
+require_once ('include/string.php');
 require_once ('include/TypedDialog.class.php');
 
 

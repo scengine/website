@@ -188,7 +188,12 @@ function print_tag_links ($type, $taglist)
 
 function print_medias_internal ($type, $showtag=null)
 {
-	$tags = split (' ', $showtag);
+	$n_medias = 0;
+	
+	if (! is_array ($showtag))
+		$tags = split (' ', $showtag);
+	else
+		$tags = $showtag;
 	
 	$medias = media_get_array_tags ($type);
 	if (! empty ($medias))
@@ -232,32 +237,50 @@ function print_medias_internal ($type, $showtag=null)
 				}
 				echo '</div>';
 			}
+			
+			$n_medias++;
 		}
 	}
+	
 	/* no media selected */
-	else
+	if ($n_medias == 0)
 	{
-		echo '<p>Aucun média dans cette section</p>';
+		echo '<p>';
+		if ($showtag === null)
+			echo 'Aucun média dans cette section.';
+		else
+		{
+			$s = (count ($tags) == 1) ? '' : 's';
+			
+			echo 'Aucun média pour ce',$s,' tag',$s,' dans cette section.';
+		}
+		echo '</p>';
 	}
 }
 
-function print_medias ($type, $tag=null)
+/*
+ * \param $types mixed: array of types or string of comma-separated types to show
+ * \param $tag   tags to filter with
+ */
+function print_medias ($types, $tag=null)
 {
-	switch ($type)
+	//if (! is_array ($types) && $types !== null)
+	//	$types = split (',', $types);
+	
+	for ($type = 1; $type < MediaType::N_TYPES; $type++)
+	//foreach ($types as $type)
 	{
-		case MediaType::SCREENSHOT:
-			echo '
-			<h2 id="screens">Screenshots</h2>';
-			break;
-		case MediaType::MOVIE:
-			echo '
-			<h2 id="movies">Vidéos</h2>';
-			break;
+		if ($types === null || ! in_array ($type, $types))
+			continue;
+		
+		echo '
+		<h2 id="',MediaType::to_id ($type),'">
+			',ucfirst (MediaType::to_string ($type, true)),'
+		</h2>
+		<div>
+			',print_medias_internal ($type, $tag),'
+		</div>';
 	}
-	echo '
-	<div>
-		',print_medias_internal ($type, $tag),'
-	</div>';
 }
 
 function print_all_medias ($tag=null)
@@ -267,7 +290,41 @@ function print_all_medias ($tag=null)
 }
 
 
+/******************************************************************************/
+
 require_once ('include/top.minc');
+
+/* filtering */
+$types = null;
+$tags = null;
+
+/* types */
+if (isset ($_POST['post']))
+{
+	if (isset ($_POST['type']))
+	{
+		$types = $_POST['type'];
+	}
+}
+else if (isset ($_GET['type']))
+{
+	$types = split (',', $_GET['type']);
+}
+else
+{
+	/* Defaults to screenshots & movies */
+	$types = array (MediaType::SCREENSHOT, MediaType::MOVIE);
+}
+
+/* tags */
+if (isset ($_POST['showtag']))
+{
+	$tags = $_POST['showtag'];
+}
+else if (isset ($_GET['showtag']))
+{
+	$tags = split (' ', $_GET['showtag']);
+}
 
 
 ?>
@@ -278,13 +335,77 @@ require_once ('include/top.minc');
 			Ici sont répertoriés les divers médias du moteur. Voici la liste des catégories disponibles :
 		</p>
 			<ul>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']),'?type=',MediaType::SCREENSHOT/*,'#screens'*/; ?>">Screenshots</a></li>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']),'?type=',MediaType::MOVIE/*,'#movies'*/; ?>">Vidéos</a></li>
+				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>#medias_screens">Screenshots</a></li>
+				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>#medias_movies">Vidéos</a></li>
 			</ul>
 		<p>
 			Chaque catégorie classe ses médias en fonction de la version du moteur,
 			en allant de la plus récente à la plus ancienne. Bon visionnage :o)
 		</p>
+		<div class="foldable" id="fld_mtt0">
+			<form method="post" action="<?php echo basename (__FILE__); ?>">
+				<fieldset>
+					<legend>
+						Filtrage des médias…
+						<a href="#" id="fld_mtt0_btn"
+							 onclick="toggle_folding ('fld_mtt0_btn', 'fld_mtt0'); return false;">
+							[-]
+						</a>
+					</legend>
+					<input type="hidden" name="post" value="true" />
+					<div>
+						<fieldset class="noframe">
+						<legend>Types&nbsp;:</legend>
+						<?php
+							for ($type = 1; $type < MediaType::N_TYPES; $type++)
+							{
+								echo '
+								<label>
+									<input type="checkbox" name="type[]" value="',$type,'" ';
+								if ($types !== null && in_array ($type, $types))
+									echo 'checked="checked" ';
+								echo '
+									/>',
+									MediaType::to_string ($type),'
+								</label>';
+							}
+						?>
+						</fieldset>
+						<fieldset class="noframe">
+						<legend>Tags&nbsp;:</legend>
+						<?php
+							$list_tags = media_get_all_tags ();
+							foreach ($list_tags as $list_tag => $list_tag_name)
+							{
+								echo '
+								<label>
+									<input type="checkbox" name="showtag[]" value="',$list_tag,'" ';
+								if ($tags !== null && in_array ($list_tag, $tags))
+									echo 'checked="checked" ';
+								echo '
+									/>',
+									$list_tag_name,'
+								</label>';
+							}
+						?>
+						</fieldset>
+					</div>
+					<p class="form_buttons">
+						<input type="reset" value="Réinitialiser" />
+						<input type="submit" value="Filtrer" />
+						<a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>"
+							 onclick="window.location.replace (this.href); return false;">
+							<input type="submit" value="Annuler" />
+						</a>
+					</p>
+				</fieldset>
+				<script type="text/javascript">
+					<!--
+					toggle_folding ('fld_mtt0_btn', 'fld_mtt0');
+					//-->
+				</script>
+			</form>
+		</div>
 	</div>
 
 	<div id="content">
@@ -298,27 +419,10 @@ require_once ('include/top.minc');
 		/* print media list */
 		else
 		{
-			$type = null;
-			$tag = null;
-			
-			if (isset ($_GET['type']))
-			{
-				switch ($_GET['type'])
-				{
-					case MediaType::SCREENSHOT:
-					case MediaType::MOVIE:
-						$type = $_GET['type'];
-						break;
-				}
-			}
-			
-			if (isset ($_GET['showtag']))
-				$tag = $_GET['showtag'];
-			
-			if ($type !== null)
-				print_medias ($type, $tag);
-			else
-				print_all_medias ($tag);
+			//if ($types !== null)
+				print_medias ($types, $tags);
+			//else
+			//	print_all_medias ($tags);
 		}
 		
 		?>

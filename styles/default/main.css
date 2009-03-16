@@ -103,7 +103,7 @@ background-color: #f5f5f5;
 cursor: pointer;
 }
 textarea, input[type=text], input[type=password], input[type=file] {
-width: 100%;
+width: 99%;
 background-color: #fafafa;
 color: black;
 border: 1px solid #bfbfbf;
@@ -132,6 +132,12 @@ font-size: 90%;
 select option:hover {
 background-color: #333;
 color: #fafafa;
+}
+fieldset {
+border: 1px solid #bfbfbf;
+}
+fieldset.noframe {
+border: none;
 }
 
 .form_buttons {
@@ -293,7 +299,7 @@ text-align: center;
 }
 .lsmenu h4, .rsmenu h4 {
 margin: 20px 0px 3px 0px;
-font-size: 11px;
+font-size: 10px;
 }
 .rsmenu p {
 margin: auto;
@@ -402,6 +408,15 @@ float: right;
 .newslinks {
 text-align: center;
 font-size: 85%;
+}
+
+.news_engine_box {
+max-height: 400px;
+overflow: auto;
+border-top: 1px solid #bfbfbf;
+border-bottom: 1px solid #bfbfbf;
+margin: 5px -6px 5px -4px;
+padding: 5px;
 }
 
 
@@ -530,7 +545,7 @@ max-width: 160px;
 
 .code_snippet_box {
 font-size: 80%;
-margin-top: 10px;
+margin: 10px;
 padding: 5px;
 border: 1px solid #83C9FC;
 background-color: #f4f4f4;
@@ -545,3 +560,9 @@ width: 98%;
 margin-top: 5px;
 }
 
+.foldable {
+overflow: hidden;
+}
+.foldable fieldset {
+margin-top: 0;
+}

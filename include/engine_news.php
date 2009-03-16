@@ -143,6 +143,8 @@ function print_engine_news ()
 				</form>';
 	}
 	
+	echo '
+	<div class="news_engine_box">';
 	
 	foreach ($news as $new)
 	{
@@ -181,6 +183,8 @@ function print_engine_news ()
 					</div>';
 		}
 	} //endwhile
+	
+	echo '</div>';
 	
 	echo '<br /><div class="newslinks">';
 	print_engine_page_browser ($start_news);
