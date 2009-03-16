@@ -203,11 +203,24 @@ function print_media ($media_id)
 	}
 	
 	echo '
-	<p class="links">
+	<p class="links">';
+	/* wether we want to return to the media page and not the previous one */
+	if ($_GET['noreturn'])
+	{
+		echo '
+		<a href="',basename ($_SERVER['PHP_SELF']),'">
+			Retour
+		</a>';
+	}
+	else
+	{
+		echo '
 		<a href="',basename ($_SERVER['PHP_SELF']),'"
-		   onclick="window.history.back(1);return false;">
+			onclick="window.history.back(1);return false;">
 			&lArr;&nbsp;Retour
-		</a>
+		</a>';
+	}
+	echo '
 	</p>';
 }
 
