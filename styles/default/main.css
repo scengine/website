@@ -110,6 +110,10 @@ border: 1px solid #bfbfbf;
 font-family: sans-serif;
 padding: 0 2px;
 }
+textarea {
+font-size: 90%;
+font-family: monospace;
+}
 textarea[disabled],
 textarea[readonly],
 input[type=text][disabled],
@@ -522,7 +526,9 @@ float: left;
 /**/
 .showmediacontainer img,
 .mediacontainer img {
+/*
 border: 1px solid black;
+*/
 }
 .mediacontainer img {
 max-width: 160px;

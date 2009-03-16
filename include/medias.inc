@@ -610,7 +610,7 @@ function add_media_query ()
 					/* if no thumb, try to create one */
 					if (! create_thumbnail ($_FILES[FFIELD]['type'], $tmp_path, $tb_w_path))
 					{
-						$tb_path = null;
+						$tb_path = media_get_default_thumbnail_from_uri ($old_name);
 					}
 				}
 				else

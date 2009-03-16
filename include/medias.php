@@ -20,10 +20,15 @@
  */
 
 require_once ('include/defines.php');
+require_once ('include/string.php');
 require_once ('include/MyDB.php');
 
 define (MEDIA_THUMBNAIL_WIDTH,  160.0);
 define (MEDIA_THUMBNAIL_HEIGHT, 120.0);
+/* default thumbnails if none */
+define (MEDIA_UNKNOWN_THUMBNAIL_URI,    'default/media_unknown.png');
+define (MEDIA_COMPRESSED_THUMBNAIL_URI, 'default/media_compressed.png');
+
 
 abstract class MediaType
 {
@@ -222,6 +227,31 @@ function media_set ($id, array $values)
 	}
 }
 
+function media_get_default_thumbnail_from_uri (&$uri)
+{
+	switch (strtolower (filename_getext ($uri)))
+	{
+		case 'gz':
+		case 'bz2':
+		case 'tar':
+		case 'tgz':
+		case 'tbz2':
+		case 'zip':
+		case '7z':
+		case 'jar':
+			return MEDIA_COMPRESSED_THUMBNAIL_URI;
+		
+		default:
+			return MEDIA_UNKNOWN_THUMBNAIL_URI;
+	}
+}
+
+function __media_is_default_thumbnail (string &$uri)
+{
+	return ($uri == MEDIA_UNKNOWN_THUMBNAIL_URI ||
+	        $uri == MEDIA_COMPRESSED_THUMBNAIL_URI);
+}
+
 function media_remove ($id, $rm_files=true)
 {
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
@@ -231,11 +261,19 @@ function media_remove ($id, $rm_files=true)
 	$media = $db->fetch_response ();
 	if ($media)
 	{
+		$uri_n = $db->count ("`uri`='${media['uri']}'");
+		$tb_uri_n = $db->count ("`tb_uri`='${media['tb_uri']}'");
+		
 		media_unescape_db_array ($media);
-		if ($media['uri'])
+		if ($media['uri'] && $uri_n <= 1)
+		{
 			unlink (MEDIA_DIR_W.'/'.$media['uri']);
-		if ($media['tb_uri'])
+		}
+		if ($media['tb_uri'] && $tb_uri_n <= 1 &&
+		    ! __media_is_default_thumbnail ($media['tb_uri']))
+		{
 			unlink (MEDIA_DIR_W.'/'.$media['tb_uri']);
+		}
 	}
 	return $db->delete ("`id`='$id'");
 }

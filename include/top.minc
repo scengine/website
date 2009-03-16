@@ -81,7 +81,7 @@ function print_head_adds (&$adds) {
 				<li><a href="medias.php">Médias</a>
 					<ul>
 						<li><a href="medias.php#medias_screens">Screenshots</a></li>
-						<li><a href="medias.php#madias_movies">Vidéos</a></li>
+						<li><a href="medias.php#medias_movies">Vidéos</a></li>
 					</ul>
 				</li>
 				<li><a href="downloads.php">Téléchargements</a></li>

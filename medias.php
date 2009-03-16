@@ -97,6 +97,17 @@ function print_movie (array &$media)
 	</object>';
 }
 
+function print_by_thumbnail (array &$media)
+{
+	$uri = MEDIA_DIR_R.'/'.$media['uri'];
+	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
+	
+	echo '
+	<a href="',$uri,'" title="',$media['desc'],'">
+		<img src="',$tb_uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
+	</a>';
+}
+
 /*
  * Fallback function that try to display a media by its extension
  */
@@ -107,6 +118,7 @@ function print_media_from_ext (array &$media)
 		case 'png':
 		case 'jpg':
 		case 'jpeg':
+		case 'gif':
 			print_screenshot ($media);
 			break;
 		
@@ -127,7 +139,8 @@ function print_media_from_ext (array &$media)
 			break;
 		
 		default:
-			echo 'Not implemented yed';
+			//echo 'Not implemented yet';
+			print_by_thumbnail ($media);
 	}
 }
 
