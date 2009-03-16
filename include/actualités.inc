@@ -94,7 +94,9 @@ function display_table ($title='', $source='', $author='', $action='new', $id=''
 			</label>
 			<br />
 			<label><span class="u">C</span>ontenu : <br />
-				<textarea name="contenu" rows="15" tabindex="30" accesskey="c">', htmlspecialchars ($source), '</textarea>
+				<textarea name="contenu" rows="15" tabindex="30" accesskey="c">',
+					htmlspecialchars ($source),
+				'</textarea>
 			</label>';
 			echo '<input type="hidden" name="auteur" value="', $author, '" />';
 			/* // gestion de changement de l'auteur
@@ -112,11 +114,15 @@ function display_table ($title='', $source='', $author='', $action='new', $id=''
 	echo '</select>
 			</label>
 			*/
-	echo '</p>
+	echo '
+		</p>
 		<p class="form_buttons">
 			<input type="submit" value="Poster" accesskey="P" title="Poster la nouvelle (Alt + P)"/>
 			<input type="reset" accesskey="x" title="Vider le formulaire (Alt + X)"/>
-			<a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Annuler" /></a>
+			<a href="?page=', strtolower (PAGE), '"
+			   onclick="window.location.replace(this.href)">
+				<input type="button" value="Annuler" />
+			</a>
 		</p>
 	</form>';
 
@@ -257,14 +263,19 @@ if (User::get_level () <= NEWSLEVEL) {
 				                    $_POST['contenu'],
 				                    $_POST['auteur']))
 				{
-					echo '<p>« ', $titre, ' » mis à jour avec succès</p>.
-							<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+					echo '<p>« ', $titre, ' » mis à jour avec succès</p>.';
 				}
 				else
 				{
-					echo '<p>Erreur lors de la mise à jour de « ', $titre, ' »
-								<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+					echo '<p>Erreur lors de la mise à jour de « ', $titre, ' ».</p>';
 				}
+				echo '
+				<p>
+					<a href="?page=', strtolower (PAGE), '"
+					   onclick="window.location.replace(this.href)">
+						<input type="button" value="Retour" />
+					</a>
+				</p>';
 			}
 			else 
 			{
@@ -276,13 +287,25 @@ if (User::get_level () <= NEWSLEVEL) {
 					                    $message['id']);
 				}
 				else
-					echo '<p>Erreur : message inéxistant.</p>
-								<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+					echo '
+					<p>Erreur&bsnp;: message inéxistant.</p>
+					<p>
+						<a href="?page=', strtolower (PAGE), '"
+						   onclick="window.location.replace(this.href)">
+							<input type="button" value="Retour" />
+						</a>
+					</p>';
 			}
 		}
 		else {
-			echo '<p>Erreur : pas d\'ID</p>
-					<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+			echo '
+			<p>Erreur&nbsp;: pas d\'ID</p>
+			<p>
+				<a href="?page=', strtolower (PAGE), '"
+				   onclick="window.location.replace(this.href)">
+					<input type="button" value="Retour" />
+				</a>
+			</p>';
 		}
 	}
 	else if (urldecode ($_GET['action']) == 'rm')
@@ -322,26 +345,42 @@ if (User::get_level () <= NEWSLEVEL) {
 				}
 				else
 				{
-					echo '<p>voulez-vous vraiment buter tout « ', $titre, ' » ?</p>
-							<form method="post" action="?page=', strtolower (PAGE), '&amp;action=rm&amp;id=', $_GET['id'], '">
-								<p>
-									<input type="hidden" name="rm" value="rm" />
-									<input type="submit" value="Supprimer" />
-									<a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Annuler" /></a>
-								</p>
-							</form>';
+					echo '
+					<p>voulez-vous vraiment buter tout « ', $titre, ' » ?</p>
+					<form method="post" action="?page=', strtolower (PAGE), '&amp;action=rm&amp;id=', $_GET['id'], '">
+						<p>
+							<input type="hidden" name="rm" value="rm" />
+							<input type="submit" value="Supprimer" />
+							<a href="?page=', strtolower (PAGE), '"
+								 onclick="window.location.replace(this.href)">
+								<input type="button" value="Annuler" />
+							</a>
+						</p>
+					</form>';
 				}
 			}
 			else
 			{
-				echo '<p>Erreur : ID inéxistante.</p>
-						<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+				echo '
+				<p>Erreur : ID inéxistante.</p>
+				<p>
+					<a href="?page=', strtolower (PAGE), '"
+					   onclick="window.location.replace(this.href)">
+						<input type="button" value="Retour" />
+					</a>
+				</p>';
 			}
 		}
 		else
 		{
-			echo '<p>Erreur : pas d\'ID</p>
-					<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+			echo '
+			<p>Erreur : pas d\'ID</p>
+			<p>
+				<a href="?page=', strtolower (PAGE), '"
+				   onclick="window.location.replace(this.href)">
+					<input type="button" value="Retour" />
+				</a>
+			</p>';
 		}
 	}
 	else if (urldecode ($_GET['action']) == 'new')
@@ -354,13 +393,25 @@ if (User::get_level () <= NEWSLEVEL) {
 			                 $_POST['contenu'],
 			                 $_POST['auteur']))
 			{
-				echo '<p>« ', $titre, ' » créé avec succès.</p>
-						<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+				echo '
+				<p>« ', $titre, ' » créé avec succès.</p>
+				<p>
+					<a href="?page=', strtolower (PAGE), '"
+					   onclick="window.location.replace(this.href)">
+						<input type="button" value="Retour" />
+					</a>
+				</p>';
 			}
 			else
 			{
-				echo '<p>Erreur lors de la création de « ', $titre, ' »</p>
-						<p><a href="?page=', strtolower (PAGE), '" onclick="window.location.replace(this.href)"><input type="button" value="Retour" /></a></p>';
+				echo '
+				<p>Erreur lors de la création de « ', $titre, ' »</p>
+				<p>
+					<a href="?page=', strtolower (PAGE), '"
+					   onclick="window.location.replace(this.href)">
+						<input type="button" value="Retour" />
+					</a>
+				</p>';
 			}
 		}
 		else
@@ -370,10 +421,13 @@ if (User::get_level () <= NEWSLEVEL) {
 	}
 	else
 	{
-		echo '<p><a href="?page=', strtolower (PAGE), '&amp;action=new" onclick="window.location.replace(this.href)">
-					<input type="button" value="Nouvelle nouvelle" />
-					</a>
-				</p>';
+		echo '
+		<p>
+			<a href="?page=', strtolower (PAGE), '&amp;action=new"
+			   onclick="window.location.replace(this.href)">
+				<input type="button" value="Nouvelle nouvelle" />
+			</a>
+		</p>';
 		print_all_messages ();
 	}
 }
