@@ -246,7 +246,7 @@ function media_get_default_thumbnail_from_uri (&$uri)
 	}
 }
 
-function __media_is_default_thumbnail (string &$uri)
+function __media_is_default_thumbnail (&$uri)
 {
 	return ($uri == MEDIA_UNKNOWN_THUMBNAIL_URI ||
 	        $uri == MEDIA_COMPRESSED_THUMBNAIL_URI);
