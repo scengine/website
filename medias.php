@@ -97,6 +97,40 @@ function print_movie (array &$media)
 	</object>';
 }
 
+/*
+ * Fallback function that try to display a media by its extension
+ */
+function print_media_from_ext (array &$media)
+{
+	switch (strtolower (filename_getext ($media['uri'])))
+	{
+		case 'png':
+		case 'jpg':
+		case 'jpeg':
+			print_screenshot ($media);
+			break;
+		
+		case 'ogm':
+		case 'ogg':
+		case 'ogv':
+		case 'mkv':
+		case 'flv':
+		case 'mpg':
+		case 'mpeg':
+		case 'mp4':
+		case 'mpeg4':
+		case 'm4v':
+		case 'avi':
+		case 'mov':
+		case 'wmv':
+			print_movie ($media);
+			break;
+		
+		default:
+			echo 'Not implemented yed';
+	}
+}
+
 function print_media ($media_id)
 {
 	$media = media_get_by_id ($media_id);
@@ -118,6 +152,8 @@ function print_media ($media_id)
 			case MediaType::MOVIE:
 				print_movie ($media);
 				break;
+			default:
+				print_media_from_ext ($media);
 		}
 		
 		echo '
