@@ -135,63 +135,15 @@ function print_head_adds (&$adds) {
 			</div>
 			
 			<div class="lsmenu">
-				<h3>Image aléatiore</h3>
+				<h3>Image aléatoire</h3>
 				<?php
 				random_screenshot_print ();
 				?>
 			</div>
 			
-			<!-- liste de moteurs 3D libres -->
-			<div class="lsmenu">
-				<h3>Moteurs 3D libres</h3>
-				<ul>
-					<!-- <li><span class="b"><a href="http://nxengine.developpez.com">nxEngine</a></span>&nbsp;: moteur full shaders en C# utilisant DirectX, bientôt peut-être OpenGL.</li> -->
-					<li><span class="b"><a href="http://www.ogre3d.org">Ogre</a></span>&nbsp;: moteur en C++ mature compatible OpenGL et DirectX.</li>
-					<li><span class="b"><a href="http://irrlicht.sourceforge.net/">Irrlicht</a></span>&nbsp;: codé en C++, ce moteur est également compatible avec OpenGL et DirectX.</li>
-					<li><span class="b"><a href="http://www.crystalspace3d.org/">Crystal Space</a></span>&nbsp;: ce moteur 3D, sous licence LGPL, fonctionne uniquement avec OpenGL.</li>
-				</ul>
-			</div>
-			
-			<!-- partenaires -->
-			<div class="lsmenu">
-				<h3>SCEngine avec...</h3>
-				<ul class="nolist">
-					<li><img src="images/icons/gnu.png" alt="-" title="GNU"/>
-						&nbsp;<a href="http://www.gnu.org/">GNU</a></li>
-					<li><img src="images/icons/debian.png" alt="-" title="Debian"/>
-						&nbsp;<a href="http://www.debian.org">Debian GNU/Linux</a></li>
-					<!-- <li><img src="images/icons/ubuntu.png" alt="-" title="Ubuntu"/>
-						&nbsp;<a href="http://www.ubuntu.com">Ubuntu GNU/Linux</a></li> -->
-					<li><img src="images/icons/ogl.png" alt="-" title="OpenGL"/>
-						&nbsp;<a href="http://opengl.org">OpenGL</a></li>
-					<li><img src="images/icons/devil.png" alt="-" title="DevIL"/>
-						&nbsp;<a href="http://openil.sourceforge.net/">DevIL</a></li>
-					<li><img src="images/icons/blender.png" alt="-" title="Blender"/>
-						&nbsp;<a href="http://www.blender.org/">Blender</a></li>
-					<li><img src="images/icons/php.png" alt="-" title="PHP"/>
-						&nbsp;<a href="http://www.php.net/">PHP</a></li>
-					<!-- <li><img src="images/icons/gimp.png" alt="-" title="Gimp"/>
-						&nbsp;<a href="http://www.gimp.org/">Gimp</a></li> -->
-				</ul>
-				<p class="center">
-					<a href="http://wikimediafoundation.org/wiki/Donate/fr" class="noicon">
-						<img alt="Wikipedia Affiliate Button"
-							src="http://upload.wikimedia.org/wikipedia/foundation/c/ca/2008_fundraiser_micro_button-fr.png" />
-					</a>
-				</p>
-				<p class="center">
-					<a href="http://stopsoftwarepatents.eu/481000979610/" class="noicon"
-						 title="Non aux brevets logiciel">
-						<img src="http://stopsoftwarepatents.eu/banner/481000979610/ssp-66-15.gif"
-							   alt="StopSoftwarePatents.eu Petition Banner" />
-					</a> 
-				</p>
-			</div>
-				
 			<?php
 				if (User::get_logged ()) {
 			?>
-				
 			<div class="lsmenu">
 				<h3>Administration</h3>
 				<p>
@@ -250,6 +202,53 @@ function print_head_adds (&$adds) {
 				unset ($compteur);
 				
 			?>
+			
+			<!-- liste de moteurs 3D libres -->
+			<div class="lsmenu">
+				<h3>Moteurs 3D libres</h3>
+				<ul>
+					<!-- <li><span class="b"><a href="http://nxengine.developpez.com">nxEngine</a></span>&nbsp;: moteur full shaders en C# utilisant DirectX, bientôt peut-être OpenGL.</li> -->
+					<li><span class="b"><a href="http://www.ogre3d.org">Ogre</a></span>&nbsp;: moteur en C++ mature compatible OpenGL et DirectX.</li>
+					<li><span class="b"><a href="http://irrlicht.sourceforge.net/">Irrlicht</a></span>&nbsp;: codé en C++, ce moteur est également compatible avec OpenGL et DirectX.</li>
+					<li><span class="b"><a href="http://www.crystalspace3d.org/">Crystal Space</a></span>&nbsp;: ce moteur 3D, sous licence LGPL, fonctionne uniquement avec OpenGL.</li>
+				</ul>
+			</div>
+			
+			<!-- partenaires -->
+			<div class="lsmenu">
+				<h3>SCEngine avec...</h3>
+				<ul class="nolist">
+					<li><img src="images/icons/gnu.png" alt="-" title="GNU"/>
+						&nbsp;<a href="http://www.gnu.org/">GNU</a></li>
+					<li><img src="images/icons/debian.png" alt="-" title="Debian"/>
+						&nbsp;<a href="http://www.debian.org">Debian GNU/Linux</a></li>
+					<!-- <li><img src="images/icons/ubuntu.png" alt="-" title="Ubuntu"/>
+						&nbsp;<a href="http://www.ubuntu.com">Ubuntu GNU/Linux</a></li> -->
+					<li><img src="images/icons/ogl.png" alt="-" title="OpenGL"/>
+						&nbsp;<a href="http://opengl.org">OpenGL</a></li>
+					<li><img src="images/icons/devil.png" alt="-" title="DevIL"/>
+						&nbsp;<a href="http://openil.sourceforge.net/">DevIL</a></li>
+					<li><img src="images/icons/blender.png" alt="-" title="Blender"/>
+						&nbsp;<a href="http://www.blender.org/">Blender</a></li>
+					<li><img src="images/icons/php.png" alt="-" title="PHP"/>
+						&nbsp;<a href="http://www.php.net/">PHP</a></li>
+					<!-- <li><img src="images/icons/gimp.png" alt="-" title="Gimp"/>
+						&nbsp;<a href="http://www.gimp.org/">Gimp</a></li> -->
+				</ul>
+				<p class="center">
+					<a href="http://wikimediafoundation.org/wiki/Donate/fr" class="noicon">
+						<img alt="Wikipedia Affiliate Button"
+							src="http://upload.wikimedia.org/wikipedia/foundation/c/ca/2008_fundraiser_micro_button-fr.png" />
+					</a>
+				</p>
+				<p class="center">
+					<a href="http://stopsoftwarepatents.eu/481000979610/" class="noicon"
+						 title="Non aux brevets logiciel">
+						<img src="http://stopsoftwarepatents.eu/banner/481000979610/ssp-66-15.gif"
+							   alt="StopSoftwarePatents.eu Petition Banner" />
+					</a> 
+				</p>
+			</div>
 		</div>
 
 		<div id="rmenu">

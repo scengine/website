@@ -404,7 +404,8 @@ border: 4px double /*#83C9FC*/ black;
 background-color: #eee;
 }
 
-.new .admin {
+.new .admin,
+.showmediacontainer .admin {
 font-size: 90%;
 float: right;
 }

@@ -154,7 +154,16 @@ function print_media ($media_id)
 		
 		echo '
 		<h3 id="watch">',$media['desc'],'</h3>
-		<div class="showmediacontainer">
+		<div class="showmediacontainer">';
+		if (User::get_logged ())
+		{
+			echo '
+			<div class="admin">
+				[<a href="admin.php?page=medias&amp;action=edit&amp;media=',$media['id'],'">Éditer</a>]
+				[<a href="admin.php?page=medias&amp;action=rm&amp;media=',$media['id'],'">Supprimer</a>]
+			</div>';
+		}
+		echo '
 			<div class="media">';
 		
 		switch ($media['type'])
@@ -460,9 +469,9 @@ else if (isset ($_GET['showtag']))
 						?>
 						</fieldset>
 					</div>
-					<p class="form_buttons">
+					<div class="form_buttons">
 						<input type="submit" value="Filtrer" />
-					</p>
+					</div>
 				</fieldset>
 				<script type="text/javascript">
 					<!--
@@ -475,6 +484,13 @@ else if (isset ($_GET['showtag']))
 
 	<div id="content">
 		<?php
+		if (User::get_logged ())
+		{
+			echo '
+			<p class="admin">
+				[<a href="admin.php?page=medias&amp;action=new">Ajouter un média</a>]
+			</p>';
+		}
 		
 		/* watch a media if asked */
 		if (isset ($_GET['watch']) && settype ($_GET['watch'], integer))
