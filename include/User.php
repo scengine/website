@@ -33,6 +33,7 @@ abstract class User
 {
 	private static $time;
 	private static $logged = 0;
+	private static $level = null;
 
 	public static function login($time=COOKIE_EXPIRE) {
 		self::$time = $time;
@@ -63,7 +64,6 @@ abstract class User
 			unset ($db);
 		}
 		
-		
 		return self::get_logged ();
 	}
 
@@ -72,7 +72,6 @@ abstract class User
 		$db->select_table(USERS_TABLE);
 		$db->update('`logged`=0', '`username`=\''.$_SESSION['username'].'\'');
 		unset ($db);
-		
 		
 		setcookie ('username', false, time () - 3600);
 		setcookie ('password', false, time () - 3600);
@@ -89,7 +88,26 @@ abstract class User
 	}
 
 	public static function get_level() {
-		return $_COOKIE['level'];
+		/* search value only if not in cache */
+		if (self::$level === null)
+		{
+			if (isset ($_COOKIE['username'], $_COOKIE['password']))
+			{
+				$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+				$db->select_table (USERS_TABLE);
+				
+				$username = mysql_real_escape_string (self::get_name (), $db->get_link ());
+				$db->select ('`level`', '`username`=\''.$username.'\'');
+				$response = $db->fetch_response ();
+				self::$level = $response['level'];
+			}
+			else
+			{
+				/* return a big level for no rights */
+				self::$level = 512;
+			}
+		}
+		return self::$level;
 	}
 
 	public static function get_logged() {
