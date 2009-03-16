@@ -559,7 +559,7 @@ background-color: #f4f4f4;
 overflow: hidden;
 }
 .code_snippet textarea {
-font-size: 80%;
+font-size: 100%;
 width: 98%;
 }
 .code_snippet_box .code_snippet {

@@ -361,56 +361,147 @@ function media_print_code_snippets (array &$media)
 		</div>
 		Liste des extraits de codes pour lier ce média
 		
-		<div class="code_snippet">
-			Code BBanCode/DokuWiki pour insérer un lien avec vignette vers ce média&nbsp;:
-			<?php
-			echo
-				__media_print_code_snippet_textarea (
-					'[['.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch|{{'.
-					$tb_uri.'|'.$media['desc'].'}}]]'
-				);
-			?>
+		<div class="code_snippet_box" id="bb_spt_0<?php echo $n; ?>">
+			<div class="fleft">
+				<a href="#" id="bb_spt_0<?php echo $n; ?>_button"
+					 onclick="toggle_folding('bb_spt_0<?php echo $n; ?>_button', 'bb_spt_0<?php echo $n; ?>', true); return false;"
+					 title="Voir les codes pour ce média">
+					[-]
+				</a>
+			</div>
+			Avec une vignette
+			
+			<div class="code_snippet">
+				BBanCode/DokuWiki&nbsp;:
+				<?php
+				echo
+					__media_print_code_snippet_textarea (
+						'[['.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch|{{'.
+						$tb_uri.'|'.$media['desc'].'}}]]'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				BBCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'[url='.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch][img]'.
+						$tb_uri.'[/img][/url]'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				ZCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'<lien url="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'#watch"><image>'.$tb_uri.'</image></lien>'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				XHTML&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'<a href="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'#watch"><img src="'.$tb_uri.'" alt="'.$media['desc'].'" /></a>'
+					);
+				?>
+			</div>
 		</div>
-		<div class="code_snippet">
-			Code BBCode pour insérer un lien avec vignette vers ce média&nbsp;:
-			<?php
-				__media_print_code_snippet_textarea (
-					'[url='.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch][img]'.
-					$tb_uri.'[/img][/url]'
-				);
-			?>
+		
+		<div class="code_snippet_box" id="bb_spt_1<?php echo $n; ?>">
+			<div class="fleft">
+				<a href="#" id="bb_spt_1<?php echo $n; ?>_button"
+					 onclick="toggle_folding('bb_spt_1<?php echo $n; ?>_button', 'bb_spt_1<?php echo $n; ?>', true); return false;"
+					 title="Voir les codes pour ce média">
+					[-]
+				</a>
+			</div>
+			Directement
+			
+			<div class="code_snippet">
+				BBanCode/DokuWiki&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea ('[['.$uri.'|'.$media['desc'].']]');
+				?>
+			</div>
+			<div class="code_snippet">
+				BBCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea ('[url='.$uri.']'.$media['desc'].'[/url]');
+				?>
+			</div>
+			<div class="code_snippet">
+				ZCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea ('<lien url="'.$uri.'">'.$media['desc'].'</lien>');
+				?>
+			</div>
+			<div class="code_snippet">
+				XHTML&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea ('<a href="'.$uri.'">'.$media['desc'].'</a>');
+				?>
+			</div>
 		</div>
-		<div class="code_snippet">
-			Code HTML pour insrer un lien avec vignette vers ce média&nbsp;:
-			<?php
-				__media_print_code_snippet_textarea (
-					'<a href="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
-					'#watch"><img src="'.$tb_uri.'" alt="'.$media['desc'].'" /></a>'
-				);
-			?>
+		
+		<div class="code_snippet_box" id="bb_spt_2<?php echo $n; ?>">
+			<div class="fleft">
+				<a href="#" id="bb_spt_2<?php echo $n; ?>_button"
+					 onclick="toggle_folding('bb_spt_2<?php echo $n; ?>_button', 'bb_spt_2<?php echo $n; ?>', true); return false;"
+					 title="Voir les codes pour ce média">
+					[-]
+				</a>
+			</div>
+			En affichant le média
+			
+			<div class="code_snippet">
+				BBanCode/DokuWiki&nbsp;:
+				<?php
+				echo
+					__media_print_code_snippet_textarea (
+						'[['.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch|{{'.
+						$uri.'|'.$media['desc'].'}}]]'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				BBCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'[url='.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch][img]'.
+						$uri.'[/img][/url]'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				ZCode&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'<lien url="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'#watch"><image>'.$uri.'</image></lien>'
+					);
+				?>
+			</div>
+			<div class="code_snippet">
+				XHTML&nbsp;:
+				<?php
+					__media_print_code_snippet_textarea (
+						'<a href="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'#watch"><img src="'.$uri.'" alt="'.$media['desc'].'" /></a>'
+					);
+				?>
+			</div>
 		</div>
-		<div class="code_snippet">
-			Code BBanCode/DokuWiki pour insérer un lien direct vers ce média&nbsp;:
-			<?php
-				__media_print_code_snippet_textarea ('[['.$uri.'|'.$media['desc'].']]');
-			?>
-		</div>
-		<div class="code_snippet">
-			Code BBCode pour insérer un lien direct vers ce média&nbsp;:
-			<?php
-				__media_print_code_snippet_textarea ('[url='.$uri.']'.$media['desc'].'[/url]');
-			?>
-		</div>
-		<div class="code_snippet">
-			Code HTML pour insrer un lien direct vers ce média&nbsp;:
-			<?php
-				__media_print_code_snippet_textarea ('<a href="'.$uri.'">'.$media['desc'].'</a>');
-			?>
-		</div>
+		
 	</div>
 	<script type="text/javascript">
 		<!--
-		toggle_folding ('bb_spt_<?php echo $n; ?>_button', 'bb_spt_<?php echo $n; ?>');
+		//toggle_folding ('bb_spt_<?php echo $n; ?>_button', 'bb_spt_<?php echo $n; ?>');
+		toggle_folding ('bb_spt_0<?php echo $n; ?>_button', 'bb_spt_0<?php echo $n; ?>');
+		toggle_folding ('bb_spt_1<?php echo $n; ?>_button', 'bb_spt_1<?php echo $n; ?>');
+		toggle_folding ('bb_spt_2<?php echo $n; ?>_button', 'bb_spt_2<?php echo $n; ?>');
 		//-->
 	</script>
 	<?php
