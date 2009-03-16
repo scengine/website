@@ -26,6 +26,7 @@
 
 require_once ('defines.php');
 require_once ('include/engine_news.php');
+require_once ('include/random_screenshot.php');
 require_once ('include/User.php');
 require_once ('include/Compteur.php');
 require_once ('include/string.php');
@@ -131,6 +132,13 @@ function print_head_adds (&$adds) {
 				<p>
 					 La version <span class="b"><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></span> est disponible !
 				</p>
+			</div>
+			
+			<div class="lsmenu">
+				<h3>Image aléatiore</h3>
+				<?php
+				random_screenshot_print ();
+				?>
 			</div>
 			
 			<!-- liste de moteurs 3D libres -->

@@ -199,6 +199,31 @@ class MyDB
 		return $n;
 	}
 	
+	public function random_row ($column, $where='')
+	{
+		/* implementation found in the internet, supposed to be fatser than the
+		 * naive one on large tables.
+		 * But it seems to have a realtivly bad alea when restricting selection */
+		/*
+		$this->select ('max('.$column.') AS max_id', $where);
+		$max_row = $this->fetch_response ();
+		$random = mt_rand (0, $max_row['max_id']);
+		
+		if ($where != '')
+			$where = ' AND '.$where;
+		
+		if ($this->select ('*', $column.' >= '.$random.$where, $column, 'ASC', 1) == false)
+			return $this->select ('*', $column.' < '.$random.$where, $column, 'DESC', 1);
+		else
+			return true;
+		*/
+		/* naive method */
+		if ($where != '')
+			$where = 'WHERE '.$where;
+		
+		return $this->query ('SELECT * FROM '.$this->table.' '.$where.' ORDER BY rand() LIMIT 1');
+	}
+	
 	public function get_link ()
 	{
 		return $this->link;
