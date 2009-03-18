@@ -203,7 +203,11 @@ class MyDB
 	{
 		/* implementation found in the internet, supposed to be fatser than the
 		 * naive one on large tables.
-		 * But it seems to have a realtivly bad alea when restricting selection */
+		 * But it has a bad alea if values in \p $column are not equally separated,
+		 * e.g. if values are [1,2,5,7,42,43], 42 has the better chance to be
+		 * selected (with (42-7) / 43 ~= 81.4% of chances), then 5 (~6.98%),
+		 * then 7 (~4.66%) and finally 1, 2 and 43 (~2.33%).
+		 */
 		/*
 		$this->select ('max('.$column.') AS max_id', $where);
 		$max_row = $this->fetch_response ();

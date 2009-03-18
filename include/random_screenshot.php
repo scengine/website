@@ -38,7 +38,7 @@ function random_screenshot_print ()
 		media_unescape_db_array ($media);
 		
 		echo '
-		<div class="media">
+		<div class="media center">
 			<a href="medias.php?watch=',$media['id'],'&amp;noreturn=1">
 				<img src="',MEDIA_DIR_R,'/',$media['tb_uri'],'" alt="',$media['desc'],'"
 					style="max-width: 100%;" />

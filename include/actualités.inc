@@ -4,6 +4,7 @@ require_once ('MyDB.php');
 require_once ('BCode.php');
 require_once ('User.php');
 require_once ('defines.php');
+require_once ('feeds.php');
 
 
 /* DEBUG : */
@@ -23,14 +24,16 @@ function add_message ($title, $source, $author) {
 	$author = addslashes ($author);
 	
 	$rv = True;
-	$date = mktime ();
+	$date = time ();
 
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
-	$rv = $db->insert ("'', '$date', '$title', '$content', '$source', '$author'");
+	$rv = $db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'");
 
 	unset ($db);
-
+	
+	feed_update_news ();
+	
 	return $rv;
 }
 /* this function update an existing message */
@@ -44,14 +47,18 @@ function update_message ($id, $title, $source, $author) {
 	$source = addslashes ($source);
 	$content = addslashes ($content);
 	$author = addslashes ($author);
+	$mdate = time ();
+	$mauthor = addslashes (User::get_name ());
 	
 	$rv = True;
 
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
-	$rv = $db->update ("`titre`='$title', `contenu`='$content', `source`='$source', `auteur`='$author'", "`id`=$id");
+	$rv = $db->update ("`mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `auteur`='$author', `mauthor`='$mauthor'", "`id`=$id");
 
 	unset ($db);
+	
+	feed_update_news ();
 
 	return $rv;
 }
@@ -65,11 +72,13 @@ function remove_message ($id) {
 	$rv = $db->delete ("`id`='$id'");
 
 	unset ($db);
+	
+	feed_update_news ();
 
 	return $rv;
 }
 
-/* this function display a table contening or not values. */
+/* this function display a table containg or not values. */
 function display_table ($title='', $source='', $author='', $action='new', $id='') {
 	if (empty ($author))
 		$author = User::get_name ();
@@ -263,7 +272,7 @@ if (User::get_level () <= NEWSLEVEL) {
 				                    $_POST['contenu'],
 				                    $_POST['auteur']))
 				{
-					echo '<p>« ', $titre, ' » mis à jour avec succès</p>.';
+					echo '<p>« ', $titre, ' » mis à jour avec succès.</p>';
 				}
 				else
 				{
@@ -419,14 +428,46 @@ if (User::get_level () <= NEWSLEVEL) {
 			display_table_new ();
 		}
 	}
+	else if (urldecode ($_GET['action']) == 'update_feeds')
+	{
+		if (feed_update_news () && feed_update_devel ())
+		{
+			echo '
+			<p>Flus mis à jour avec succès</p>
+			<p>
+				<a href="?page=', strtolower (PAGE), '"
+					 onclick="window.location.replace(this.href)">
+					<input type="button" value="Retour" />
+				</a>
+			</p>';
+		}
+		else
+		{
+			echo '
+			<p>Erreur lors de la mise à jour des flux</p>
+			<p>
+				<a href="?page=', strtolower (PAGE), '"
+					 onclick="window.location.replace(this.href)">
+					<input type="button" value="Retour" />
+				</a>
+			</p>';
+		}
+	}
 	else
 	{
 		echo '
 		<p>
 			<a href="?page=', strtolower (PAGE), '&amp;action=new"
-			   onclick="window.location.replace(this.href)">
-				<input type="button" value="Nouvelle nouvelle" />
-			</a>
+			   onclick="window.location.replace(this.href)"
+			   title="Créer une nouvelle actualité">',
+				'<input type="button" value="Nouvelle nouvelle" />',
+			'</a>
+			
+			<a href="?page=', strtolower (PAGE), '&amp;action=update_feeds"
+			   onclick="window.location.replace(this.href)"
+			   title="Forcer la mise à jour des fulx Atom et RSS pour les actualités et les actualités du développement">',
+				'<input type="button" value="Forcer la mise à jour des flux" />',
+			'</a>
 		</p>';
 		print_all_messages ();
 	}

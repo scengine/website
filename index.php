@@ -82,13 +82,27 @@ function escape_html_quotes (&$str)
 
 function print_news ($start=0) {
 	$news = get_news ($start, NEWS_OFFSET);
-
+	
 	// pour permetre aux admins d'ajouter une news
 	if (User::get_logged () &&
 		User::get_level () <= NEWSLEVEL) {
-		echo '<p>[<a href="admin.php?page=actualités&amp;action=new">Ajouter une news</a>]</p>';
+		echo '<div class="fleft">
+			[<a href="admin.php?page=actualités&amp;action=new">Ajouter une news</a>]
+		</div>';
 	}
-
+	
+	echo '
+	<div class="links right">
+		Flux
+			<a href="',NEWS_ATOM_FEED_FILE,'" title="S\'abonner au flux Atom">',
+				'Atom&nbsp;<img src="styles/default/feed-atom.png" alt="Flux Atom" />',
+			'</a>
+		/
+		<a href="',NEWS_RSS_FEED_FILE,'" title="S\'abonner au flux RSS">',
+			'RSS&nbsp;<img src="styles/default/feed-rss.png" alt="Flux RSS" />',
+		'</a>
+	</div>';
+	
 	foreach ($news as $new) {
 		echo '<div class="new">';
 		
@@ -117,7 +131,7 @@ function print_news ($start=0) {
 							<br />
 							<label>Contenu&nbsp;:<br />
 							<textarea name="content" cols="24" rows="16" id="tn', $new['id'], '">',
-								stripslashes (BCode::unparse ($new['source'])),
+								htmlspecialchars (stripslashes (BCode::unparse ($new['source'])), ENT_COMPAT, 'UTF-8'),
 							'</textarea>
 							</label>
 							<br />
@@ -133,9 +147,13 @@ function print_news ($start=0) {
 		echo '<div class="author"><p>Par <span class="b">',
 			stripslashes ($new['auteur']),
 			'</span> le ',
-			date ('d/m/Y à H:i',
-			$new['date']),
-			'</p></div>';
+			date ('d/m/Y à H:i', $new['date']);
+		if ($new['date'] < $new['mdate'])
+		{
+			echo ' &ndash; édité par <span class="b">',stripslashes ($new['mauthor']),
+				'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
+		}
+		echo '</p></div>';
 			//<p>';
 		echo stripslashes ($new['contenu']);
 		echo //'</p>

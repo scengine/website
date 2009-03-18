@@ -63,3 +63,9 @@ define (MEDIA_DIR_W, './medias');
  * It is not really needed but provides nice features.
  * This path must be a complete prefix, with trailing slash, or be empty. */
 define (BSE_BASE_URL, 'http://www.mysite.com/');
+
+/* Feeds locations for both R & W */
+define (NEWS_ATOM_FEED_FILE,  'feeds/news.atom');
+define (NEWS_RSS_FEED_FILE,   'feeds/news.rss');
+define (DEVEL_ATOM_FEED_FILE, 'feeds/devel.atom');
+define (DEVEL_RSS_FEED_FILE,  'feeds/devel.rss');

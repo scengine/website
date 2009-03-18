@@ -111,6 +111,17 @@ function print_engine_news ()
 	
 	$news = get_engine_news ($start_news, ENGINE_NEWS_OFFSET);
 	
+	echo '
+	<div class="links right">
+		Flux
+			<a href="',DEVEL_ATOM_FEED_FILE,'" title="S\'abonner au flux Atom">',
+				'Atom&nbsp;<img src="styles/default/feed-atom.png" alt="Flux Atom" />',
+			'</a>
+		/
+		<a href="',DEVEL_RSS_FEED_FILE,'" title="S\'abonner au flux RSS">',
+			'RSS&nbsp;<img src="styles/default/feed-rss.png" alt="Flux RSS" />',
+		'</a>
+	</div>';
 	
 	if ($user_logged &&
 	    //User::get_name ()   == 'Yno')
@@ -148,7 +159,7 @@ function print_engine_news ()
 	
 	foreach ($news as $new)
 	{
-		echo '<h4>', date ('d/m/Y à H\hi', $new['date']), '</h4>';
+		echo '<h4 id="m', $new['id'], '">', date ('d/m/Y à H\hi', $new['date']), '</h4>';
 		
 		if ($user_logged &&
 		    //User::get_name ()   == 'Yno')
@@ -163,7 +174,7 @@ function print_engine_news ()
 				</div>';
 		}
 		
-		echo '<p id="m', $new['id'], '">', stripslashes ($new['content']), '</p>';
+		echo '<p>', stripslashes ($new['content']), '</p>';
 		
 		if ($user_logged &&
 			 //User::get_name ()   == 'Yno')

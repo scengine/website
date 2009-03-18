@@ -405,7 +405,14 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 					</select>
 				</td>
 				<td>
-					<label><?php echo strshortcut (MEDIA_DIR_W, 25); ?>
+					<label>
+					<?php
+						$display_dest = strshortcut (MEDIA_DIR_W, 25);
+						if (! empty ($display_dest))
+							$display_dest .= '/';
+						
+						echo $display_dest;
+						?>
 						<input class="nosize" type="text" id="manual_entry"
 									 name="manual_entry" value="/" />
 					</label>

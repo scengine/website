@@ -439,8 +439,7 @@ else if (isset ($_GET['showtag']))
 									<input type="checkbox" name="type[]" value="',$type,'" ';
 								if ($types !== null && in_array ($type, $types))
 									echo 'checked="checked" ';
-								echo '
-									/>',
+								echo '/>',
 									MediaType::to_string ($type),'
 								</label>';
 							}
@@ -487,9 +486,9 @@ else if (isset ($_GET['showtag']))
 		if (User::get_logged ())
 		{
 			echo '
-			<p class="admin">
+			<div class="admin">
 				[<a href="admin.php?page=medias&amp;action=new">Ajouter un média</a>]
-			</p>';
+			</div>';
 		}
 		
 		/* watch a media if asked */

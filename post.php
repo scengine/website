@@ -32,6 +32,7 @@ require_once ('include/MyDB.php');
 require_once ('include/BCode.php');
 require_once ('include/string.php');
 require_once ('include/TypedDialog.class.php');
+require_once ('include/feeds.php');
 
 
 
@@ -100,6 +101,8 @@ abstract class Devel {
 			//Msg::error ('Aucune information n\'a été trouvée pour poster le message&nbsp;!');
 			$dialog->add_error_message ('Aucune information n\'a été trouvée pour poster le message&nbsp;!');
 		}
+		
+		feed_update_devel ();
 	}
 
 	public static function remove ($id) {
@@ -124,6 +127,8 @@ abstract class Devel {
 			//Msg::error ('Pas d\'ID spécifiée.');
 			$dialog->add_error_message ('Pas d\'ID spécifiée.');
 		}
+		
+		feed_update_devel ();
 	}
 
 	public static function edit ($id, $date, $content) {
@@ -150,6 +155,8 @@ abstract class Devel {
 			//Msg::error ('Données erronées.');
 			$dialog->add_error_message ('Données erronées.');
 		}
+		
+		feed_update_devel ();
 	}
 
 	public static function get_table() {
@@ -177,7 +184,7 @@ abstract class News {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->insert ("'', '$date', '$title', '$content', '$source', '$author'")) {
+			if ($db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'")) {
 				$dialog->add_info_message ('News postée avec succès.');
 			}
 			else {
@@ -188,7 +195,9 @@ abstract class News {
 		}
 		else
 			$dialog->add_error_message ('Aucune information n\'a été trouvée pour poster la news&nbsp;!');
-		}
+		
+		feed_update_news ();
+	}
 
 	public static function remove ($id) {
 		global $dialog;
@@ -209,6 +218,8 @@ abstract class News {
 		else {
 			$dialog->add_error_message ('Pas d\'ID spécifiée.');
 		}
+		
+		feed_update_news ();
 	}
 
 	public static function edit ($id, $date, $title, $content) {
@@ -220,11 +231,13 @@ abstract class News {
 		
 		if (!empty ($id) && !empty ($date) && !empty ($title) && !empty ($content)) {
 //			$content = parse ($content);
+			$mdate = time ();
+			$mauthor = addslashes (User::get_name ());
 			
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->update ("`date`='$date', `titre`='$title', `contenu`='$content', `source`='$source'", "`id`=$id"))
+			if ($db->update ("`date`='$date', `mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id"))
 				$dialog->add_info_message  ('News éditée avec succès.');
 			else
 				$dialog->add_error_message  ('Erreur lors de l\'édition de la news.');
@@ -233,6 +246,8 @@ abstract class News {
 		}
 		else
 			$dialog->add_error_message  ('Les données puxxent !!!');
+		
+		feed_update_news ();
 	}
 
 	public static function get_table() {
