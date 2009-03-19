@@ -323,7 +323,7 @@ margin-top: -1px;
 }
 
 
-#body {
+#body, #footerbox {
 margin-left: 16%;
 margin-right: 16%;
 }
@@ -424,11 +424,6 @@ margin: 5px -6px 5px -4px;
 padding: 5px;
 }
 
-
-#footerbox {
-margin-left: 17%;
-margin-right: 15%;
-}
 
 #footer {
 text-align: justify;
