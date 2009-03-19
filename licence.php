@@ -2,7 +2,7 @@
 /* LICENSE
  * 
  * BanSE - a site base (designed to be the SCEngine website)
- * Copyright (C) 2007-2009 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ * Copyright (C) 2007-2009 Colomban "Ban" Wendling <ban@herbesfolles.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
