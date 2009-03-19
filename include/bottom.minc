@@ -1,11 +1,18 @@
+<?php
+
+require_once ('include/defines.php');
+
+?>
 		</div>
 		
 		<div id="footerbox">
 			<div id="footer">
 				<p><a href="http://validator.w3.org/check?uri=referer">xHTML 1.0</a></p>
 				<p>
-					BanSE, Copyright © 2007-2009 Colomban Wendling &lt;<span>ban</span>[at]<span>herbesfolles</span>[dot]<span>org</span>&gt;<br />
-					This whole site is licencied under the GNU GPL v3 or later. See <a href="http://www.gnu.org/licenses/gpl.txt">license</a> for more details.
+					<a href="<?php echo BSE_TAR_FILE; ?>">BanSE</a>,
+					Copyright © 2007-2009 Colomban Wendling &lt;<span>ban</span>[at]<span>herbesfolles</span>[dot]<span>org</span>&gt;<br />
+					This whole site is licencied under the GNU GPL v3 or later.
+					See <a href="http://www.gnu.org/licenses/gpl.txt">license</a> for more details.
 				</p>
 			</div>
 		</div>

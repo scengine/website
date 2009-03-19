@@ -64,6 +64,11 @@ define (MEDIA_DIR_W, './medias');
  * This path must be a complete prefix, with trailing slash, or be empty. */
 define (BSE_BASE_URL, 'http://www.mysite.com/');
 
+/* Link to the BSE archive you use (or the latest, as you want). Please hos a
+ * copy in your download repository since it has not official website.
+ */
+define (BSE_TAR_FILE, 'http://www.mysite.com/downloads/bse.tar.gz');
+
 /* Feeds locations for both R & W */
 define (NEWS_ATOM_FEED_FILE,  'feeds/news.atom');
 define (NEWS_RSS_FEED_FILE,   'feeds/news.rss');
