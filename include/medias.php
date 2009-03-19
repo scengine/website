@@ -147,7 +147,14 @@ function media_get_by_id ($media_id)
 	$db->select ('*', '`id`=\''.$media_id.'\'');
 	$media = $db->fetch_response ();
 	if ($media !== false)
+	{
+		/* FIXME: would be cool in a certain way but needs some work to compatibilize callers */
+		/*
+		$media['tags'] = split (' ', $media['tags']);
+		sort ($media['tags']);
+		*/
 		media_unescape_db_array ($media);
+	}
 	unset ($db);
 	return $media;
 }
@@ -287,7 +294,7 @@ function media_remove ($id, $rm_files=true)
  *          is an array of medias matching the tag.
  *          Else, if \p bytags is not true, the first level array has only one
  *          key that is 0 for compatibility with the tagged array.
- *          Each media is a standard media array.
+ *          Each media is a standard media array but with array for tags.
  *          The returned array is sorted in reverse order by default.
  * 
  * I.e:
@@ -308,10 +315,11 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
+		$resp['tags'] = split (' ', $resp['tags']);
+		sort ($resp['tags']);
 		if ($bytags)
 		{
-			$tags = split (' ', $resp['tags']);
-			foreach ($tags as $tag)
+			foreach ($resp['tags'] as $tag)
 			{
 				if ($seltags === null || in_array ($tag, $seltags))
 					$medias[$tag][] = $resp;

@@ -48,7 +48,7 @@ function get_size_string ($bytes, $round = 2, $mul = 1024)
 }
 
 /**
- * \brief Sorts a multidimantional array to one of his 2nd level keys.
+ * \brief Sorts a multidimantional array to one of its 2nd level keys.
  * \param $array_to_sort the multidimetional array to sort
  * \param $sort_key the key of the 2nd level that you want to be sorted by
  * \param $sort_direction the direction to sort. can be SORT_DESC or SORT_ASC.
@@ -61,8 +61,8 @@ function array_multisort_2nd (array &$array_to_sort, $sort_key, $sort_direction=
 	}
 	
 	$sort_arr = array ();
-	foreach ($array_to_sort as $id => $row) {
-		foreach ($row as $key=>$value) {
+	foreach ($array_to_sort as $id => &$row) {
+		foreach ($row as $key => &$value) {
 			$sort_arr[$key][$id] = $value;
 		}
 	}

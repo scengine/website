@@ -233,13 +233,18 @@ function print_media ($media_id)
 	</p>';
 }
 
-function print_tag_links ($type, $taglist)
+function print_tag_links ($type, $tags)
 {
 	$tagged = true;
 	
-	if (! empty ($taglist))
+	if (! is_array ($tags))
 	{
-		$tags = split (' ', $taglist);
+		$tags = split (' ', $tags);
+		sort ($tags);
+	}
+	
+	if (! empty ($tags[0]))
+	{
 		$n_tags = count ($tags);
 		for ($i = 0; $i < $n_tags; $i++)
 		{
@@ -268,7 +273,10 @@ function print_medias_internal (&$medias, $bytags=false)
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 		}
 		
-		array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
+		if ($bytags)
+			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
+		else
+			array_multisort_2nd ($tagmedias, 'tags', SORT_DESC);
 		
 		foreach ($tagmedias as $media)
 		{
