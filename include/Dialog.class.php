@@ -21,11 +21,13 @@
 
 require_once ('include/defines.php');
 
+define (DIALOG_REDIRECT_TIME, 1);
+
 
 class Dialog {
 	protected $title = 'Title';
 	protected $messages = array ();
-	private $redirect_time = 3;
+	private $redirect_time = DIALOG_REDIRECT_TIME;
 	private $redirect_url = null;
 	private $redirect = true;
 	

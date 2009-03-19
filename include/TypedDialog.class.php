@@ -30,7 +30,7 @@ define (DIALOG_TYPE_WARNING, 3);
 class TypedDialog extends Dialog {
 	private $type;
 	
-	public function __construct ($type=DIALOG_TYPE_NONE, $url=null, $time=3) {
+	public function __construct ($type=DIALOG_TYPE_NONE, $url=null, $time=DIALOG_REDIRECT_TIME) {
 		$this->set_type ($type);
 		parent::__construct ('None', true, $url, $time);
 	}
@@ -60,9 +60,11 @@ class TypedDialog extends Dialog {
 	}
 	
 	public function set_error_message ($msg) {
+		$this->redirect (false);
 		$this->set_typed_message (DIALOG_TYPE_ERROR, $msg);
 	}
 	public function add_error_message ($msg) {
+		$this->redirect (false);
 		$this->set_typed_message (DIALOG_TYPE_ERROR, $msg);
 	}
 	public function set_info_message ($msg) {
@@ -84,11 +86,14 @@ class TypedDialog extends Dialog {
 				throw new Exception ('Dialog type cannot be DIALOG_TYPE_NONE for printing');
 				return;
 			case DIALOG_TYPE_ERROR:
-				$this->set_title ('Erreur'); break;
+				$this->set_title ('Erreur');
+				break;
 			case DIALOG_TYPE_INFO:
-				$this->set_title ('Information'); break;
+				$this->set_title ('Information');
+				break;
 			case DIALOG_TYPE_WARNING:
-				$this->set_title ('Attention'); break;
+				$this->set_title ('Attention');
+				break;
 		}
 		
 		/* hack to set the right title for the message */
