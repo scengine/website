@@ -60,11 +60,11 @@ class TypedDialog extends Dialog {
 	}
 	
 	public function set_error_message ($msg) {
-		$this->redirect (false);
+		$this->set_redirect (false);
 		$this->set_typed_message (DIALOG_TYPE_ERROR, $msg);
 	}
 	public function add_error_message ($msg) {
-		$this->redirect (false);
+		$this->set_redirect (false);
 		$this->set_typed_message (DIALOG_TYPE_ERROR, $msg);
 	}
 	public function set_info_message ($msg) {
