@@ -1,0 +1,27 @@
+Howto install BSE
+=================
+
+Basic setup
+-----------
+
+1) Copy (or move) include/defines.php.default to include/defines.php and modify
+   it accordingly to your configuration.
+
+2) Create the right tables in your database.
+   There is a SQL structure file in extras/TABLES.sql that you can import in
+   your database. It contains a default administrator named 'admin' with
+   the password 'password'.
+   
+   If you prefer to create the first administrator manually, just insert its
+   name with quotes escaped (addslashes()) in the `username` field, its password
+   encrypted with md5() in the `password` field, and fill the two last fields
+   with a 0 (zero).
+
+3) You may want to create some files in your media directory:
+   * default/media_unknown.png that is the default icon for uploaded files if no
+     thumbnail is available;
+   * default/media_compressed.png that is the default icon for compressed files
+     if no specific thumbnail is available.
+
+4) You can, if you want, safely remove the extras/ directory, or not upload it
+   to your server

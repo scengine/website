@@ -39,11 +39,11 @@ define (NEWSLEVEL, 1);
 define (ENGINE, 'SCEngine'); // :D
 
 /* Tables names */
-define (USERS_TABLE, '`admins`');
-define (DEVEL_TABLE, '`devel`');
-define (NEWS_TABLE, '`news`');
-define (MEDIA_TABLE, '`medias`');
-define (COUNTER_TABLE, '`counter`');
+define (USERS_TABLE, '`bse_admins`');
+define (DEVEL_TABLE, '`bse_devel`');
+define (NEWS_TABLE, '`bse_news`');
+define (MEDIA_TABLE, '`bse_medias`');
+define (COUNTER_TABLE, '`bse_counter`');
 
 /* File to store metadatas */
 define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
