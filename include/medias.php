@@ -280,16 +280,24 @@ function media_remove ($id, $rm_files=true)
 
 /*
  * \param $type the type of medias to get (see MediaType)
+ * \param $bytags whether to get an array of tags or not
+ * \param $seltags an array of tags to select or null for all
  * \returns a two-dimentionnal array of medias matching type \p $type
- *          the array is an array of tags, and each tag is an array of medias
- *          matching the tag. Each media is a standard media array.
+ *          If \p $bytags is true, the array is an array of tags, and each tag
+ *          is an array of medias matching the tag.
+ *          Else, if \p bytags is not true, the first level array has only one
+ *          key that is 0 for compatibility with the tagged array.
+ *          Each media is a standard media array.
  *          The returned array is sorted in reverse order by default.
  * 
  * I.e:
- * $arr = media_get_array_tags(MediaType::SCREENSHOT);
+ * $arr = media_get_array(MediaType::SCREENSHOT, true);
  * print_r ($arr['a_tag'][0]); // dump of the first media tagged 'a_tag'
+ * Or:
+ * $arr = media_get_array(MediaType::SCREENSHOT, false);
+ * print_r ($arr[0][0]); // dump of the first media
  */
-function media_get_array_tags ($type)
+function media_get_array ($type, $bytags=false, $seltags=null)
 {
 	$medias = array ();
 	settype ($type, int) or die ('$type must be integer');
@@ -300,10 +308,18 @@ function media_get_array_tags ($type)
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
-		$tags = split (' ', $resp['tags']);
-		foreach ($tags as $tag)
+		if ($bytags)
 		{
-			$medias[$tag][] = $resp;
+			$tags = split (' ', $resp['tags']);
+			foreach ($tags as $tag)
+			{
+				if ($seltags === null || in_array ($tag, $seltags))
+					$medias[$tag][] = $resp;
+			}
+		}
+		else
+		{
+			$medias[0][] = $resp;
 		}
 	}
 	

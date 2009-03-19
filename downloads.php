@@ -27,7 +27,7 @@ require_once ('include/misc.php');
 
 function print_downloads ()
 {
-	$medias = media_get_array_tags (MediaType::RELEASE);
+	$medias = media_get_array (MediaType::RELEASE, true);
 	if (! empty ($medias))
 	{
 		foreach ($medias as $tag => $tagmedias)

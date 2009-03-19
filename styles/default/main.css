@@ -523,6 +523,7 @@ border: 1px solid #83C9FC;
 }
 .mediacontainer {
 float: left;
+max-width: 160px;
 }
 /**/
 .showmediacontainer img,
@@ -546,7 +547,6 @@ text-align: justify;
 font-size: 75%;
 }
 .mediacontainer .comment {
-max-width: 100%;
 max-width: 160px;
 }
 

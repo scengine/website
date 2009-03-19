@@ -257,75 +257,47 @@ function print_tag_links ($type, $taglist)
 	return $tagged;
 }
 
-function print_medias_internal ($type, $showtag=null)
+function print_medias_internal (&$medias, $bytags=false)
 {
-	$n_medias = 0;
-	
-	if (! is_array ($showtag))
-		$tags = split (' ', $showtag);
-	else
-		$tags = $showtag;
-	
-	$medias = media_get_array_tags ($type);
-	if (! empty ($medias))
+	foreach ($medias as $tag => $tagmedias)
 	{
-		foreach ($medias as $tag => $tagmedias)
+		if ($bytags)
 		{
-			if ($showtag !== null && ! in_array ($tag, $tags))
-				continue;
-			
 			if ($tag == '')
 				$tag = 'Non taggés';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
-			
-			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
-			
-			foreach ($tagmedias as $media)
-			{
-				$name = basename ($media['uri']);
-				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
-				$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
-				
-				echo
-				'<div class="mediacontainer">
-					<div class="media">
-						<a href="?watch=',$media['id'],'#watch" title="',$media['desc'],'" class="noicon">
-							<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
-						</a>
-					</div>
-					<div class="links">
-						[<a class="noicon" href="?watch=',$media['id'],'" title="Voir « ',$name,' »">Voir</a>]
-						[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
-					</div>';
-				/* tags if any */
-				echo '<div class="links tags">Tags&nbsp;: ';
-				print_tag_links ($type, $media['tags']);
-				echo '</div>';
-				/* comment if any */
-				if (! empty ($media['comment']))
-				{
-					echo '<div class="comment"><p>',$media['comment'],'</p></div>';
-				}
-				echo '</div>';
-			}
-			
-			$n_medias++;
 		}
-	}
-	
-	/* no media selected */
-	if ($n_medias == 0)
-	{
-		echo '<p>';
-		if ($showtag === null)
-			echo 'Aucun média dans cette section.';
-		else
+		
+		array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
+		
+		foreach ($tagmedias as $media)
 		{
-			$s = (count ($tags) == 1) ? '' : 's';
+			$name = basename ($media['uri']);
+			$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
+			$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
 			
-			echo 'Aucun média pour ce',$s,' tag',$s,' dans cette section.';
+			echo
+			'<div class="mediacontainer">
+				<div class="media">
+					<a href="?watch=',$media['id'],'#watch" title="',$media['desc'],'" class="noicon">
+						<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
+					</a>
+				</div>
+				<div class="links">
+					[<a class="noicon" href="?watch=',$media['id'],'" title="Voir « ',$name,' »">Voir</a>]
+					[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
+				</div>';
+			/* tags if any */
+			echo '<div class="links tags">Tags&nbsp;: ';
+			print_tag_links ($media['type'], $media['tags']);
+			echo '</div>';
+			/* comment if any *//*
+			if (! empty ($media['comment']))
+			{
+				echo '<div class="comment"><p>',$media['comment'],'</p></div>';
+			}*/
+			echo '</div>';
 		}
-		echo '</p>';
 	}
 }
 
@@ -333,23 +305,45 @@ function print_medias_internal ($type, $showtag=null)
  * \param $types mixed: array of types or string of comma-separated types to show
  * \param $tag   tags to filter with
  */
-function print_medias ($types, $tag=null)
+function print_medias ($types, $showtag=null)
 {
 	//if (! is_array ($types) && $types !== null)
 	//	$types = split (',', $types);
+	$bytags = $showtag !== null;
+	
+	if (! is_array ($showtag) && $showtag !== null)
+		$tags = split (' ', $showtag);
+	else
+		$tags = $showtag;
 	
 	for ($type = 1; $type < MediaType::N_TYPES; $type++)
 	//foreach ($types as $type)
 	{
-		if ($types === null || in_array ($type, $types))
+		$medias = media_get_array ($type, $bytags, $tags);
+		if (($types !== null || ($showtag === null || ! empty ($medias))) &&
+		    ($types === null || in_array ($type, $types)))
 		{
 			echo '
 			<h2 id="',MediaType::to_id ($type),'">
 				',ucfirst (MediaType::to_string ($type, true)),'
 			</h2>
-			<div>
-				',print_medias_internal ($type, $tag),'
-			</div>';
+			<div>';
+			if (! empty ($medias))
+				print_medias_internal ($medias, $bytags);
+			else
+			{
+				echo '<p>';
+				if ($tags === null)
+					echo 'Aucun média dans cette section.';
+				else
+				{
+					$s = (count ($tags) == 1) ? '' : 's';
+					
+					echo 'Aucun média pour ce',$s,' tag',$s,' dans cette section.';
+				}
+				echo '</p>';
+			}
+			echo '</div>';
 		}
 	}
 }
