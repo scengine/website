@@ -135,13 +135,6 @@ function print_head_adds (&$adds) {
 		</div>
 
 		<div id="lmenu">
-			<!-- dernières versions du moteur -->
-			<div class="lsmenu">
-				<h3>Dernières versions</h3>
-				<p>
-					 La version <span class="b"><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></span> est disponible !
-				</p>
-			</div>
 			
 			<div class="lsmenu">
 				<h3>Image aléatoire</h3>
@@ -263,8 +256,16 @@ function print_head_adds (&$adds) {
 		</div>
 
 		<div id="rmenu">
+			<!-- dernières versions du moteur -->
 			<div class="rsmenu">
-				<h3>Avancement du moteur</h3>
+				<h3>Dernière version</h3>
+				<p>
+					 La version <span class="b"><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></span> est disponible !
+				</p>
+			</div>
+			
+			<div class="rsmenu">
+				<h3>Développement</h3>
 				<?php
 					print_engine_news ();
 				?>

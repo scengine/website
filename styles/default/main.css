@@ -267,7 +267,7 @@ left: 0px;
 
 z-index: 1;
 
-width: 17%;
+width: 16%;
 margin: 10px;
 border: 1px solid #83C9FC;
 background-color: #eee;
@@ -283,7 +283,7 @@ right: 0px;
 
 z-index: 1;
 
-width: 15%;
+width: 16%;
 margin: 10px 9px;
 border: 1px solid #83C9FC;
 background-color: #eee;
@@ -324,8 +324,8 @@ margin-top: -1px;
 
 
 #body {
-margin-left: 17%;
-margin-right: 15%;
+margin-left: 16%;
+margin-right: 16%;
 }
 
 #content, #presentation {
