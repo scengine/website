@@ -273,10 +273,7 @@ function print_medias_internal (&$medias, $bytags=false)
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 		}
 		
-		if ($bytags)
-			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
-		else
-			array_multisort_2nd ($tagmedias, 'tags', SORT_DESC);
+		array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
 		
 		foreach ($tagmedias as $media)
 		{
