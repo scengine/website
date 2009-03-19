@@ -577,3 +577,10 @@ margin-top: 0;
 .small {
 font-size: 80%;
 }
+
+.news_engine_box .datecolor {
+height: 5px;
+width: 5px;
+float: left;
+margin: 24px 3px 0 -5px;
+}

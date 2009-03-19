@@ -99,6 +99,28 @@ function print_engine_page_browser ($current)
 }
 
 
+/* gets a colour from the age of a news */
+function get_color_for_oldness ($age)
+{
+	$old = (86400 * 1);
+	$x = min ((time () - $age) / $old, 1.0) / 1.6;
+	/* RGB color */
+	$color = array (0.9 - $x, $x, 0.0);
+	
+	$convtable = array (
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+	);
+	
+	$out = '';
+	foreach ($color as $c)
+	{
+		$id = $c * (count ($convtable) -1);
+		$out .= $convtable[$id];
+	}
+	
+	return $out;
+}
+
 function print_engine_news ()
 {
 	$user_logged = User::get_logged ();
@@ -159,7 +181,14 @@ function print_engine_news ()
 	
 	foreach ($news as $new)
 	{
-		echo '<h4 id="m', $new['id'], '">', date ('d/m/Y à H\hi', $new['date']), '</h4>';
+		/* color box */
+		echo '
+		<div class="datecolor"
+		     style="background-color: #',get_color_for_oldness ($new['date']),';">
+		</div>';
+		
+		/* title */
+		echo '<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
 		
 		if ($user_logged &&
 		    //User::get_name ()   == 'Yno')
