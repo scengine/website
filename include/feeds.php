@@ -41,8 +41,8 @@ define (ATOM_FEED_NEWS_TPL,
 ');
 define (ATOM_FEED_NEWS_ITEM_TPL,
 '	<entry>
-		<title>{title}</title>
-		<content type="html">
+		<title xml:lang="{lang}">{title}</title>
+		<content type="html" xml:lang="{lang}">
 			{content}
 		</content>
 		<updated>{date}</updated>
@@ -110,8 +110,8 @@ define (ATOM_FEED_DEVEL_TPL,
 ');
 define (ATOM_FEED_DEVEL_ITEM_TPL,
 '	<entry>
-		<title>{title}</title>
-		<content type="html">
+		<title xml:lang="{lang}">{title}</title>
+		<content type="html" xml:lang="{lang}">
 			{content}
 		</content>
 		<updated>{date}</updated>
@@ -207,6 +207,7 @@ function feed_update_news ()
 		$atom_items[] = array (
 			'tpl'     => ATOM_FEED_NEWS_ITEM_TPL,
 			'replace' => array (
+				'lang'          => 'fr',
 				'title'         => stripslashes ($news['titre']),
 				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 				 * the use HTML, even if it is not good as XHTML */
@@ -276,6 +277,7 @@ function feed_update_devel ()
 		$atom_items[] = array (
 			'tpl'     => ATOM_FEED_DEVEL_ITEM_TPL,
 			'replace' => array (
+				'lang'          => 'fr',
 				'title'         => date ('d/m/Y à H\hi', $news['date']),
 				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 				 * the use HTML, even if it is not good as XHTML */
