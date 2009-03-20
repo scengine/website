@@ -24,6 +24,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('include/MyDB.php');
 
 /*
 class CounterIP_ {
@@ -61,6 +62,7 @@ class CounterIP_ {
 		}
 	}
 	
+	// FIXME: use a lockfile or file_put_contents() with LOCK_EX flag
 	private function data_write () {
 		$fp = @fopen ($this->file, 'w');
 		
@@ -112,9 +114,6 @@ class CounterIP_ {
 */
 
 
-require_once ('include/MyDB.php');
-
-define (COUNTER_TABLE, 'counter');
 
 class CounterIP {
 	protected $db;
@@ -132,7 +131,7 @@ class CounterIP {
 	}
 	
 	protected function ip_is_known ($ip) {
-		if ($this->db->select ('ip', 'ip=\''.$ip.'\'')) {
+		if ($this->db->select ('`ip`', '`ip`=\''.$ip.'\'')) {
 			return $this->db->fetch_response () ? true : false;
 		}
 		return false;
@@ -141,7 +140,7 @@ class CounterIP {
 	protected function increment_ip ($ip) {
 		if ($this->ip_is_known ($ip)) {
 			$n = $this->get_n_for_ip ($ip) + 1;
-			return $this->db->update ('count=\''.$n.'\'', 'ip=\''.$ip.'\'');
+			return $this->db->update ('`count`=\''.$n.'\'', '`ip`=\''.$ip.'\'');
 		}
 		else
 			return $this->db->insert ('\''.$ip.'\', \'1\'');
@@ -152,7 +151,7 @@ class CounterIP {
 	}
 	
 	public function get_n_for_ip ($ip) {
-		$this->db->select ('*', 'ip=\''.$ip.'\'');
+		$this->db->select ('*', '`ip`=\''.$ip.'\'');
 		$response = $this->db->fetch_response ();
 		if ($response !== false)
 			return $response['count'];
@@ -178,57 +177,6 @@ class CounterIP {
 	}
 }
 
-/*
-function newfile ($file, $mode = 0644) {
-	$rv = true;
-
-	$f = fopen ($file, 'x');
-	if ($f) {
-		fclose ($f);
-		chmod ($file, $mode);
-	}
-	else
-		$rv = false;
-
-	return $rv;
-}
-
-class Compteur {
-	private $dir = 'cmptdata/';
-	private $file = 'count';
-
-	private $n = 0;
-
-	public function __construct ($count = true, $prefix = '') {
-		// accpet a prefix for datadir
-		if ($prefix)
-			$this->dir = $prefix.$this->dir;
-		
-		// concatenation of filename & datadir
-		$this->file = $this->dir.$this->file;
-		
-		// count if it is not unactivated
-		if ($count)
-			$this->count ();
-	}
-
-	public function count () {
-		if (file_exists ($this->file))
-			$this->n = file_get_contents ($this->file);
-		else
-			newfile ($this->file, 0640);
-		
-		return file_put_contents ($this->file, ++$this->n);
-	}
-
-	public function get_n () {
-		if (!$this->n)
-			$this->n = file_get_contents ($this->file);
-		
-		return ($this->n) ? $this->n : 0;
-	}
-}
-*/
 /*
 $c = new CounterIP_ (false, '/tmp/counter');
 $_SERVER['REMOTE_ADDR'] = $c->get_n_ip ();

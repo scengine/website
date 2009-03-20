@@ -134,7 +134,7 @@ class WKParser
 {
   /* Parser de WikiCode-like
    * simple et rapide mais linéaire et peu puissant */
-  /* Il manrche bien tant qu'on est gentil avec lui :D */
+  /* Il marche bien tant qu'on est gentil avec lui :D */
   /**
    * TODO:
    * 
