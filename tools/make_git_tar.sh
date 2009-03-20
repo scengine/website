@@ -17,11 +17,19 @@ function failed()
   echo "failed!" >&2
   #exit 1
 }
-
 REPO="git://git.tuxfamily.org/gitroot/scengine/website.git"
 TEMPDIR="$(get_tmp_dir)"
 NAME="bse_git$(date '+%Y%m%d')"
 TARNAME="$NAME.tar.gz"
+
+if [ $# -gt 0 ]; then
+  OUT="$1"
+  if [ ${OUT:0:1} != '/' ]; then
+    OUT="$PWD/$OUT"
+  fi
+else
+  OUT="/tmp/$TARNAME"
+fi
 
 cd "$TEMPDIR" && (
   echo "Fetching repository..."
@@ -30,11 +38,6 @@ cd "$TEMPDIR" && (
     echo "Creating tar..."
     tar -czv --exclude '.git' -f "$TARNAME" "$NAME" && (
       echo "done."
-      if [ $# -gt 0 ]; then
-        OUT="$1"
-      else
-        OUT="/tmp/$TARNAME"
-      fi
       echo "Moving '$TARNAME' to '$OUT'..."
       mv -i "$TARNAME" "$OUT" \
         && echo "done." \
