@@ -76,13 +76,12 @@ function print_engine_page_browser ($current)
 	$n_pages = ceil ($n_news / ENGINE_NEWS_OFFSET);
 	$has_prev = ($current > 0) ? true : false;
 	$has_next = ($n_news > $current + ENGINE_NEWS_OFFSET) ? true : false;
-
+	
 	if ($has_prev)
-		echo '<a href="?', ENGINE_NEWS_GET_PREFIX, '=',
+		echo '<a href="?',ENGINE_NEWS_GET_PREFIX,'=',
 			($current >= ENGINE_NEWS_OFFSET) ? $current - ENGINE_NEWS_OFFSET : 0,
 			'">&lt;</a> ';
-
-
+	
 	for ($i=0; $i<$n_pages; $i++)
 	{
 		$cur_offset = $i * ENGINE_NEWS_OFFSET;
@@ -90,12 +89,11 @@ function print_engine_page_browser ($current)
 		if ($cur_offset == $current)
 			echo $i+1, ' ';
 		else
-			echo '<a href="?', ENGINE_NEWS_GET_PREFIX, '=', $cur_offset, '">', $i+1, '</a> ';
+			echo '<a href="?',ENGINE_NEWS_GET_PREFIX,'=',$cur_offset,'">',$i+1,'</a> ';
 	}
-
-
+	
 	if ($has_next)
-		echo ' <a href="?', ENGINE_NEWS_GET_PREFIX, '=', $current + ENGINE_NEWS_OFFSET, '">&gt;</a>';
+		echo ' <a href="?',ENGINE_NEWS_GET_PREFIX,'=',$current + ENGINE_NEWS_OFFSET,'">&gt;</a>';
 }
 
 
@@ -162,14 +160,14 @@ function print_engine_news ()
 				document.getElementById ("checkjs").style.display = \'none\';
 			</script>';
 		
-		echo '<h4>', date ("d/m/Y à H\hi"), '</h4>
+		echo '<h4>',date ("d/m/Y à H\hi"),'</h4>
 				<form method="post" action="post.php?sec=devel&amp;act=new">
 					<div>
 						<a href="javascript:entry_more(\'tnewdevel\')">[+]</a>
 						<a href="javascript:entry_lesser(\'tnewdevel\')">[-]</a>
 					</div>
 					<p>
-						<input type="hidden" name="date" value="', mktime (), '"/>
+						<input type="hidden" name="date" value="',time (),'"/>
 						<textarea name="content" cols="24" rows="8" id="tnewdevel"></textarea>
 						<input type="submit" value="Poster" />
 					</p>
@@ -195,27 +193,29 @@ function print_engine_news ()
 		    $user_level == 0)
 		{
 			echo '<div class="admin">
-					[<a onclick="edit(', $new['id'], ', this)"
+					[<a onclick="edit(\'m',$new['id'],'\', this)"
 						title="éditer">éditer</a>]
-					[<a href="post.php?sec=devel&amp;act=rm&amp;id=', $new['id'], '"
+					[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
 						onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
 						title="Supprimer">X</a>]
 				</div>';
 		}
 		
-		echo '<p>', stripslashes ($new['content']), '</p>';
+		echo '<p id="mm',$new['id'],'">', stripslashes ($new['content']), '</p>';
 		
 		if ($user_logged &&
 			 //User::get_name ()   == 'Yno')
 			 $user_level == 0)
 		{
-			echo '<div class="formedit" id="f', $new['id'], '" style="display:none;">
-						<a href="javascript:entry_more(\'t', $new['id'], '\')">[+]</a>
-						<a href="javascript:entry_lesser(\'t', $new['id'], '\')">[-]</a>
-						<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=', $new['id'], '">
+			echo '<div class="formedit" id="fm',$new['id'],'" style="display:none;">
+						<a href="javascript:entry_more(\'tm',$new['id'],'\')">[+]</a>
+						<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
+						<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
 							<p>
-								<input type="hidden" name="date" value="', $new['date'], '"/>
-								<textarea name="content" cols="24" rows="8" id="t', $new['id'], '">', br2nl (stripslashes ($new['content'])), '</textarea>
+								<input type="hidden" name="date" value="',$new['date'],'"/>
+								<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
+									br2nl (stripslashes ($new['content'])),
+								'</textarea>
 								<input type="submit" value="Poster" />
 								<input type="reset" value="Reset" />
 							</p>

@@ -19,16 +19,18 @@
  */
 
 function edit (id, el) {
-	if (document.getElementById ("f"+id).style.display == "none")
+	var f_e = document.getElementById ("f"+id);
+	var m_e = document.getElementById ("m"+id);
+	if (f_e.style.display == "none")
 	{
-		document.getElementById ("f"+id).style.display = "block";
-		document.getElementById ("m"+id).style.display = "none";
+		f_e.style.display = "block";
+		m_e.style.display = "none";
 		el.innerHTML = "Annuler";
 	}
 	else
 	{
-		document.getElementById ("f"+id).style.display = "none";
-		document.getElementById ("m"+id).style.display = "block";
+		f_e.style.display = "none";
+		m_e.style.display = "block";
 		el.innerHTML = "Éditer";
 	}
 }

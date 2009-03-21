@@ -54,14 +54,14 @@ function print_head_adds (&$adds) {
 	<head>
 		<title><?php echo TITLE,' - ',$MDI->get_name (); ?></title>
 		
-		<link rel="start" title="Accueil" href="index.html" />
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<meta name="description" content="<?php echo DESCRIPTION; ?>" />
 		
 		<link rel="start" title="Accueil" href="index.php" />
 		<link rel="icon" href="styles/default/icon.png" type="image/png" />
 <!-- Feuille de style par défaut -->
-		<link rel="stylesheet" media="screen" type="text/css" title="default" href="styles/default/main.css" />
+		<link rel="stylesheet" media="screen" type="text/css" title="default"
+			href="styles/default/main.css" />
 		
 		<link rel="alternate" title="Flux des actualités (Atom)"
 			type="application/atom+xml" href="<?php echo NEWS_ATOM_FEED_FILE; ?>" />
@@ -80,7 +80,7 @@ function print_head_adds (&$adds) {
 		?>
 	</head>
 
- <body>
+	<body>
 		<div id="header">
 			<h1><span><a href="index.php"><?php echo $MDI->get_name (); ?></a></span></h1> <!-- TODO A remplacer par une image d'en-tete /-->
 		</div>
