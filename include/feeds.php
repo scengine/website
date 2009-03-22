@@ -236,7 +236,7 @@ function feed_update_news ()
 		'tpl'     => ATOM_FEED_NEWS_TPL,
 		'replace' => array (
 			'title'         => 'News du SCEngine',
-			'icon'          => BSE_BASE_URL.'styles/default/icon.png',
+			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'self_url'      => BSE_BASE_URL.NEWS_ATOM_FEED_FILE,
 			'alternate_url' => BSE_BASE_URL.'index.php',
 			'date'          => date ('c'),
@@ -253,7 +253,7 @@ function feed_update_news ()
 			'site_url'      => BSE_BASE_URL,
 			'language'      => 'fr',
 			'date'          => date ('r'),
-			'icon'          => BSE_BASE_URL.'styles/default/icon.png',
+			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'items'         => &$rss_items
 		)
 	);
@@ -304,7 +304,7 @@ function feed_update_devel ()
 		'tpl'     => ATOM_FEED_DEVEL_TPL,
 		'replace' => array (
 			'title'         => 'News du développement du SCEngine',
-			'icon'          => BSE_BASE_URL.'styles/default/icon.png',
+			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'self_url'      => BSE_BASE_URL.DEVEL_ATOM_FEED_FILE,
 			'alternate_url' => BSE_BASE_URL.'index.php',
 			'date'          => date ('c'),
@@ -322,7 +322,7 @@ function feed_update_devel ()
 			'site_url'      => BSE_BASE_URL,
 			'language'      => 'fr',
 			'date'          => date ('r'),
-			'icon'          => BSE_BASE_URL.'styles/default/icon.png',
+			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'items'         => &$rss_items
 		)
 	);
@@ -353,22 +353,22 @@ $all = array (
 	array (
 		'tpl' => ATOM_FEED_TPL,
 		'replace' => array (
-			'{title}' => 'News du SCEngine',
-			'{icon}' => BSE_BASE_URL.'styles/default/icon.png',
-			'{self_url}' => BSE_BASE_URL.NEWS_FEED_FILE,
-			'{alternate_url}' => BSE_BASE_URL,
-			'{date}' => date ('c'),
-			'{id}' => 'rda:uuid:1001:a144:45cc:b11f',
-			'{items}' => array (
+			'title' => 'News du SCEngine',
+			'icon' => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
+			'self_url' => BSE_BASE_URL.NEWS_FEED_FILE,
+			'alternate_url' => BSE_BASE_URL,
+			'date' => date ('c'),
+			'id' => 'rda:uuid:1001:a144:45cc:b11f',
+			'items' => array (
 				array (
 					'tpl' => ATOM_FEED_ITEM_TPL,
 					'replace' => array (
-						'{content}' => 'relol',
-						'{title}' => 'lol',
-						'{date}' => '12463542112',
-						'{link}' => 'http://patate.com',
-						'{id}' => 'rda:uuid:1001:a144:45ab:b11f',
-						'{author}' => 'moi'
+						'content' => 'relol',
+						'title' => 'lol',
+						'date' => '12463542112',
+						'link' => 'http://patate.com',
+						'id' => 'rda:uuid:1001:a144:45ab:b11f',
+						'author' => 'moi'
 					)
 				)
 			)

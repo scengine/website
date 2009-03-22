@@ -37,6 +37,8 @@ define (DB_TRANSFERT_ENCODING, 'utf8_bin');
 define (NEWSLEVEL, 1);
 
 define (ENGINE, 'SCEngine'); // :D
+define (DESCRIPTION, 'Site officiel du SCEngine');
+define (STYLE, 'default');
 
 /* Tables names */
 define (USERS_TABLE, '`bse_admins`');

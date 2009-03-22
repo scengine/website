@@ -69,9 +69,9 @@ class Dialog {
 		<title><?php echo $this->title,' &ndash; ',ENGINE; ?></title>
 		
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<link rel="icon" href="styles/default/icon.png" type="image/png" />
+		<link rel="icon" href="styles/<?php echo STYLE; ?>/icon.png" type="image/png" />
 		<link rel="stylesheet" media="screen" type="text/css" title="default"
-			href="styles/default/messages.css" />
+			href="styles/<?php echo STYLE; ?>/messages.css" />
 		<?php
 	
 	/* auto redirection */

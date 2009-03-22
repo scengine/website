@@ -96,7 +96,7 @@ function print_media_show ($media_id, $show_return_links=true,
 			<tr>
 				<th>', $show_admin_links ? '
 					<a href="?page='.PAGE.'&amp;action=rm&amp;media='.$media['id'].'" title="Supprimer">
-						<img src="styles/'.STYLE.'/delete.png" alt="Éditer" />
+						<img src="styles/'.STYLE.'/delete.png" alt="Supprimer" />
 					</a>' : '', '
 				</th>
 			</tr>
@@ -153,7 +153,7 @@ function print_media_table_for_type ($type, array &$medias)
 				</td>
 				<td>
 					<a href="?page=',PAGE,'&amp;action=rm&amp;media=',$media['id'],'" title="Supprimer">
-						<img src="styles/',STYLE,'/delete.png" alt="Éditer" />
+						<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
 					</a>
 				</td>
 				<!--td>',$media['id'],'</td-->

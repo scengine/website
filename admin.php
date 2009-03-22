@@ -36,22 +36,20 @@ if (!User::get_logged () && User::get_level () <= 3) {
 
 
 //define (TITLE, 'Administration - '.ENGINE);
-define (STYLE, 'default');
 define (DESCRIPTION, 'Administration du '.$MDI->get_name ());
 
 
 $name = urldecode($_GET['page']);
 
 // on vérifie que la page existe et que l'admin est loggué :
-if (file_exists( 'include/'.$name.'.inc' ) && User::get_logged ()) {
-	$page = 'include/'.$name.'.inc';
-
+$page = 'include/'.$name.'.inc';
+if (file_exists ('./'.$page) && User::get_logged ()) {
 	define (TITLE, ucfirst($name).' - Administration');
 	define (PAGE, $name);
 }
 else {
 	$page = 'include/accueil.inc';
-
+	
 	define (TITLE, 'Accueil - Administration');
 	define (PAGE, 'accueil');
 }
