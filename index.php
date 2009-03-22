@@ -86,7 +86,8 @@ function print_news ($start=0) {
 	// pour permetre aux admins d'ajouter une news
 	if (User::get_logged () &&
 		User::get_level () <= NEWSLEVEL) {
-		echo '<div class="fleft">
+		echo '
+		<div class="fleft">
 			[<a href="admin.php?page=actualités&amp;action=new">Ajouter une news</a>]
 		</div>';
 	}
@@ -104,61 +105,69 @@ function print_news ($start=0) {
 	</div>';
 	
 	foreach ($news as $new) {
-		echo '<div class="new">';
+		echo '
+		<div class="new">';
 		
 		if (User::get_logged () &&
-			User::get_level () <= NEWSLEVEL) {
-			echo '<div class="admin">';
+		    User::get_level () <= NEWSLEVEL) {
+			echo '
+			<div class="admin">',
 	//                  [<a href="admin/?page=actualités&amp;id=', $new['id'], '&amp;action=édit">Éditer</a>]
 	//                  [<a href="admin/?page=actualités&amp;id=', $new['id'], '&amp;action=rm">Supprimer</a>]
-			echo '[<a onclick="edit(\'n', $new['id'], '\', this)">Éditer</a>]
-				  [<a href="post.php?sec=news&amp;id=', $new['id'], '&amp;act=rm"
-					  onclick="return confirm(\'Voulez-vous vraiment supprimer cette news ?\')">Supprimer</a>]';
-			echo '</div>';
+				'[<a onclick="edit(\'n',$new['id'],'\', this)">Éditer</a>]
+				[<a href="post.php?sec=news&amp;id=',$new['id'],'&amp;act=rm"
+				    onclick="return confirm(\'Voulez-vous vraiment supprimer cette news ?\')">Supprimer</a>]
+			</div>';
 			
-			echo '<div class="formedit" id="fn', $new['id'], '" style="display:none;">
-					<form method="post" action="post.php?sec=news&amp;id=', $new['id'], '&amp;act=edit">
-						<div>
-							<a href="javascript:entry_more(\'tn', $new['id'], '\')">[+]</a>
-							<a href="javascript:entry_lesser(\'tn', $new['id'], '\')">[-]</a>
-						</div>
-						<p>
-							<input type="hidden" name="date" value="', $new['date'], '" />
-							<label>Titre&nbsp;:<br />
-							<input type="text" name="title" value="', escape_html_quotes (stripslashes ($new['titre'])), '" />
-							</label>
-							<br />
-							<br />
-							<label>Contenu&nbsp;:<br />
-							<textarea name="content" cols="24" rows="16" id="tn', $new['id'], '">',
+			echo '
+			<div class="formedit" id="fn',$new['id'],'" style="display:none;">
+				<form method="post" action="post.php?sec=news&amp;id=',$new['id'],'&amp;act=edit">
+					<div>
+						<a href="javascript:entry_more(\'tn',$new['id'],'\')">[+]</a>
+						<a href="javascript:entry_lesser(\'tn',$new['id'],'\')">[-]</a>
+					</div>
+					<p>
+						<input type="hidden" name="date" value="',$new['date'],'" />
+						<label>Titre&nbsp;:<br />
+							<input type="text" name="title" value="',escape_html_quotes (stripslashes ($new['titre'])),'" />
+						</label>
+						<br />
+						<br />
+						<label>Contenu&nbsp;:<br />
+							<textarea name="content" cols="24" rows="16" id="tn',$new['id'],'">',
 								htmlspecialchars (stripslashes (BCode::unparse ($new['source'])), ENT_COMPAT, 'UTF-8'),
 							'</textarea>
-							</label>
-							<br />
-							<input type="submit" value="Envoyer" />
-							<input type="reset" value="Réinitialiser" />
-						</p>
-					</form>
-				  </div>';
+						</label>
+						<br />
+						<input type="submit" value="Envoyer" />
+						<input type="reset" value="Réinitialiser" />
+					</p>
+				</form>
+			</div>';
 		}
 		
-		echo '<div id="mn', $new['id'], '">';
-		echo '<h3 id="n', $new['id'], '"><a href="#n', $new['id'], '">', escape_html_quotes (stripslashes ($new['titre'])), '</a></h3>';
-		echo '<div class="author"><p>Par <span class="b">',
-			stripslashes ($new['auteur']),
-			'</span> le ',
-			date ('d/m/Y à H:i', $new['date']);
+		echo '
+			<div id="mn',$new['id'],'">
+				<h3 id="n',$new['id'],'">
+					<a href="#n',$new['id'],'">',
+						escape_html_quotes (stripslashes ($new['titre'])),
+					'</a>
+				</h3>
+				<div class="author">
+					<p>
+						Par <span class="b">',stripslashes ($new['auteur']),'</span> le ',
+						date ('d/m/Y à H:i', $new['date']);
 		if ($new['date'] < $new['mdate'])
 		{
 			echo ' &ndash; édité par <span class="b">',stripslashes ($new['mauthor']),
 				'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
 		}
-		echo '</p></div>';
-			//<p>';
-		echo stripslashes ($new['contenu']);
-		echo //'</p>
-			 '</div>
-			</div>';
+		echo '
+					</p>
+				</div>
+				',stripslashes ($new['contenu']),'
+			</div>
+		</div>';
 	}
 }
 

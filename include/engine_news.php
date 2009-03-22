@@ -149,29 +149,30 @@ function print_engine_news ()
 	{
 		
 		# si le JS n'est pas activé, l'erreur s'affichera
-		echo '<div id="checkjs" style="color: red; font-weight: bold; text-decoration: blink;">
-			ATTENTION&nbsp;:<br />
-			le JavaScript n\'est pas activé.</div>';
-		# ci-dessous, le code pour cacher le message (en JS, donc que si le JS marche)
-		echo '<script type="text/javascript">
-			if (document.all) // IE
-				document.all["checkjs"].style.display = \'none\';
-			else // autres
-				document.getElementById ("checkjs").style.display = \'none\';
-			</script>';
+		echo '
+		<noscript>
+			<div style="color: red; font-weight: bold; text-decoration: blink; margin-top: 10px;">
+				<strong>
+					ATTENTION&nbsp;:<br />
+					le JavaScript n\'est pas activé, la suppression des news se fera sans
+					confirmation.
+				</strong>
+			</div>
+		</noscript>';
 		
-		echo '<h4>',date ("d/m/Y à H\hi"),'</h4>
-				<form method="post" action="post.php?sec=devel&amp;act=new">
-					<div>
-						<a href="javascript:entry_more(\'tnewdevel\')">[+]</a>
-						<a href="javascript:entry_lesser(\'tnewdevel\')">[-]</a>
-					</div>
-					<p>
-						<input type="hidden" name="date" value="',time (),'"/>
-						<textarea name="content" cols="24" rows="8" id="tnewdevel"></textarea>
-						<input type="submit" value="Poster" />
-					</p>
-				</form>';
+		echo '
+		<h4>',date ("d/m/Y à H\hi"),'</h4>
+		<form method="post" action="post.php?sec=devel&amp;act=new">
+			<div>
+				<a href="javascript:entry_more(\'tnewdevel\')">[+]</a>
+				<a href="javascript:entry_lesser(\'tnewdevel\')">[-]</a>
+			</div>
+			<p>
+				<input type="hidden" name="date" value="',time (),'"/>
+				<textarea name="content" cols="24" rows="8" id="tnewdevel"></textarea>
+				<input type="submit" value="Poster" />
+			</p>
+		</form>';
 	}
 	
 	echo '
@@ -186,49 +187,58 @@ function print_engine_news ()
 		</div>';
 		
 		/* title */
-		echo '<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
+		echo '
+		<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
 		
 		if ($user_logged &&
 		    //User::get_name ()   == 'Yno')
 		    $user_level == 0)
 		{
-			echo '<div class="admin">
-					[<a onclick="edit(\'m',$new['id'],'\', this)"
-						title="éditer">éditer</a>]
-					[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
-						onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
-						title="Supprimer">X</a>]
-				</div>';
+			echo '
+			<div class="admin">
+				[<a onclick="edit(\'m',$new['id'],'\', this)" title="éditer">éditer</a>]
+				[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
+				    onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
+				    title="Supprimer">X</a>]
+			</div>';
 		}
 		
-		echo '<p id="mm',$new['id'],'">', stripslashes ($new['content']), '</p>';
+		echo '
+		<p id="mm',$new['id'],'">',
+			stripslashes ($new['content']),
+		'</p>';
 		
 		if ($user_logged &&
 			 //User::get_name ()   == 'Yno')
 			 $user_level == 0)
 		{
-			echo '<div class="formedit" id="fm',$new['id'],'" style="display:none;">
-						<a href="javascript:entry_more(\'tm',$new['id'],'\')">[+]</a>
-						<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
-						<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
-							<p>
-								<input type="hidden" name="date" value="',$new['date'],'"/>
-								<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
-									br2nl (stripslashes ($new['content'])),
-								'</textarea>
-								<input type="submit" value="Poster" />
-								<input type="reset" value="Reset" />
-							</p>
-						</form>
-					</div>';
+			echo '
+			<div class="formedit" id="fm',$new['id'],'" style="display:none;">
+				<a href="javascript:entry_more(\'tm',$new['id'],'\')">[+]</a>
+				<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
+				<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
+					<p>
+						<input type="hidden" name="date" value="',$new['date'],'"/>
+						<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
+							br2nl (stripslashes ($new['content'])),
+						'</textarea>
+						<input type="submit" value="Poster" />
+						<input type="reset" value="Reset" />
+					</p>
+				</form>
+			</div>';
 		}
 	} //endwhile
 	
-	echo '</div>';
+	echo '
+	</div>';
 	
-	echo '<br /><div class="newslinks">';
+	echo '
+	<br />
+	<div class="newslinks">';
 	print_engine_page_browser ($start_news);
-	echo '</div>';
+	echo '
+	</div>';
 	
 	unset ($user_logged, $user_level, $news, $new);
 }
