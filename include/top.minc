@@ -201,8 +201,9 @@ function print_head_adds (&$adds) {
 				</p>
 				<ul>
 					<li><a href="admin.php">Administration</a></li>
-					<li><a href="admin.php?page=actualités">Éditer les news.</a></li>
-					<li><a href="admin.php?page=administrateurs">Gérer les administrateurs.</a></li>
+					<li><a href="admin.php?page=actualités">Gérer les news</a></li>
+					<li><a href="admin.php?page=medias">Gérer les médias</a></li>
+					<li><a href="admin.php?page=administrateurs">Gérer les admins</a></li>
 				</ul>
 				<p>
 					<a href="connexion.php?act=logout"
