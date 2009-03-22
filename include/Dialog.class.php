@@ -61,54 +61,71 @@ class Dialog {
 	}
 	
 	public function flush () {
-		?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 	<head>
-		<title><?php echo $this->title,' - ',ENGINE ?></title>
+		<title><?php echo $this->title,' &ndash; ',ENGINE; ?></title>
 		
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<link rel="icon" href="styles/default/icon.png" type="image/png" />
-<!-- Feuille de style par défaut -->
-		<link rel="stylesheet" media="screen" type="text/css" title="default" href="styles/default/messages.css" />
+		<link rel="stylesheet" media="screen" type="text/css" title="default"
+			href="styles/default/messages.css" />
 		<?php
-		
-		/* auto redirection */
-		if ($this->redirect) {
-			echo '<meta http-equiv="refresh" content="',$this->redirect_time,'; url=',$this->redirect_url,'" />';
-		}
-		
+	
+	/* auto redirection */
+	if ($this->redirect) {
 		echo '
+		<meta http-equiv="refresh" content="',$this->redirect_time,'; url=',$this->redirect_url,'" />';
+	}
+	
+?>
+	
 	</head>
 	<body>
 		<div class="message">
-			';
-		
-		/* print message(s) */
-		foreach ($this->messages as $message) {
-			if ($message[1] !== null)
-				echo '<h2>',$message[1],'</h2>';
-			echo '<p>',$message[0], '</p>';
+<?php
+	
+	/* print message(s) */
+	foreach ($this->messages as $message) {
+		if ($message[1] !== null)
+		{
+			echo '
+			<h2>',$message[1],'</h2>';
 		}
-		
-		/* print return link */
-		if ($this->redirect) {
-			echo '<p class="center small"><a href="',$this->redirect_url,'">Cliquez ici</a> si vous n\'êtes pas redirigé automatiquement</p>';
-		}
-		else {
-			echo '<p class="center small"><a href="',$this->redirect_url,'">Retour</a></p>';
-		}
-		
 		echo '
+			<p>
+				',$message[0], '
+			</p>';
+	}
+	
+	/* print return link */
+	if ($this->redirect) {
+		echo '
+			<p class="center small">
+				<a href="',$this->redirect_url,'">Cliquez ici</a> si vous n\'êtes pas
+				redirigé automatiquement.
+			</p>';
+	}
+	else {
+		echo '
+			<p class="center small">
+				<a href="',$this->redirect_url,'">Retour</a>
+			</p>';
+	}
+	
+?>
+		
 		</div>
 	</body>
 </html>
-';
+<?php
 	}
 }
 
 /*
-$d = &new Dialog ('Dialogue', false, 'page.html');
+$d = &new Dialog ('Dialogue', true, 'page.html');
 $d->add_message ('Ceci est un message', 'Titre');
 $d->add_message ('Voici un deuxième message, mais il n\'a pas de titre.');
 $d->flush ();

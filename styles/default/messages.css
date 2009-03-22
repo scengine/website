@@ -1,7 +1,7 @@
 /* LICENSE
  * 
  * BanSE - a site base (designed to be the SCEngine website)
- * Copyright (C) 2007-2008 Colomban "Ban" Wendling <ban-ubuntu@club-internet.fr>
+ * Copyright (C) 2007-2009 Colomban "Ban" Wendling <ban@herbesfolles.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,39 @@
  */
 
 body {
-    background-color: #fcfcff;
-    color: #333;
-    font-family: sans-serif;
-    
-    margin: 10px 0;
+background-color: #fcfcff;
+color: #333;
+font-family: sans-serif;
+
+margin: 10px 0;
 }
 
 
 a {
-    color: #7AA4BD;
-    text-decoration: none;
+color: #7AA4BD;
+text-decoration: none;
 }
 a:hover {
 /*     color: #999; */
-    text-decoration: underline;
+text-decoration: underline;
 }
 
 h2 {
-    font-family: sans-serif;
-    color: #20639a;
-    text-align: center;
+font-family: sans-serif;
+color: #20639a;
+text-align: center;
 }
 
 .message {
-    margin: 15% auto 0 auto;
-    padding: 0 10px;
-    width: 33%;
-/*     padding: 0 10px; */
-    border: 1px solid #83C9FC;
-    background-color: #eee;
-    -moz-border-radius: 12px;
-    
-    text-align: justify;
+margin: 15% auto 0 auto;
+padding: 0 10px;
+width: 33%;
+/* padding: 0 10px; */
+border: 1px solid #83C9FC;
+background-color: #eee;
+-moz-border-radius: 12px;
+
+text-align: justify;
 }
 
 .small { font-size: 70%; }
