@@ -162,8 +162,8 @@ function print_head_adds (&$adds) {
 						&nbsp;<a href="http://www.gnu.org/">GNU</a></li>
 					<li><img src="images/icons/debian.png" alt="-" title="Debian"/>
 						&nbsp;<a href="http://www.debian.org">Debian GNU/Linux</a></li>
-					<!-- <li><img src="images/icons/ubuntu.png" alt="-" title="Ubuntu"/>
-						&nbsp;<a href="http://www.ubuntu.com">Ubuntu GNU/Linux</a></li> -->
+					<li><img src="images/icons/tf.png" alt="-" title="TuxFamily"/>
+						&nbsp;<a href="http://www.tuxfamily.org">TuxFamily</a></li>
 					<li><img src="images/icons/ogl.png" alt="-" title="OpenGL"/>
 						&nbsp;<a href="http://opengl.org">OpenGL</a></li>
 					<li><img src="images/icons/devil.png" alt="-" title="DevIL"/>
