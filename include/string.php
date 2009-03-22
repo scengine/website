@@ -137,3 +137,46 @@ function path_clean ($str)
   }
   return $clean;
 }
+
+function mime_type_from_ext ($ext)
+{
+	switch (strtolower ($ext))
+	{
+		/* Images */
+		case 'png':
+			return 'image/png';
+		case 'jpg':
+		case 'jpeg':
+			return 'image/jpeg';
+		case 'gif':
+			return 'image/gif';
+		/* Videos */
+		case 'ogm':
+		case 'ogg':
+		case 'ogv':
+			return 'video/x-ogm';
+		case 'mkv':
+			return 'video/x-matroska';
+		case 'flv':
+			return 'video/x-flv';
+		case 'mpg':
+		case 'mpeg':
+			return 'video/mpeg';
+		case 'mp4':
+		case 'mpeg4':
+		case 'm4v':
+			return 'video/mp4';
+		case 'avi':
+			return 'video/avi';
+		case 'wmv':
+			return 'video/x-ms-wmv';
+		
+		default:
+			return 'application/octet-stream';
+	}
+}
+
+function filename_get_mime_type ($filename)
+{
+	return mime_type_from_ext (filename_getext ($filename));
+}

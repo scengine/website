@@ -318,7 +318,10 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 		?>
 			<tr>
 				<th>
-					<label for="f__0">Fichier&nbsp;:</label>
+					<label for="f__0">
+						Fichier&nbsp;:
+						<input type="radio" name="upload_type" value="file" checked="checked" />
+					</label>
 				</th>
 				<td colspan="2">
 					<input id="f__0" type="file" name="<?php echo FFIELD; ?>" />
@@ -326,13 +329,38 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 			</tr>
 			<tr>
 				<th>
+					<label for="f__0_1">
+						<abbr title="Uniform Resource Locator">URL</abbr> du fichier&nbsp;:
+						<input type="radio" name="upload_type" value="url" />
+					</label>
+				</th>
+				<td colspan="2">
+					<input id="f__0_1" type="text" name="<?php echo FFIELD; ?>" />
+				</td>
+			</tr>
+			
+			<tr>
+				<th>
 					<label for="f__1"
 					       title="Si la vignette est omise, elle sera générée si possible. La génération ne fonctionne qu'avec les images PNG et JPEG">
 						Vignette&nbsp;:
+						<input type="radio" name="upload_tb_type" value="file" checked="checked" />
 					</label>
 				</th>
 				<td colspan="2">
 					<input id="f__1" type="file" name="<?php echo TBFIELD; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<label for="f__1_1"
+					       title="Si la vignette est omise, elle sera générée si possible. La génération ne fonctionne qu'avec les images PNG et JPEG">
+						<abbr title="Uniform Resource Locator">URL</abbr> de la vignette&nbsp;:
+						<input type="radio" name="upload_tb_type" value="url" />
+					</label>
+				</th>
+				<td colspan="2">
+					<input id="f__1_1" type="text" name="<?php echo TBFIELD; ?>" />
 				</td>
 			</tr>
 		<?php
@@ -588,15 +616,141 @@ function add_media_query ()
 		}
 		else
 		{
+			$file_tmp_path = '';
+			$file_old_name = '';
+			$file_type     = '';
+			$upload_type   = '';
+			$tb_path   = '';
+			
 			if ($_POST['dest'] == 'other')
 				$_POST['dest'] = $_POST['manual_entry'];
 			
+			/* File */
+			if ($_POST['upload_type'] == 'url')
+			{
+				if (empty ($_POST[FFIELD]))
+					$error = 'Upload error: no URL';
+				else
+				{
+					$file_tmp_path = '/tmp/tmpupload_'.time ();
+					$file_old_name = basename ($_POST[FFIELD]);
+					$file_type = filename_get_mime_type ($file_old_name);
+					$upload_type = 'url';
+					
+					if (! copy ($_POST[FFIELD], $file_tmp_path))
+						$error = 'Failed to upload URL';
+				}
+			}
+			else
+			{
+				if ($_FILES[FFIELD]['error'] != UPLOAD_ERR_OK)
+					$error = 'Upload error: '.upload_error_to_string ($_FILES[FFIELD]['error']);
+				else
+				{
+					$file_tmp_path = $_FILES[FFIELD]['tmp_name'];
+					$file_old_name = $_FILES[FFIELD]['name'];
+					$file_type = $_FILES[FFIELD]['type'];
+					$upload_type = 'file';
+				}
+			}
+			
+			/* Tumbnail */
+			if (! $error)
+			{
+				// Thumbnail is created after uploading media to be able to read it
+				$tb_path = path_clean ($_POST['dest'].'/tb_'.$prefix.$file_old_name);
+				//$tb_r_path = MEDIA_DIR_R.'/'.$tb_path;
+				$tb_w_path = MEDIA_DIR_W.'/'.$tb_path;
+				
+				if ($_POST['upload_tb_type'] == 'url')
+				{
+					if (! empty ($_POST[TBFIELD]))
+					{
+						$tb_tmp_path = '/tmp/tmpuploadtb_'.time ();
+						
+						if (! copy ($_POST[TBFIELD], $tb_tmp_path))
+							$error = 'Failed to upload URL';
+						else
+						{
+							if (! rename ($tb_tmp_path, $tb_w_path))
+							{
+								$error = 'Failed to move thumbnail to the final location';
+								unlink ($tb_tmp_path);
+							}
+						}
+					}
+				}
+				else
+				{
+					if ($_FILES[TBFIELD]['error'] == UPLOAD_ERR_OK)
+					{
+						$tb_tmp_path = $_FILES[TBFIELD]['tmp_name'];
+						if (! move_uploaded_file ($tb_tmp_path, $tb_w_path))
+							$error = 'Failed to move thumbnail to the final location';
+					}
+					else if ($_FILES[TBFIELD]['error'] != UPLOAD_ERR_NO_FILE)
+						$error = 'Failed to upload thumb';
+				}
+				
+				if (empty ($tb_tmp_path) && ! $error)
+				{
+					if (! create_thumbnail ($file_type, $file_tmp_path, $tb_w_path))
+					{
+						$tb_path = media_get_default_thumbnail_from_uri ($old_name);
+					}
+				}
+			}
+			
+			if (! $error)
+			{
+				/* no errors, we can work with data */
+				$prefix = '' /*time ()*/;
+				$path = path_clean ($_POST['dest'].'/'.$prefix.$file_old_name);
+				$r_path = MEDIA_DIR_R.'/'.$path;
+				$w_path = MEDIA_DIR_W.'/'.$path;
+				
+				$statbuf = stat ($file_tmp_path);
+				
+				if ($upload_type == 'url')
+				{
+					if (! rename ($file_tmp_path, $w_path))
+					{
+						unlink ($file_tmp_path);
+						$error = 'Failed to move file to the final location.';
+					}
+				}
+				else
+				{
+					if (! move_uploaded_file ($file_tmp_path, $w_path))
+						$error = 'Failed to move file to the final location.';
+				}
+				
+				if (! $error)
+				{
+					if (media_add ($path, $tb_path, $statbuf['size'],
+					               $statbuf['mtime'], $_POST['type'], $_POST['uid'], 
+					               $_POST['tags'], $_POST['desc'], $_POST['comment']))
+					{
+						echo '
+						<p class="ok">
+							"',basename ($file_old_name),'" has been sucessully stored in the folder "',dirname ($w_path),'".
+						</p>';
+					}
+					else
+					{
+						$error = 'Failed to insert media in media database';
+						unlink ($w_path);
+					}
+				}
+			}
+			
+			/*
 			if ($_FILES[FFIELD]['error'] != UPLOAD_ERR_OK)
 				$error = 'Upload error: '.upload_error_to_string ($_FILES[FFIELD]['error']);
 			else
 			{
-				/* no errors, we can work with data */
-				$prefix = '' /*time ()*/;
+				// no errors, we can work with data
+				$prefix = ''; //time ();
 				$tmp_path = $_FILES[FFIELD]['tmp_name'];
 				$old_name = $_FILES[FFIELD]['name'];
 				$path = path_clean ($_POST['dest'].'/'.$prefix.$old_name);
@@ -606,7 +760,7 @@ function add_media_query ()
 				$tb_r_path = MEDIA_DIR_R.'/'.$tb_path;
 				$tb_w_path = MEDIA_DIR_W.'/'.$tb_path;
 				
-				/* on crée le thumb avant pour pouvoir lire depuis le dossier temporaire */
+				// on crée le thumb avant pour pouvoir lire depuis le dossier temporaire
 				if ($_FILES[TBFIELD]['error'] == UPLOAD_ERR_OK)
 				{
 					if (! move_uploaded_file ($_FILES[TBFIELD]['tmp_name'], $tb_w_path))
@@ -614,7 +768,7 @@ function add_media_query ()
 				}
 				else if ($_FILES[TBFIELD]['error'] == UPLOAD_ERR_NO_FILE)
 				{
-					/* if no thumb, try to create one */
+					// if no thumb, try to create one
 					if (! create_thumbnail ($_FILES[FFIELD]['type'], $tmp_path, $tb_w_path))
 					{
 						$tb_path = media_get_default_thumbnail_from_uri ($old_name);
@@ -649,6 +803,7 @@ function add_media_query ()
 						$error = 'Unknown error';
 				}
 			}
+			*/
 		}
 		
 		/* erros display */

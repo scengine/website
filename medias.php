@@ -41,52 +41,11 @@ function print_screenshot (array &$media)
 	</a>';
 }
 
-function get_video_mime_from_ext ($ext)
-{
-	$ext = strtolower ($ext);
-	$type = 'application/octet-stream';
-	
-	switch (strtolower ($ext))
-	{
-		case 'ogm':
-		case 'ogg':
-		case 'ogv':
-			$type = 'video/x-ogm';
-			break;
-		case 'mkv':
-			$type = 'video/x-matroska';
-			break;
-		case 'flv':
-			$type = 'video/x-flv';
-			break;
-		case 'mpg':
-		case 'mpeg':
-			$type = 'video/mpeg';
-			break;
-		case 'mp4':
-		case 'mpeg4':
-		case 'm4v':
-			$type = 'video/mp4';
-			break;
-		case 'avi':
-			$type = 'video/avi';
-			break;
-		case 'mov':
-			$type = 'video/quicktime';
-			break;
-		case 'wmv':
-			$type = 'video/x-ms-wmv';
-			break;
-	}
-	
-	return $type;
-}
-
 function print_movie (array &$media)
 {
 	$uri = MEDIA_DIR_R.'/'.$media['uri'];
 	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
-	$type = get_video_mime_from_ext (filename_getext ($uri));
+	$type = filename_get_mime_type ($uri);
 	
 	echo '
 	<object type="',$type,'" data="',$uri,'" width="100%" height="400">
