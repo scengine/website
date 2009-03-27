@@ -131,4 +131,3 @@ $d->add_message ('Voici un deuxième message, mais il n\'a pas de titre.');
 $d->flush ();
 unset ($d);
 //*/
-?>

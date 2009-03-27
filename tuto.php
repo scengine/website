@@ -306,5 +306,3 @@ le dossier &quot;samples&quot; livré avec les versions releases du moteur.
 <?php
 
 require_once ('include/bottom.minc');
-
-?>

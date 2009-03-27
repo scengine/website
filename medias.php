@@ -470,5 +470,3 @@ else if (isset ($_GET['showtag']))
 <?php
 
 require_once ('include/bottom.minc');
-
-?>

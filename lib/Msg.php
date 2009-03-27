@@ -40,5 +40,3 @@ abstract class Msg {
 			</div>';
 	}
 }
-
-?>

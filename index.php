@@ -241,5 +241,3 @@ if ($start_news < 0) $start_news = 0;
 <?php
 
 require_once ('include/bottom.minc');
-
-?>

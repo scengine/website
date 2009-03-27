@@ -111,4 +111,3 @@ $d->set_message ('coucou les gens !');
 $d->flush ();
 unset ($d);
 //*/
-?>

@@ -79,5 +79,3 @@ abstract class BCode
     return $str;
   }
 }
-
-?>

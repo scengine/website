@@ -182,5 +182,3 @@ $c = new CounterIP_ (false, '/tmp/counter');
 $_SERVER['REMOTE_ADDR'] = $c->get_n_ip ();
 $c->count ();
 */
-
-?>

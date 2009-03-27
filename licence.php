@@ -56,5 +56,3 @@ function print_gpl () {
 <?php
 
 require_once ('include/bottom.minc');
-
-?>

@@ -155,4 +155,3 @@ abstract class User
 		return true;
 	}
 }
-?>

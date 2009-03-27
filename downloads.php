@@ -153,4 +153,3 @@ require_once ('include/top.minc');
 
 <?php
 require_once ('include/bottom.minc');
-?>
