@@ -50,6 +50,10 @@
  */
 
 
+/* internal count of queries */
+$__MyDB_internal__n_queries = 0;
+/* internal count of instances */
+$__MyDB_internal__n_instances = 0;
 
 # Une classe non-abstraide de gestion de la DB
 
@@ -60,6 +64,9 @@ class MyDB
 	
 	public function __construct ($server, $username, $password, $db=null, $charset=null)
 	{
+		global $__MyDB_internal__n_instances;
+		$__MyDB_internal__n_instances++;
+		
 		$this->server = $server;
 		$this->username = $username;
 		$this->password = $password;
@@ -113,6 +120,9 @@ class MyDB
 	
 	public function query ($query)
 	{
+		global $__MyDB_internal__n_queries;
+		$__MyDB_internal__n_queries++;
+		
 		//echo '<pre>MyDB: q is: ',$query,'</pre>';
 		$this->response = mysql_query ($query, $this->link) or die ($this->error ());
 		return $this->response;
@@ -257,5 +267,17 @@ class MyDB
 		return $rv;
 		*/
 		return true;
+	}
+	
+	/* Returns number of queries. This count is kept between instances and this
+	 * function can be called without a class instance. */
+	public function get_n_queries () {
+		global $__MyDB_internal__n_queries;
+		return $__MyDB_internal__n_queries;
+	}
+	
+	public function get_n_instances () {
+		global $__MyDB_internal__n_instances;
+		return $__MyDB_internal__n_instances;
 	}
 }
