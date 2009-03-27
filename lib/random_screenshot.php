@@ -20,8 +20,8 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/medias.php');
-require_once ('include/MyDB.php');
+require_once ('lib/medias.php');
+require_once ('lib/MyDB.php');
 
 
 function random_screenshot_print ()

@@ -21,7 +21,7 @@
 
 /* parser for BanCode */
 
-require_once ('WKParser.php');
+require_once ('lib/WKParser.php');
 
 abstract class BCode
 {

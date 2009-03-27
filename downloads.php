@@ -21,8 +21,9 @@
 
 define (TITLE, 'Téléchargements');
 
-require_once ('include/medias.php');
-require_once ('include/misc.php');
+require_once ('lib/User.php');
+require_once ('lib/medias.php');
+require_once ('lib/misc.php');
 
 
 function print_downloads ()
@@ -44,7 +45,14 @@ function print_downloads ()
 					<th>URI</th>
 					<th>Description</th>
 					<th>Taille</th>
-					<th>Date</th>
+					<th>Date</th>';
+			if (User::get_logged ())
+			{
+				echo '
+					<th></th>
+					<th></th>';
+			}
+			echo '
 				</tr>';
 			
 			foreach ($tagmedias as $media)
@@ -52,8 +60,8 @@ function print_downloads ()
 				$name = basename ($media['uri']);
 				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
 				
-				echo
-				'<tr>
+				echo '
+				<tr>
 					<td>
 						<a href="',$media['uri'],'" title="',$media['desc'],'" class="noicon">
 							',$name,'
@@ -67,7 +75,24 @@ function print_downloads ()
 					</td>
 					<td>
 						',date ('d/m/Y H:i', $media['mdate']),'
+					</td>';
+				if (User::get_logged ())
+				{
+					echo '
+					<td>
+						<a href="admin.php?page=medias&amp;action=edit&amp;media=',$media['id'],'"
+						   title="Éditer">
+							<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
+						</a>
 					</td>
+					<td>
+						<a href="admin.php?page=medias&amp;action=rm&amp;media=',$media['id'],'"
+						   title="Supprimer">
+							<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
+						</a>
+					</td>';
+				}
+				echo '
 				</tr>';
 			}
 			
@@ -90,26 +115,37 @@ require_once ('include/top.minc');
 <div id="presentation">
 	<h2><?php echo TITLE; ?></h2>
 	<p>
-<span class="u">Avertissement :</span> dans la mesure où le moteur est en constant
-développement et que son interface est modifiée chaque jour, il n'est pas conseillé
-de s'inspirer des sources disponibles en téléchargement pour le moment,
-et encore moins de se familiariser avec les versions actuelles en vue d'utiliser
-le moteur par la suite.<br />
-En revanche je vous conseille vivement de préférer le dépôt SVN aux archives disponibles
-sur cette page, elle est très souvent moins buggée.
+		<span class="u">Avertissement :</span> dans la mesure où le moteur est en constant
+		développement et que son interface est modifiée chaque jour, il n'est pas conseillé
+		de s'inspirer des sources disponibles en téléchargement pour le moment,
+		et encore moins de se familiariser avec les versions actuelles en vue d'utiliser
+		le moteur par la suite.<br />
+		En revanche je vous conseille vivement de préférer le dépôt SVN aux archives disponibles
+		sur cette page, elle est très souvent moins buggée.
 	</p>
 </div>
 
 <div id="content">
 	<h3>Version de développement</h3>
-        <p>
-	Vous pouvez obtenir la version de développement en utilisant
-	<a href="http://fr.wikipedia.org/wiki/Subversion_(logiciel)">SVN</a>&nbsp;:<br />
-	<code>svn co svn://svn.tuxfamily.org/svnroot/scengine/scengine scengine</code>
+	<p>
+		Vous pouvez obtenir la version de développement en utilisant
+		<a href="http://fr.wikipedia.org/wiki/Subversion_(logiciel)">SVN</a>&nbsp;:<br />
+		<code>svn co svn://svn.tuxfamily.org/svnroot/scengine/scengine scengine</code>
 	</p>
 
 	<h3>Versions publiées</h3>
 	<?php
+		if (User::get_logged ())
+		{
+			echo '
+			<div>
+				<a href="admin.php?page=medias&amp;action=new"
+				   onclick="window.location.replace (this.href); return false;">
+					<input type="button" value="Ajouter un téléchargement" />
+				</a>
+			</div>';
+		}
+		
 		print_downloads ();
 	?>
 		

@@ -20,7 +20,7 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/Metadata.php'); /* gave MDI instance */
+require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 //$md = &new Metadata (METADATA_FILE);
 

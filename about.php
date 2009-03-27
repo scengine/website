@@ -22,7 +22,7 @@
 
 define (TITLE, 'À propos');
 require_once ('include/top.minc');
-require_once ('include/Metadata.php'); /* gave MDI instance */
+require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 ?>
 	<div id="presentation">

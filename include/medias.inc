@@ -22,9 +22,9 @@
 define (PAGE, 'medias');
 
 
-require_once ('include/misc.php');
-require_once ('include/MyDB.php');
-require_once ('include/medias.php');
+require_once ('lib/misc.php');
+require_once ('lib/MyDB.php');
+require_once ('lib/medias.php');
 
 
 function print_return_link ($button=false)

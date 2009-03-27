@@ -29,7 +29,7 @@
 				<a href="index.php">Retour au site</a>
 			</p>
 <?php
-	require_once('include/User.php');
+	require_once('lib/User.php');
 
 	if(User::get_logged ())
 	{

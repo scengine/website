@@ -25,12 +25,12 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/engine_news.php');
-require_once ('include/random_screenshot.php');
-require_once ('include/User.php');
-require_once ('include/Compteur.php');
-require_once ('include/string.php');
-require_once ('include/Metadata.php'); /* gave MDI instance */
+require_once ('lib/engine_news.php');
+require_once ('lib/random_screenshot.php');
+require_once ('lib/User.php');
+require_once ('lib/CounterIP.php');
+require_once ('lib/string.php');
+require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 
 function print_head_adds (&$adds) {

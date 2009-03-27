@@ -24,7 +24,7 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/MyDB.php');
+require_once ('lib/MyDB.php');
 
 /*
 class CounterIP_ {

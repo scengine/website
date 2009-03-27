@@ -28,8 +28,8 @@ define (NEWS_OFFSET, 8);
 
 require_once ('include/defines.php');
 require_once ('include/top.minc');
-require_once ('include/MyDB.php');
-require_once ('include/BCode.php');
+require_once ('lib/MyDB.php');
+require_once ('lib/BCode.php');
 
 
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';

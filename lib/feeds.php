@@ -20,7 +20,7 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/MyDB.php');
+require_once ('lib/MyDB.php');
 
 
 /** Feed templates for devel news **/

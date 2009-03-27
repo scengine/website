@@ -21,7 +21,7 @@
 
 /* Display messages dialogs */
 
-require_once ('include/Dialog.class.php');
+require_once ('lib/Dialog.php');
 
 
 define (DIALOG_TYPE_NONE, 0);

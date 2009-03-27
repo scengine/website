@@ -19,11 +19,11 @@
  * 
  */
 
-require_once ('MyDB.php');
-require_once ('BCode.php');
-require_once ('User.php');
-require_once ('defines.php');
-require_once ('feeds.php');
+require_once ('lib/MyDB.php');
+require_once ('lib/BCode.php');
+require_once ('lib/User.php');
+require_once ('include/defines.php');
+require_once ('lib/feeds.php');
 
 
 /* DEBUG : */

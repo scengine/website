@@ -26,9 +26,9 @@
 define (TITLE, 'Médias');
 
 require_once ('include/defines.php');
-require_once ('include/medias.php');
-require_once ('include/misc.php');
-require_once ('include/User.php');
+require_once ('lib/medias.php');
+require_once ('lib/misc.php');
+require_once ('lib/User.php');
 
 
 function print_screenshot (array &$media)

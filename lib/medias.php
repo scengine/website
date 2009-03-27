@@ -20,8 +20,8 @@
  */
 
 require_once ('include/defines.php');
-require_once ('include/string.php');
-require_once ('include/MyDB.php');
+require_once ('lib/string.php');
+require_once ('lib/MyDB.php');
 
 define (MEDIA_THUMBNAIL_WIDTH,  160.0);
 define (MEDIA_THUMBNAIL_HEIGHT, 120.0);

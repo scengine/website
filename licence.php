@@ -21,7 +21,7 @@
 
 
 define (TITLE, 'Licence');
-require_once ('include/string.php');
+require_once ('lib/string.php');
 require_once ('include/top.minc');
 
 //define (LICENSE_FILE, 'http://www.gnu.org/licenses/gpl.txt');

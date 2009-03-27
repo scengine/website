@@ -20,10 +20,10 @@
  */
 
 
-require_once ('defines.php');
-require_once ('include/MyDB.php');
-require_once ('include/User.php');
-require_once ('include/string.php');
+require_once ('include/defines.php');
+require_once ('lib/MyDB.php');
+require_once ('lib/User.php');
+require_once ('lib/string.php');
 
 define (ENGINE_NEWS_OFFSET, 16);
 define (ENGINE_NEWS_GET_PREFIX, 's_e');

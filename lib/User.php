@@ -24,8 +24,8 @@
 session_start ();
 */
 
-require_once ('defines.php');
-require_once ('MyDB.php');
+require_once ('include/defines.php');
+require_once ('lib/MyDB.php');
 
 define (COOKIE_EXPIRE, 0);
 

@@ -21,9 +21,9 @@
 
 /*connecxion/déconnexion*/
 
-require_once ('include/User.php');
-require_once ('include/string.php');
-require_once ('include/TypedDialog.class.php');
+require_once ('lib/User.php');
+require_once ('lib/string.php');
+require_once ('lib/TypedDialog.php');
 
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
 $refresh = 'index.php';

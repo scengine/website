@@ -23,10 +23,10 @@
 
 session_start();
 
-require_once ('include/User.php');
-require_once ('include/Header.php');
+require_once ('lib/User.php');
+require_once ('lib/Header.php');
 require_once ('include/defines.php');
-require_once ('include/Metadata.php'); /* gave MDI instance */
+require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 // si l'utilisateur n'est pas loggué, on l'envois chier :D
 if (!User::get_logged () && User::get_level () <= 3) {

@@ -21,9 +21,9 @@
 
 /* page d'administration des admins */
 
-require_once ('defines.php');
-require_once ('User.php');
-require_once ('MyDB.php');
+require_once ('include/defines.php');
+require_once ('lib/User.php');
+require_once ('lib/MyDB.php');
 
 
 
