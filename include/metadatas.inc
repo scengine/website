@@ -148,7 +148,7 @@ function print_team_table (array &$team, $project) {
 		</div>
 		<div id="content">
 <?php
-if (User::has_rights (ADMIN_LEVEL_MEDIA)) {
+if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 ?>
 			<form action="<?php echo '?page=', PAGE ?>" method="post">
 				<div>
