@@ -25,39 +25,41 @@ require_once ('lib/Metadata.php'); /* gave MDI instance */
 //$md = &new Metadata (METADATA_FILE);
 
 
-/* si on doit enregistrer les données */
-if ($_POST['name']) {
-	$MDI->set_name ($_POST['name']);
-	$MDI->set_version ($_POST['version']);
-	$MDI->set_license ($_POST['license']);
-	
-	for ($i=0; true; $i++) {
-		/* hack to pass NEW author into this loop */
-		if (!isset ($_POST['author'.$i]))
-			$i = 'NEW';
+if (User::has_rights (ADMIN_LEVEL_METADATA)) {
+	/* si on doit enregistrer les données */
+	if ($_POST['name']) {
+		$MDI->set_name ($_POST['name']);
+		$MDI->set_version ($_POST['version']);
+		$MDI->set_license ($_POST['license']);
 		
-		$author = stripslashes ($_POST['author'.$i]);
+		for ($i=0; true; $i++) {
+			/* hack to pass NEW author into this loop */
+			if (!isset ($_POST['author'.$i]))
+				$i = 'NEW';
+			
+			$author = stripslashes ($_POST['author'.$i]);
+			
+			if ($_POST['dev'.$i])     $MDI->add_authors ($author);
+			else                      $MDI->remove_authors ($author);
+			if ($_POST['doc'.$i])     $MDI->add_documenters ($author);
+			else                      $MDI->remove_documenters ($author);
+			if ($_POST['trans'.$i])   $MDI->add_translators ($author);
+			else                      $MDI->remove_translators ($author);
+			if ($_POST['graph'.$i])   $MDI->add_graphists ($author);
+			else                      $MDI->remove_graphists ($author);
+			if ($_POST['contrib'.$i]) $MDI->add_contributors ($author);
+			else                      $MDI->remove_contributors ($author);
+			
+			/* see on top of this loop for the hack explanation */
+			if ($i === 'NEW') break;
+		}
 		
-		if ($_POST['dev'.$i])     $MDI->add_authors ($author);
-		else                      $MDI->remove_authors ($author);
-		if ($_POST['doc'.$i])     $MDI->add_documenters ($author);
-		else                      $MDI->remove_documenters ($author);
-		if ($_POST['trans'.$i])   $MDI->add_translators ($author);
-		else                      $MDI->remove_translators ($author);
-		if ($_POST['graph'.$i])   $MDI->add_graphists ($author);
-		else                      $MDI->remove_graphists ($author);
-		if ($_POST['contrib'.$i]) $MDI->add_contributors ($author);
-		else                      $MDI->remove_contributors ($author);
+		if ($_POST['update_mdate'])
+			$MDI->update_mdate ();
+		$MDI->update_metadata_mdate ();
 		
-		/* see on top of this loop for the hack explanation */
-		if ($i === 'NEW') break;
+		$MDI->save ();
 	}
-	
-	if ($_POST['update_mdate'])
-		$MDI->update_mdate ();
-	$MDI->update_metadata_mdate ();
-	
-	$MDI->save ();
 }
 
 
@@ -140,11 +142,14 @@ function print_team_table (array &$team, $project) {
 ?>
 		<div id="presentation">
 			<h2>Gestion des métadonnées</h2>
-				<p>
-					Gestion des métadonnées associées au projet
-				</p>
+			<p>
+				Gestion des métadonnées associées au projet
+			</p>
 		</div>
 		<div id="content">
+<?php
+if (User::has_rights (ADMIN_LEVEL_MEDIA)) {
+?>
 			<form action="<?php echo '?page=', PAGE ?>" method="post">
 				<div>
 					<label>Nom du projet&nbsp;:<br /><input type="text" name="name" value="<?php echo htmlspecialchars ($MDI->get_name ()); ?>" /></label><br />
@@ -161,4 +166,16 @@ function print_team_table (array &$team, $project) {
 					</a-->
 				</p>
 			</form>
+<?php
+}
+/* if no sufficients rights */
+else
+{
+?>
+			<p>
+				Vous n'avez pas les droits suffisants pour modifier les métadonnées.
+			</p>
+<?php
+}
+?>
 		</div>

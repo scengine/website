@@ -37,12 +37,16 @@ define (DB_TRANSFERT_ENCODING, 'utf8_bin');
 define (ADMIN_LEVEL_NEWS, 2);
 /* same but for development news */
 define (ADMIN_LEVEL_NEWSDEVEL, 0);
-/* same but for medias */
+/* admin level for medias */
 define (ADMIN_LEVEL_MEDIA, 1);
+/* admin level for metadatas */
+define (ADMIN_LEVEL_METADATA, 0);
+
 /* maximum level for admins (should be always 0) */
 define (ADMIN_LEVEL_MASTER, 0);
 /* minimal level for admins (should be <= to all other levels) */
 define (ADMIN_LEVEL_MINIMAL, 3);
+
 
 define (ENGINE, 'SCEngine'); // :D
 define (DESCRIPTION, 'Site officiel du SCEngine');
