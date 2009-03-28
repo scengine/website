@@ -181,7 +181,6 @@ abstract class News {
 		if (! empty ($title) && ! empty ($content) && ! empty ($source) && ! empty ($author)) {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			
 			if ($db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'")) {
 				$dialog->add_info_message ('News postée avec succès.');
 				
@@ -205,7 +204,6 @@ abstract class News {
 		if (!empty ($id)) {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			
 			if ($db->delete ("`id`='$id'")) {
 				$dialog->add_info_message ('News supprimée avec succès.');
 				
@@ -222,22 +220,20 @@ abstract class News {
 		}
 	}
 	
-	public static function edit ($id, $date, $title, $content) {
+	public static function edit ($id, $title, $content) {
 		global $dialog;
 		
 		$source = addslashes ($content);
 		$content = addslashes (BCode::parse (stripslashes ($content)));
 		$title = addslashes ($title);
 		
-		if (!empty ($id) && !empty ($date) && !empty ($title) && !empty ($content)) {
-//			$content = parse ($content);
+		if (! empty ($id) && ! empty ($title) && ! empty ($content)) {
 			$mdate = time ();
 			$mauthor = addslashes (User::get_name ());
 			
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			
-			if ($db->update ("`date`='$date', `mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id")) {
+			if ($db->update ("`mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id")) {
 				$dialog->add_info_message  ('News éditée avec succès.');
 				
 				self::update_feed ();
@@ -306,7 +302,7 @@ if (User::get_logged ())
 			else if ($_GET['act'] == 'edit')
 			{
 				if (!empty ($_GET['id']))
-					News::edit ($_GET['id'], $_POST['date'], $_POST['title'], $_POST['content']);
+					News::edit ($_GET['id'], $_POST['title'], $_POST['content']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}

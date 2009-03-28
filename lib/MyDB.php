@@ -80,13 +80,16 @@ class MyDB
 	
 	private function connect ()
 	{
-		return $this->link = mysql_connect ($this->server, $this->username, $this->password);
+		$this->link = mysql_connect ($this->server, $this->username, $this->password);
+		return $this->link !== false;
 	}
 	
-	private function close ()
+	public function close ()
 	{
-		if ($this->link !== false)
+		if ($this->link !== false) {
 			mysql_close ($this->link);
+			$this->link = false;
+		}
 	}
 	
 	public function __sleep ()
@@ -104,7 +107,14 @@ class MyDB
 	
 	public function __destruct ()
 	{
-		$this->close ();
+		/*
+		 * see http://fr.php.net/manual/fr/function.mysql-close.php#72395 for why I
+		 * don't close link.
+		 * Moreover, I dunno why, perhaps because link is already implicitly closed,
+		 * but sometimes I get an error about invalid connexion closed if I close it
+		 * myself.
+		 */
+		//$this->close ();
 	}
 	
 	public function error ()

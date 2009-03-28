@@ -155,7 +155,6 @@ function print_news ($start=0) {
 						<a href="javascript:entry_lesser(\'tn',$new['id'],'\')">[-]</a>
 					</div>
 					<p>
-						<input type="hidden" name="date" value="',$new['date'],'" />
 						<label>Titre&nbsp;:<br />
 							<input type="text" name="title" value="',escape_html_quotes (stripslashes ($new['titre'])),'" />
 						</label>
