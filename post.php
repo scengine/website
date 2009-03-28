@@ -90,6 +90,8 @@ abstract class Devel {
 			
 			if ($db->insert ("'', '$date', '$content'")) {
 				$dialog->add_info_message ('Message posté avec succès.');
+				
+				self::update_feed ();
 			}
 			else {
 				$dialog->add_error_message ('Une erreur est survenue lors de l\'insertion des '.
@@ -102,10 +104,8 @@ abstract class Devel {
 		else {
 			$dialog->add_error_message ('Aucune information n\'a été trouvée pour poster le message&nbsp;!');
 		}
-		
-		self::update_feed ();
 	}
-
+	
 	public static function remove ($id) {
 		global $dialog;
 		
@@ -115,6 +115,8 @@ abstract class Devel {
 			
 			if ($db->delete ("`id`='$id'")) {
 				$dialog->add_info_message ('Message supprimé avec succès.');
+				
+				self::update_feed ();
 			}
 			else {
 				$dialog->add_error_message ('Erreur lors de la suppression du message.');
@@ -125,10 +127,8 @@ abstract class Devel {
 		else{
 			$dialog->add_error_message ('Pas d\'ID spécifiée.');
 		}
-		
-		self::update_feed ();
 	}
-
+	
 	public static function edit ($id, $date, $content) {
 		global $dialog;
 		
@@ -140,6 +140,8 @@ abstract class Devel {
 			
 			if ($db->update ("`date`='$date', `content`='$content'", "`id`=$id")) {
 				$dialog->add_info_message ('Message édité avec succès.');
+				
+				self::update_feed ();
 			}
 			else {
 				$dialog->add_error_message ('Erreur lors de l\'édition du message.');
@@ -150,10 +152,8 @@ abstract class Devel {
 		else {
 			$dialog->add_error_message ('Données erronées.');
 		}
-		
-		self::update_feed ();
 	}
-
+	
 	public static function get_table() {
 		return self::$table;
 	}
@@ -184,6 +184,8 @@ abstract class News {
 			
 			if ($db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'")) {
 				$dialog->add_info_message ('News postée avec succès.');
+				
+				self::update_feed ();
 			}
 			else {
 				$dialog->add_error_message ('Une erreur est survenue lors de l\'insertion des '.
@@ -195,10 +197,8 @@ abstract class News {
 		}
 		else
 			$dialog->add_error_message ('Aucune information n\'a été trouvée pour poster la news&nbsp;!');
-		
-		self::update_feed ();
 	}
-
+	
 	public static function remove ($id) {
 		global $dialog;
 		
@@ -208,6 +208,8 @@ abstract class News {
 			
 			if ($db->delete ("`id`='$id'")) {
 				$dialog->add_info_message ('News supprimée avec succès.');
+				
+				self::update_feed ();
 			}
 			else {
 				$dialog->add_error_message ('Erreur lors de la suppression de la news.');
@@ -218,10 +220,8 @@ abstract class News {
 		else {
 			$dialog->add_error_message ('Pas d\'ID spécifiée.');
 		}
-		
-		self::update_feed ();
 	}
-
+	
 	public static function edit ($id, $date, $title, $content) {
 		global $dialog;
 		
@@ -237,8 +237,11 @@ abstract class News {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->update ("`date`='$date', `mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id"))
+			if ($db->update ("`date`='$date', `mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id")) {
 				$dialog->add_info_message  ('News éditée avec succès.');
+				
+				self::update_feed ();
+			}
 			else
 				$dialog->add_error_message  ('Erreur lors de l\'édition de la news.');
 			
@@ -246,10 +249,8 @@ abstract class News {
 		}
 		else
 			$dialog->add_error_message  ('Les données puxxent !!!');
-		
-		self::update_feed ();
 	}
-
+	
 	public static function get_table() {
 		return self::$table;
 	}
