@@ -23,6 +23,7 @@ define (PAGE, 'medias');
 
 
 require_once ('lib/misc.php');
+require_once ('lib/User.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/medias.php');
 
@@ -865,48 +866,59 @@ echo '
 	
 	<div id="content">';
 
-if (isset ($_GET['action']))
+if (User::has_rights (ADMIN_LEVEL_MEDIA))
 {
-	switch ($_GET['action'])
+	if (isset ($_GET['action']))
 	{
-		case 'show':
-			if (! isset ($_GET['media']))
-				$error = 'Média manquant';
-			else
-				print_media_show ($_GET['media']);
-			break;
-		
-		case 'rm':
-			if (! isset ($_GET['media']))
-				$error = 'Média manquant';
-			else
-				remove_media_query ($_GET['media']);
-			break;
-		
-		case 'edit':
-			if (! isset ($_GET['media']))
-				$error = 'Média manquant';
-			else
-				update_media_query ($_GET['media']);
-			break;
-		
-		case 'new':
-			add_media_query ();
-			break;
-		
-		default:
-			$error = 'Action invalide';
+		switch ($_GET['action'])
+		{
+			case 'show':
+				if (! isset ($_GET['media']))
+					$error = 'Média manquant';
+				else
+					print_media_show ($_GET['media']);
+				break;
+			
+			case 'rm':
+				if (! isset ($_GET['media']))
+					$error = 'Média manquant';
+				else
+					remove_media_query ($_GET['media']);
+				break;
+			
+			case 'edit':
+				if (! isset ($_GET['media']))
+					$error = 'Média manquant';
+				else
+					update_media_query ($_GET['media']);
+				break;
+			
+			case 'new':
+				add_media_query ();
+				break;
+			
+			default:
+				$error = 'Action invalide';
+		}
+	}
+	else
+		print_media_tables ();
+	
+	if ($error)
+	{
+		echo '
+		<p class="error">',$error,'</p>
+		<p>',print_return_link (false),'</p>';
 	}
 }
+/* if not allowed to go there */
 else
-	print_media_tables ();
-
-if ($error)
 {
 	echo '
-	<p class="error">',$error,'</p>
-	<p>',print_return_link (false),'</p>';
+	<p>
+		Vous n\'avez pas les droits suffisants pour gérer les médias.
+	</p>';
 }
 
 echo '
-</div>';
+	</div>';

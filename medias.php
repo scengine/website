@@ -114,7 +114,7 @@ function print_media ($media_id)
 		echo '
 		<h3 id="watch">',$media['desc'],'</h3>
 		<div class="showmediacontainer">';
-		if (User::get_logged ())
+		if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		{
 			echo '
 			<div class="admin">
@@ -152,7 +152,7 @@ function print_media ($media_id)
 			echo '<div class="comment"><p>',$media['comment'],'</p></div>';
 		}
 		
-		if (User::get_logged ())
+		if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		{
 			media_print_code_snippets ($media);
 		}
@@ -441,7 +441,7 @@ else if (isset ($_GET['showtag']))
 
 	<div id="content">
 		<?php
-		if (User::get_logged ())
+		if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		{
 			echo '
 			<div class="admin">

@@ -46,7 +46,7 @@ function print_downloads ()
 					<th>Description</th>
 					<th>Taille</th>
 					<th>Date</th>';
-			if (User::get_logged ())
+			if (User::has_rights (ADMIN_LEVEL_MEDIA))
 			{
 				echo '
 					<th></th>
@@ -76,7 +76,7 @@ function print_downloads ()
 					<td>
 						',date ('d/m/Y H:i', $media['mdate']),'
 					</td>';
-				if (User::get_logged ())
+				if (User::has_rights (ADMIN_LEVEL_MEDIA))
 				{
 					echo '
 					<td>
@@ -135,7 +135,7 @@ require_once ('include/top.minc');
 
 	<h3>Versions publiées</h3>
 	<?php
-		if (User::get_logged ())
+		if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		{
 			echo '
 			<div>
