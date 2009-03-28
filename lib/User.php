@@ -154,4 +154,9 @@ abstract class User
 		
 		return true;
 	}
+	
+	public static function has_rights ($right_level)
+	{
+		return (self::get_logged () && self::get_level () <= $right_level) ? true : false;
+	}
 }

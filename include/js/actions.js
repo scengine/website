@@ -61,6 +61,19 @@ function toggle_folding (button_id, element_id)
 	}
 }
 
+/* toggle visibility of an element
+ * This function returns false to ease use of it in onclick links */
+function toggle_display (element_id, display_type)
+{
+	el = document.getElementById (element_id);
+	if (el.style.display == 'none')
+		el.style.display = display_type;
+	else
+		el.style.display = 'none';
+	
+	return false;
+}
+
 /* set all checkbox named \p name checked or not according to \p state */
 function set_checked_by_name (name, state)
 {

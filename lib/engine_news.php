@@ -121,8 +121,7 @@ function get_color_for_oldness ($age)
 
 function print_engine_news ()
 {
-	$user_logged = User::get_logged ();
-	$user_level  = User::get_level ();
+	$user_can_post = User::has_rights (ADMIN_LEVEL_NEWSDEVEL);
 	$start_news = 0;
 	
 	$start_news = (isset ($_GET[ENGINE_NEWS_GET_PREFIX])) ? $_GET[ENGINE_NEWS_GET_PREFIX] : 0;
@@ -143,9 +142,7 @@ function print_engine_news ()
 		'</a>
 	</div>';
 	
-	if ($user_logged &&
-	    //User::get_name ()   == 'Yno')
-	    $user_level == 0)
+	if ($user_can_post)
 	{
 		
 		# si le JS n'est pas activé, l'erreur s'affichera
@@ -190,9 +187,7 @@ function print_engine_news ()
 		echo '
 		<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
 		
-		if ($user_logged &&
-		    //User::get_name ()   == 'Yno')
-		    $user_level == 0)
+		if ($user_can_post)
 		{
 			echo '
 			<div class="admin">
@@ -208,9 +203,7 @@ function print_engine_news ()
 			stripslashes ($new['content']),
 		'</p>';
 		
-		if ($user_logged &&
-			 //User::get_name ()   == 'Yno')
-			 $user_level == 0)
+		if ($user_can_post)
 		{
 			echo '
 			<div class="formedit" id="fm',$new['id'],'" style="display:none;">
@@ -240,5 +233,5 @@ function print_engine_news ()
 	echo '
 	</div>';
 	
-	unset ($user_logged, $user_level, $news, $new);
+	unset ($user_can_post, $news, $new);
 }

@@ -600,7 +600,7 @@ function add_user($pseudo, $pass, $passconf, $level)
 
 
 // est-ce que l'admin est un "super-admin" ?
-$master = (User::get_level() == 0) ? true : false;
+$master = User::has_rights (ADMIN_LEVEL_MASTER);
 
 
 

@@ -273,7 +273,7 @@ echo '<div id="presentation">
 		<div id="content">';
 // =================================================================
 
-if (User::get_level () <= NEWSLEVEL) {
+if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	if (urldecode ($_GET['action']) == 'edit') {
 		if ($_GET['id']) {
 			$message = get_message ($_GET['id']);

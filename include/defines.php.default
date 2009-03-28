@@ -34,7 +34,13 @@ define (DB_TRANSFERT_ENCODING, 'utf8_bin');
 
 /* Administration level needed at least to post/edit/remove news.
  * Higher administration level is 0 */
-define (NEWSLEVEL, 1);
+define (ADMIN_LEVEL_NEWS, 1);
+/* same but for development news */
+define (ADMIN_LEVEL_NEWSDEVEL, 0);
+/* maximum level for admins (should be always 0) */
+define (ADMIN_LEVEL_MASTER, 0);
+/* minimal level for admins (should be <= to all other levels) */
+define (ADMIN_LEVEL_MINIMAL, 3);
 
 define (ENGINE, 'SCEngine'); // :D
 define (DESCRIPTION, 'Site officiel du SCEngine');

@@ -29,7 +29,7 @@ require_once ('include/defines.php');
 require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 // si l'utilisateur n'est pas loggué, on l'envois chier :D
-if (!User::get_logged () && User::get_level () <= 3) {
+if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 	Header::h404 ();
 }
 

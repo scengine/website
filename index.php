@@ -84,11 +84,11 @@ function print_news ($start=0) {
 	$news = get_news ($start, NEWS_OFFSET);
 	
 	// pour permetre aux admins d'ajouter une news
-	if (User::get_logged () &&
-		User::get_level () <= NEWSLEVEL) {
+	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 		echo '
 		<div class="fleft">
-			[<a href="admin.php?page=actualités&amp;action=new">Ajouter une news</a>]
+			[<a href="admin.php?page=actualités&amp;action=new"
+			    onclick="return toggle_display (\'fld_nnew\', \'block\');">Ajouter une news</a>]
 		</div>';
 	}
 	
@@ -104,12 +104,40 @@ function print_news ($start=0) {
 		'</a>
 	</div>';
 	
+	if (User::has_rights (ADMIN_LEVEL_NEWS))
+	{
+		// new news form is displayed only by JS, then without JS it doesn't bother
+		echo '
+		<div class="new" id="fld_nnew" style="display: none">
+			<div class="formedit">
+				<form method="post" action="post.php?sec=news&amp;act=new">
+					<div>
+						<a href="javascript:entry_more(\'tnnew\')">[+]</a>
+						<a href="javascript:entry_lesser(\'tnnew\')">[-]</a>
+					</div>
+					<p>
+						<label>Titre&nbsp;:<br />
+							<input type="text" name="title" value="" />
+						</label>
+						<br />
+						<br />
+						<label>Contenu&nbsp;:<br />
+							<textarea name="content" cols="24" rows="16" id="tnnew"></textarea>
+						</label>
+						<br />
+						<input type="submit" value="Envoyer" />
+						<input type="reset" value="Réinitialiser" />
+					</p>
+				</form>
+			</div>
+		</div>';
+	}
+	
 	foreach ($news as $new) {
 		echo '
 		<div class="new">';
 		
-		if (User::get_logged () &&
-		    User::get_level () <= NEWSLEVEL) {
+		if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
 			<div class="admin">',
 	//                  [<a href="admin/?page=actualités&amp;id=', $new['id'], '&amp;action=édit">Éditer</a>]
