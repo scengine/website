@@ -72,3 +72,23 @@ function array_multisort_2nd (array &$array_to_sort, $sort_key, $sort_direction=
 	return $array_to_sort;
 }
 
+/* prints a portable link button */
+function print_button_full ($label, $url, $title=null, $js='')
+{
+	echo '
+	<a href="',htmlspecialchars ($url, ENT_COMPAT, 'UTF-8'),'"
+		', $title !== null ? 'title="'.htmlspecialchars ($title, ENT_COMPAT, 'UTF-8').'"' : '','
+	   onclick="',$js,'">',
+		'<input type="button" value="',htmlspecialchars ($label, ENT_COMPAT, 'UTF-8'),'" />',
+	'</a>';
+}
+
+function print_button ($label, $url, $title=null)
+{
+	print_button_full ($label, $url, $title, 'window.location.replace (this.href); return false;');
+}
+
+function print_backbutton ($label, $url, $title=null, $back=1)
+{
+	print_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
+}

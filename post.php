@@ -39,19 +39,26 @@ require_once ('lib/feeds.php');
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
 $refresh = 'index.php';
 
-// on vérifie que le client a donné une adresse de page précédante
-if ($_SERVER['HTTP_REFERER']) {
-	// on vérifie que la page pérécdante correspond à une page du site
-	if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
-		$refresh = $_SERVER['HTTP_REFERER'];
-		
-		if ($_GET['id'] && ctype_digit ($_GET['id']))
-		{
-			if (Devel::SECTION == $_GET['sec'])
-				$refresh .= '#m';
-			else
-				$refresh .= '#n';
-			$refresh .= $_GET['id'];
+if (isset ($_GET['redirect'])) {
+	// if a redirect was sepcified, use it
+	$refresh = urldecode ($_GET['redirect']);
+}
+else {
+	// else, try to get previous URL
+	// on vérifie que le client a donné une adresse de page précédante
+	if ($_SERVER['HTTP_REFERER']) {
+		// on vérifie que la page pérécdante correspond à une page du site
+		if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
+			$refresh = $_SERVER['HTTP_REFERER'];
+			
+			if ($_GET['id'] && ctype_digit ($_GET['id']))
+			{
+				if (Devel::SECTION == $_GET['sec'])
+					$refresh .= '#m';
+				else
+					$refresh .= '#n';
+				$refresh .= $_GET['id'];
+			}
 		}
 	}
 }
