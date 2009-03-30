@@ -53,7 +53,7 @@ else {
 			
 			if ($_GET['id'] && ctype_digit ($_GET['id']))
 			{
-				if (Devel::SECTION == $_GET['sec'])
+				if (PostDevel::SECTION == $_GET['sec'])
 					$refresh .= '#m';
 				else
 					$refresh .= '#n';
@@ -68,7 +68,7 @@ $dialog = &new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 
 /* abstract class to update devel news */
-abstract class Devel {
+abstract class PostDevel {
 	const SECTION = 'devel';
 	private static $table = DEVEL_TABLE;
 	
@@ -167,7 +167,7 @@ abstract class Devel {
 }
 
 /* abstract class to update news */
-abstract class News {
+abstract class PostNews {
 	const SECTION = 'news';
 	private static $table = NEWS_TABLE;
 	
@@ -265,19 +265,19 @@ abstract class News {
 
 if (User::get_logged ())
 {
-	if (Devel::SECTION == $_GET['sec'])
+	if (PostDevel::SECTION == $_GET['sec'])
 	{
 		if (User::has_rights (ADMIN_LEVEL_NEWSDEVEL))
 		{
 			// new devel post
 			if ($_GET['act'] == 'new')
-				Devel::save ($_POST['date'], $_POST['content']);
+				PostDevel::save ($_POST['date'], $_POST['content']);
 			
 			// edit an existing devel post
 			else if ($_GET['act'] == 'edit')
 			{
 				if (!empty ($_GET['id']))
-					Devel::edit ($_GET['id'], $_POST['date'], $_POST['content']);
+					PostDevel::edit ($_GET['id'], $_POST['date'], $_POST['content']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}
@@ -286,7 +286,7 @@ if (User::get_logged ())
 			else if ($_GET['act'] == 'rm')
 			{
 				if (!empty ($_GET['id']))
-					Devel::remove ($_GET['id']);
+					PostDevel::remove ($_GET['id']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}
@@ -297,19 +297,19 @@ if (User::get_logged ())
 		else // user level for news
 			$dialog->add_error_message ('Vous n\'avez pas le droit d\'effectuer cette action.');
 	}
-	else if (News::SECTION == $_GET['sec'])
+	else if (PostNews::SECTION == $_GET['sec'])
 	{
 		if (User::has_rights (ADMIN_LEVEL_NEWS))
 		{
 			// new news
 			if ($_GET['act'] == 'new')
-				News::save ($_POST['title'], $_POST['content']);
+				PostNews::save ($_POST['title'], $_POST['content']);
 			
 			// edit an existing news
 			else if ($_GET['act'] == 'edit')
 			{
 				if (!empty ($_GET['id']))
-					News::edit ($_GET['id'], $_POST['title'], $_POST['content']);
+					PostNews::edit ($_GET['id'], $_POST['title'], $_POST['content']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}
@@ -318,7 +318,7 @@ if (User::get_logged ())
 			else if ($_GET['act'] == 'rm')
 			{
 				if (!empty ($_GET['id']))
-					News::remove ($_GET['id']);
+					PostNews::remove ($_GET['id']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}
