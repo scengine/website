@@ -29,17 +29,17 @@ require_once ('lib/news.php');
 
 
 /* this function display a table containg or not values. */
-function display_table ($title='', $source='', $action='new', $id='') {
+function display_form ($title='', $source='', $action='new', $id='') {
 	news_print_form ($title, $source, $action, $id, 'admin.php?page='.strtolower (PAGE), 
 	                 get_button ('Annuler', '?page='.strtolower (PAGE)));
 }
 
-function display_table_new () {
-	display_table ();
+function display_form_new () {
+	display_form ();
 }
 
-function display_table_edit ($title='', $source='', $id='') {
-	display_table ($title, $source, 'edit', $id);
+function display_form_edit ($title='', $source='', $id='') {
+	display_form ($title, $source, 'edit', $id);
 }
 
 /* this function return an array of getted values on success or False on failure */
@@ -164,7 +164,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 				$title = htmlspecialchars (stripslashes ($message['titre']));
 				
 				echo '<h2>Édition de «&nbsp;',$title,'&nbsp;»</h2>';
-				display_table_edit ($message['titre'], $message['source'], $message['id']);
+				display_form_edit ($message['titre'], $message['source'], $message['id']);
 			}
 			else {
 				echo '
@@ -222,7 +222,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	}
 	else if ($_GET['action'] == 'new')
 	{
-		display_table_new ();
+		display_form_new ();
 	}
 	else if ($_GET['action'] == 'update_feeds')
 	{

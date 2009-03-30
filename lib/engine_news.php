@@ -191,7 +191,7 @@ function print_engine_news ()
 		{
 			echo '
 			<div class="admin">
-				[<a onclick="edit(\'m',$new['id'],'\', this)" title="éditer">éditer</a>]
+				[<a onclick="news_edit(\'m',$new['id'],'\', this)" title="éditer">éditer</a>]
 				[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
 				    onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
 				    title="Supprimer">X</a>]
