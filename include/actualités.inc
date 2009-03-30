@@ -25,13 +25,13 @@ require_once ('lib/User.php');
 require_once ('include/defines.php');
 require_once ('lib/feeds.php');
 require_once ('lib/misc.php');
-require_once ('lib/news.php');
+require_once ('lib/News.php');
 
 
-/* this function display a table containg or not values. */
+/* this function display a form containg or not values. */
 function display_form ($title='', $source='', $action='new', $id='') {
-	news_print_form ($title, $source, $action, $id, 'admin.php?page='.strtolower (PAGE), 
-	                 get_button ('Annuler', '?page='.strtolower (PAGE)));
+	News::print_form ($title, $source, $action, $id, 'admin.php?page='.strtolower (PAGE), 
+	                  get_button ('Annuler', '?page='.strtolower (PAGE)));
 }
 
 function display_form_new () {
@@ -42,44 +42,9 @@ function display_form_edit ($title='', $source='', $id='') {
 	display_form ($title, $source, 'edit', $id);
 }
 
-/* this function return an array of getted values on success or False on failure */
-function get_message ($id) {
-	if (! settype ($id, integer))
-		return False;
-	
-	$rv = False;
-	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-	$db->select_table (NEWS_TABLE);
-	if ($db->select ('*', "`id`=$id")) {
-		$rv = $db->fetch_response ();
-	}
-	
-	unset ($db);
-	
-	return $rv;
-}
-
-function get_all_messages () {
-	$rv = false;
-	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-	$db->select_table (NEWS_TABLE);
-	if ($db->select ('*', '', 'id')) {
-		$rv = array ();
-		while ($subarr = $db->fetch_response ()) {
-			$rv[] = $subarr;
-		}
-	}
-	
-	unset ($db);
-	
-	return $rv;
-}
-
-
-function print_all_messages () {
-	$messages = get_all_messages ();
+function print_all_messages ()
+{
+	$news = News::get ();
 	$page = strtolower (PAGE);
 	
 	echo '
@@ -102,33 +67,29 @@ function print_all_messages () {
 			</tr>
 		</tfoot>
 		<tbody>';
-	foreach ($messages as $message) {
-/*
-		$titre = htmlentities (stripslashes ($message['titre']));
-		$auteur = htmlentities (stripslashes ($message['auteur']));
-*/
-		$titre = htmlspecialchars (stripslashes ($message['titre']));
-		$auteur = htmlspecialchars (stripslashes ($message['auteur']));
+	foreach ($news as $new) {
+		$title = htmlspecialchars ($new['title']);
+		$author = htmlspecialchars ($new['author']);
 		
 		echo '
 		<tr>
 			<td>
-				<a href="?page=',$page,'&amp;action=edit&amp;id=',$message['id'],'"
-					title="Modifier «&nbsp;',$titre,'&nbsp;»">
-					',$titre,'
+				<a href="?page=',$page,'&amp;action=edit&amp;id=',$new['id'],'"
+					title="Modifier «&nbsp;',$title,'&nbsp;»">
+					',$title,'
 				</a>
 			</td>
 			<td>
-				<a href="?page=administrateurs&amp;pseudo=',$auteur,'"
+				<a href="?page=administrateurs&amp;pseudo=',$author,'"
 				  title="Voir la fiche de ',$auteur,'">
-					',$auteur,'
+					',$author,'
 				</a>
 			</td>
-			<td>', date ('d/m/y (H:i)', $message['date']), '</td>
+			<td>', date ('d/m/y (H:i)', $new['date']), '</td>
 			<td>
-				<a href="?page=',$page,'&amp;action=rm&amp;id=',$message['id'],'"
-				   onclick="return news_delete (\'',$message['id'],'\')"
-				   title="Supprimer «&nbsp;',$titre,'&nbsp;»">
+				<a href="?page=',$page,'&amp;action=rm&amp;id=',$new['id'],'"
+				   onclick="return news_delete (\'',$new['id'],'\')"
+				   title="Supprimer «&nbsp;',$title,'&nbsp;»">
 					<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
 				</a>
 			</td>
@@ -157,14 +118,14 @@ echo '
 if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	if ($_GET['action'] == 'edit') {
 		if ($_GET['id']) {
-			$message = get_message ($_GET['id']);
+			$new = News::get_by_id ($_GET['id']);
 			
-			if ($message !== false)
+			if ($new !== false)
 			{
-				$title = htmlspecialchars (stripslashes ($message['titre']));
+				$title = htmlspecialchars ($new['title']);
 				
 				echo '<h2>Édition de «&nbsp;',$title,'&nbsp;»</h2>';
-				display_form_edit ($message['titre'], $message['source'], $message['id']);
+				display_form_edit ($new['title'], $new['source'], $new['id']);
 			}
 			else {
 				echo '
@@ -186,13 +147,13 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	{
 		if ($_GET['id'])
 		{
-			$message = get_message ($_GET['id']);
+			$new = News::get_by_id ($_GET['id']);
 			
-			if ($message !== false)
+			if ($new !== false)
 			{
-				$titre = htmlspecialchars (stripslashes ($message['titre']));
+				$title = htmlspecialchars ($new['title']);
 				echo '
-				<p>Voulez-vous vraiment supprimer «&nbsp;', $titre, '&nbsp;»&nbsp;?</p>
+				<p>Voulez-vous vraiment supprimer «&nbsp;', $title, '&nbsp;»&nbsp;?</p>
 				<form method="post"
 				      action="post.php?sec=news&amp;act=rm&amp;id=',$_GET['id'],'&amp;redirect=',urlencode ('admin.php?page='.strtolower (PAGE)),'">
 					<p>

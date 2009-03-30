@@ -72,6 +72,13 @@ function array_multisort_2nd (array &$array_to_sort, $sort_key, $sort_direction=
 	return $array_to_sort;
 }
 
+/* is this function meanful? hum, if htmlspecialchars() is not good for
+ * attributes values (such as title="...") yes. */
+function escape_html_quotes (&$str)
+{
+	return str_replace ('"', '&quot;', $str);
+} 
+
 /* prints a portable link button */
 function print_button_full ($label, $url, $title=null, $js='')
 {

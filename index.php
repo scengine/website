@@ -27,41 +27,14 @@ define (TITLE, 'Accueil');
 define (NEWS_OFFSET, 8);
 
 require_once ('include/defines.php');
-require_once ('lib/news.php');
+require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/BCode.php');
 
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
-
-function get_news ($start=0, $end=NEWS_OFFSET) {
-	$rv = Array ();
-	
-	if ($end < 0)
-		$end = $start + NEWS_OFFSET;
-	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-	$db->select_table (NEWS_TABLE);
-	$db->select ('*', '', 'id', 'DESC', $start, $end);
-	
-	for ($i = 0; False !== ($content = $db->fetch_response ()); $i++) {
-		$rv[$i] = $content;
-	}
-	
-	unset ($db);
-	
-	return $rv;
-}
-
-function get_n_news ()
-{
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-	$db->select_table (NEWS_TABLE);
-	return $db->count ();
-}
-
 function print_news ($start=0) {
-	$news = get_news ($start, NEWS_OFFSET);
+	$news = News::get ($start, NEWS_OFFSET);
 	
 	// pour permetre aux admins d'ajouter une news
 	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
@@ -88,7 +61,7 @@ function print_news ($start=0) {
 	{
 		// new news form is displayed only by JS, then without JS it doesn't bother
 		echo '<div class="new" id="fld_nnew" style="display: none">';
-			news_print_form ('', '', 'new', 'new');
+			News::print_form ('', '', 'new', 'new');
 		echo '</div>';
 	}
 	
@@ -104,7 +77,7 @@ function print_news ($start=0) {
 				[<a href="admin.php?page=actualités&amp;id=',$new['id'],'&amp;action=rm"
 				    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
 			</div>';
-			news_print_form ($new['titre'], $new['source'], 'edit', $new['id'],
+			News::print_form ($new['title'], $new['source'], 'edit', $new['id'],
 			                 null, '', 'style="display:none;"');
 		}
 		
@@ -112,22 +85,22 @@ function print_news ($start=0) {
 			<div id="mn',$new['id'],'">
 				<h3 id="n',$new['id'],'">
 					<a href="#n',$new['id'],'">',
-						escape_html_quotes (stripslashes ($new['titre'])),
+						escape_html_quotes ($new['title']),
 					'</a>
 				</h3>
 				<div class="author">
 					<p>
-						Par <span class="b">',stripslashes ($new['auteur']),'</span> le ',
+						Par <span class="b">',$new['author'],'</span> le ',
 						date ('d/m/Y à H:i', $new['date']);
 		if ($new['date'] < $new['mdate'])
 		{
-			echo ' &ndash; édité par <span class="b">',stripslashes ($new['mauthor']),
+			echo ' &ndash; édité par <span class="b">',$new['mauthor'],
 				'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
 		}
 		echo '
 					</p>
 				</div>
-				',stripslashes ($new['contenu']),'
+				',$new['content'],'
 			</div>
 		</div>';
 	}
@@ -137,7 +110,7 @@ function print_news ($start=0) {
 function print_page_browser ($current)
 {
 	$bstr = '';
-	$n_news = get_n_news ();
+	$n_news = News::get_n ();
 	$n_pages = ceil ($n_news / NEWS_OFFSET);
 	$has_prev = ($current > 0) ? true : false;
 	$has_next = ($n_news > $current + NEWS_OFFSET) ? true : false;
@@ -166,7 +139,7 @@ function print_page_browser ($current)
 
 
 $start_news = (isset ($_GET['s'])) ? $_GET['s'] : 0;
-settype ($start_news, 'integer');
+settype ($start_news, integer);
 if ($start_news < 0) $start_news = 0;
 
 require_once ('include/top.minc');

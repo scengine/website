@@ -100,7 +100,7 @@ function print_engine_page_browser ($current)
 /* gets a colour from the age of a news */
 function get_color_for_oldness ($age)
 {
-	$old = (86400 * 1);
+	$old = 86400; // 24 hours
 	$x = min ((time () - $age) / $old, 1.0) / 1.6;
 	/* RGB color */
 	$color = array (0.9 - $x, $x, 0.0);
