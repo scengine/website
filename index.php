@@ -27,58 +27,38 @@ define (TITLE, 'Accueil');
 define (NEWS_OFFSET, 8);
 
 require_once ('include/defines.php');
-require_once ('include/top.minc');
+require_once ('lib/news.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/BCode.php');
-
 
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
 
 function get_news ($start=0, $end=NEWS_OFFSET) {
 	$rv = Array ();
-
+	
 	if ($end < 0)
 		$end = $start + NEWS_OFFSET;
-
+	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
-
+	
 	for ($i = 0; False !== ($content = $db->fetch_response ()); $i++) {
 		$rv[$i] = $content;
 	}
 	
 	unset ($db);
-
+	
 	return $rv;
 }
 
 function get_n_news ()
 {
-	$n = 0;
-
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-/*
-	if ($db->query('SELECT COUNT(*) AS n FROM news') !== false)
-	{
-		$data = $db->fetch_response ();
-		$n = $data['n'];
-	}
-*/
 	$db->select_table (NEWS_TABLE);
-	$n = $db->count ();
-	
-	unset ($db);
-
-	return $n;
+	return $db->count ();
 }
-
-function escape_html_quotes (&$str)
-{
-	$str = str_replace ('"', '&quot;', $str);
-	return $str;
-} 
 
 function print_news ($start=0) {
 	$news = get_news ($start, NEWS_OFFSET);
@@ -107,30 +87,9 @@ function print_news ($start=0) {
 	if (User::has_rights (ADMIN_LEVEL_NEWS))
 	{
 		// new news form is displayed only by JS, then without JS it doesn't bother
-		echo '
-		<div class="new" id="fld_nnew" style="display: none">
-			<div class="formedit">
-				<form method="post" action="post.php?sec=news&amp;act=new">
-					<div>
-						<a href="javascript:entry_more(\'tnnew\')">[+]</a>
-						<a href="javascript:entry_lesser(\'tnnew\')">[-]</a>
-					</div>
-					<p>
-						<label>Titre&nbsp;:<br />
-							<input type="text" name="title" value="" />
-						</label>
-						<br />
-						<br />
-						<label>Contenu&nbsp;:<br />
-							<textarea name="content" cols="24" rows="16" id="tnnew"></textarea>
-						</label>
-						<br />
-						<input type="submit" value="Envoyer" />
-						<input type="reset" value="Réinitialiser" />
-					</p>
-				</form>
-			</div>
-		</div>';
+		echo '<div class="new" id="fld_nnew" style="display: none">';
+			news_print_form ('', '', 'new', 'new');
+		echo '</div>';
 	}
 	
 	foreach ($news as $new) {
@@ -139,38 +98,14 @@ function print_news ($start=0) {
 		
 		if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
-			<div class="admin">',
-	//                  [<a href="admin/?page=actualités&amp;id=', $new['id'], '&amp;action=édit">Éditer</a>]
-	//                  [<a href="admin/?page=actualités&amp;id=', $new['id'], '&amp;action=rm">Supprimer</a>]
-				'[<a onclick="edit(\'n',$new['id'],'\', this)">Éditer</a>]
-				[<a href="post.php?sec=news&amp;id=',$new['id'],'&amp;act=rm"
-				    onclick="return confirm(\'Voulez-vous vraiment supprimer cette news ?\')">Supprimer</a>]
+			<div class="admin">
+				[<a href="admin.php?page=actualités&amp;id=',$new['id'],'&amp;action=edit"
+				    onclick="return news_edit (\'n',$new['id'],'\', this);">Éditer</a>]
+				[<a href="admin.php?page=actualités&amp;id=',$new['id'],'&amp;action=rm"
+				    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
 			</div>';
-			
-			echo '
-			<div class="formedit" id="fn',$new['id'],'" style="display:none;">
-				<form method="post" action="post.php?sec=news&amp;id=',$new['id'],'&amp;act=edit">
-					<div>
-						<a href="javascript:entry_more(\'tn',$new['id'],'\')">[+]</a>
-						<a href="javascript:entry_lesser(\'tn',$new['id'],'\')">[-]</a>
-					</div>
-					<p>
-						<label>Titre&nbsp;:<br />
-							<input type="text" name="title" value="',escape_html_quotes (stripslashes ($new['titre'])),'" />
-						</label>
-						<br />
-						<br />
-						<label>Contenu&nbsp;:<br />
-							<textarea name="content" cols="24" rows="16" id="tn',$new['id'],'">',
-								htmlspecialchars (stripslashes (BCode::unparse ($new['source'])), ENT_COMPAT, 'UTF-8'),
-							'</textarea>
-						</label>
-						<br />
-						<input type="submit" value="Envoyer" />
-						<input type="reset" value="Réinitialiser" />
-					</p>
-				</form>
-			</div>';
+			news_print_form ($new['titre'], $new['source'], 'edit', $new['id'],
+			                 null, '', 'style="display:none;"');
 		}
 		
 		echo '
@@ -206,13 +141,12 @@ function print_page_browser ($current)
 	$n_pages = ceil ($n_news / NEWS_OFFSET);
 	$has_prev = ($current > 0) ? true : false;
 	$has_next = ($n_news > $current + NEWS_OFFSET) ? true : false;
-
+	
 	if ($has_prev)
 		echo '<a href="?s=',
 			($current >= NEWS_OFFSET) ? $current - NEWS_OFFSET : 0,
 			'">&lt;</a> ';
-
-
+	
 	for ($i=0; $i<$n_pages; $i++)
 	{
 		$cur_offset = $i * NEWS_OFFSET;
@@ -222,8 +156,7 @@ function print_page_browser ($current)
 		else
 			echo '<a href="?s=', $cur_offset, '">', $i+1, '</a> ';
 	}
-
-
+	
 	if ($has_next)
 		echo ' <a href="?s=', $current + NEWS_OFFSET, '">&gt;</a>';
 }
@@ -235,6 +168,8 @@ function print_page_browser ($current)
 $start_news = (isset ($_GET['s'])) ? $_GET['s'] : 0;
 settype ($start_news, 'integer');
 if ($start_news < 0) $start_news = 0;
+
+require_once ('include/top.minc');
 
 ?>
 
@@ -248,10 +183,10 @@ if ($start_news < 0) $start_news = 0;
 			l'<acronym title="Application Programming Interface">API</acronym> OpenGL pour le rendu.
 		</p>
 	</div>
-
+	
 	<div id="content"><!--
 		<h2>Dernières news</h2>-->
-
+		
 		<?php
 		
 		print_news ($start_news);
@@ -262,7 +197,7 @@ if ($start_news < 0) $start_news = 0;
 		echo '</div>';
 		
 		?>
-
+	
 	</div>
 
 <?php

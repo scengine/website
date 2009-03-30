@@ -25,35 +25,13 @@ require_once ('lib/User.php');
 require_once ('include/defines.php');
 require_once ('lib/feeds.php');
 require_once ('lib/misc.php');
+require_once ('lib/news.php');
 
 
 /* this function display a table containg or not values. */
 function display_table ($title='', $source='', $action='new', $id='') {
-	$title = htmlspecialchars (stripslashes ($title));
-//    $content = htmlentities (stripslashes ($content));
-	$source = stripslashes ($source);
-	
-	echo '
-	<form method="post" action="post.php?sec=news&amp;act=',$action,'&amp;id=',$id,'&amp;redirect=',urlencode ('admin.php?page='.strtolower (PAGE)),'">
-		<p id="form_entrees">
-			<label>T<span class="u">i</span>tre : <br />
-				<input type="text" name="title" tabindex="20" accesskey="I" value="',
-					htmlspecialchars ($title),
-				'"/>
-			</label>
-			<br />
-			<label><span class="u">C</span>ontenu : <br />
-				<textarea name="content" rows="15" tabindex="30" accesskey="c">',
-					htmlspecialchars ($source),
-				'</textarea>
-			</label>
-		</p>
-		<p class="form_buttons">
-			<input type="submit" value="Poster" accesskey="P" title="Poster la nouvelle (Alt + P)"/>
-			<input type="reset" accesskey="x" title="Vider le formulaire (Alt + X)"/>
-			',print_button ('Annuler', '?page='.strtolower (PAGE)),'
-		</p>
-	</form>';
+	news_print_form ($title, $source, $action, $id, 'admin.php?page='.strtolower (PAGE), 
+	                 get_button ('Annuler', '?page='.strtolower (PAGE)));
 }
 
 function display_table_new () {
@@ -149,6 +127,7 @@ function print_all_messages () {
 			<td>', date ('d/m/y (H:i)', $message['date']), '</td>
 			<td>
 				<a href="?page=',$page,'&amp;action=rm&amp;id=',$message['id'],'"
+				   onclick="return news_delete (\'',$message['id'],'\')"
 				   title="Supprimer «&nbsp;',$titre,'&nbsp;»">
 					<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
 				</a>
@@ -182,19 +161,18 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			
 			if ($message !== false)
 			{
-				$titre = htmlspecialchars (stripslashes ($message['titre']));
+				$title = htmlspecialchars (stripslashes ($message['titre']));
 				
-				echo '<h2>Édition de «&nbsp;',$titre,'&nbsp;»</h2>';
-				display_table_edit ($message['titre'],
-														$message['source'],
-														$message['id']);
+				echo '<h2>Édition de «&nbsp;',$title,'&nbsp;»</h2>';
+				display_table_edit ($message['titre'], $message['source'], $message['id']);
 			}
-			else
+			else {
 				echo '
 				<p>Erreur&bsnp;: message inéxistant.</p>
 				<p>
 					',print_button ('Retour', '?page='.strtolower (PAGE)),'
 				</p>';
+			}
 		}
 		else {
 			echo '
@@ -214,7 +192,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			{
 				$titre = htmlspecialchars (stripslashes ($message['titre']));
 				echo '
-				<p>voulez-vous vraiment buter tout « ', $titre, ' » ?</p>
+				<p>Voulez-vous vraiment supprimer «&nbsp;', $titre, '&nbsp;»&nbsp;?</p>
 				<form method="post"
 				      action="post.php?sec=news&amp;act=rm&amp;id=',$_GET['id'],'&amp;redirect=',urlencode ('admin.php?page='.strtolower (PAGE)),'">
 					<p>

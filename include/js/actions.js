@@ -18,7 +18,8 @@
  * 
  */
 
-function edit (id, el) {
+// toggle edition of a news (on news page)
+function news_edit (id, el) {
 	var f_e = document.getElementById ("f"+id);
 	var m_e = document.getElementById ("m"+id);
 	if (f_e.style.display == "none")
@@ -33,6 +34,18 @@ function edit (id, el) {
 		m_e.style.display = "block";
 		el.innerHTML = "Éditer";
 	}
+	
+	// return false to ease use on oncklick links
+	return false;
+}
+// ask for deleting a news
+function news_delete (news_id) {
+	if (confirm ('Voulez-vous vraiment supprimer cette news ?'))
+	{
+		window.location.replace ('post.php?sec=news&id='+news_id+'&act=rm');
+	}
+	// return false to ease use on oncklick links
+	return false;
 }
 
 function entry_more (id)

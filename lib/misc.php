@@ -92,3 +92,27 @@ function print_backbutton ($label, $url, $title=null, $back=1)
 {
 	print_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
 }
+
+/* same as print_button_full() but returns a string instead of printing it.
+ * This is slower but needed sometimes */
+function get_button_full ($label, $url, $title=null, $js='')
+{
+	if ($title !== null)
+		$title = 'title="'.htmlspecialchars ($title, ENT_COMPAT, 'UTF-8').'"';
+	
+	return '
+	<a href="'.htmlspecialchars ($url, ENT_COMPAT, 'UTF-8').'" '.$title.'
+	   onclick="'.$js.'">'.
+		'<input type="button" value="'.htmlspecialchars ($label, ENT_COMPAT, 'UTF-8').'" />'.
+	'</a>';
+}
+
+function get_button ($label, $url, $title=null)
+{
+	return get_button_full ($label, $url, $title, 'window.location.replace (this.href); return false;');
+}
+
+function get_backbutton ($label, $url, $title=null, $back=1)
+{
+	return get_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
+}
