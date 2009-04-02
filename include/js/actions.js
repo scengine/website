@@ -99,3 +99,27 @@ function set_checked_by_name (name, state)
 		}
 	}
 }
+
+function textarea_insert (area_id, before_sel, after_sel) {
+  var area = document.getElementById (area_id);
+  
+  if (area.selectionStart >= 0 && area.selectionEnd >= 0) {
+    var start = area.value.substring (0, area.selectionStart);
+    var sel = area.value.substring (area.selectionStart, area.selectionEnd);
+    var end = area.value.substring (area.selectionEnd);
+    
+    area.value = start + before_sel + sel + after_sel +	end;
+    area.setSelectionRange (start.length + before_sel.length,
+                            area.value.length - end.length - after_sel.length);
+  } else {
+    area.value += before_sel + after_sel;
+  }
+  area.focus ();
+  
+  // return false to ease use in onclicks
+  return false;
+}
+
+function textarea_insert_around (area_id, around_sel) {
+  return textarea_insert (area_id, around_sel, around_sel);
+}

@@ -48,15 +48,21 @@ abstract class News
 		<div class="formedit" id="fn',$id,'" ',$extra_div_attrs,'>
 			<form method="post" action="post.php?sec=news&amp;id=',$id,'&amp;act=',$action,$redirect,'">
 				<div>
-					<a href="javascript:entry_more(\'tn',$id,'\')">[+]</a>
-					<a href="javascript:entry_lesser(\'tn',$id,'\')">[-]</a>
-				</div>
-				<p>
 					<label>T<span class="u">i</span>tre&nbsp;:<br />
 						<input type="text" name="title" accesskey="i" value="',$title,'" />
 					</label>
 					<br />
 					<br />
+					<div class="form_toolbar">',
+						print_button_js ('+', "entry_more('tn$id')", 'Agrandir le formulaire'),
+						print_button_js ('-', "entry_lesser('tn$id')", 'Rapetisser le formulaire'),
+						print_button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insérer un lien'),
+						print_button_js ('img', "textarea_insert('tn$id', '{{', '|Texte aleternatif}}')", 'Insérer une image'),
+						print_button_js ('<span class="b">G</span>', "textarea_insert_around('tn$id', '**')", 'Mettre en gras'),
+						print_button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Mettre en italique'),
+						print_button_js ('<span class="u">S</span>', "textarea_insert_around('tn$id', '__')", 'Souligner'),
+						print_button_js ('<span class="s">B</span>', "textarea_insert_around('tn$id', '--')", 'Barrer'),
+					'</div>
 					<label><span class="u">C</span>ontenu&nbsp;:<br />
 						<textarea name="content" cols="24" rows="16" accesskey="c" id="tn',$id,'">',
 							$source,
@@ -66,7 +72,7 @@ abstract class News
 					<input type="submit" value="Poster" accesskey="p" title="Poster (Alt + P)" />
 					<!--input type="reset" value="Réinitialiser" accesskey="x" title="Vider le forumlaire (Alt + X)" /-->
 					',$extra_buttons,'
-				</p>
+				</div>
 			</form>
 		</div>';
 	}

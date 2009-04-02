@@ -100,6 +100,22 @@ function print_backbutton ($label, $url, $title=null, $back=1)
 	print_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
 }
 
+function print_button_js ($label, $js, $title=null)
+{
+	/* the double click handler is to fix a Konqueror bug/problem:
+	 * it submits on click unless JS returns false; but even if there's an onclick
+	 * handler and no ondblclick one, it use return value of ondblclick on double
+	 * click.
+	 */
+	echo '
+	<button onclick="',$js,'; return false;" ondblclick="return false;"
+		', $title !== null ? 'title="'.htmlspecialchars ($title, ENT_COMPAT, 'UTF-8').'"' : '','
+	  >',
+		$label,
+	'</button>';
+	//print_button_full ($label, '#', $title, $js);
+}
+
 /* same as print_button_full() but returns a string instead of printing it.
  * This is slower but needed sometimes */
 function get_button_full ($label, $url, $title=null, $js='')
@@ -122,4 +138,9 @@ function get_button ($label, $url, $title=null)
 function get_backbutton ($label, $url, $title=null, $back=1)
 {
 	return get_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
+}
+
+function get_button_js ($label, $js, $title=null)
+{
+	return get_button_full ($label, '#', $title, $js);
 }
