@@ -55,12 +55,12 @@ content: '';
 }
 
 cite:before {
-content: "�";
+content: "«";
 padding-right: 3px;
 }
 cite {font-style: italic;}
 cite:after {
-content: "�";
+content: "»";
 padding-left: 3px;
 }
 
@@ -411,6 +411,13 @@ border: 4px double /*#83C9FC*/ black;
 background-color: #eee;
 }
 
+.more {
+font-style: italic;
+}
+.more:after {
+content: ' →';
+}
+
 .new .admin,
 .showmediacontainer .admin {
 font-size: 90%;
@@ -478,6 +485,8 @@ padding: 0px;
 .center {text-align: center;}
 .fright {float: right;}
 .fleft {float: left;}
+
+.clearer {clear: both}
 
 .align_left   {display: block; text-align: left;}
 .align_right  {display: block; text-align: right;}

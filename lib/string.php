@@ -126,8 +126,10 @@ function strshortcut ($str, $maxlen)
 }
 
 /* truncate string of XML data to obtain a string of the given maximum length.
- * If needed, ellipsis is added at the end of the XML data */
-function xmlstr_shortcut ($xml, $maxlen)
+ * If needed, ellipsis is added at the end of the XML data
+ * This function only truncates data in tags and keeps all tags and their
+ * attributes unchanged unless they don't appear in first characters. */
+function xmlstr_shortcut ($xml, $maxlen, $ellipsis='…')
 {
 	$stack = array ();
 	$item;
@@ -135,6 +137,8 @@ function xmlstr_shortcut ($xml, $maxlen)
 	$end = true;
 	$i;
 	
+	/* last pass is only to know it there's leaved data to know whether to add
+	 * ellipsis */
 	for ($i = 0; $i < strlen ($xml) && $j <= $maxlen; $i++)
 	{
 		$xml[$i];
@@ -188,7 +192,7 @@ function xmlstr_shortcut ($xml, $maxlen)
 	}
 	
 	if (! $end)
-		$shortxml .= '…';
+		$shortxml .= $ellipsis;
 	
 	while (($item = array_pop ($stack)) !== null)
 	{

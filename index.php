@@ -24,7 +24,7 @@
  */
 
 define (TITLE, 'Accueil');
-define (NEWS_OFFSET, 8);
+define (NEWS_PREVIEW_SIZE, 250);
 define (NEWS_BY_PAGE, 8);
 
 require_once ('include/defines.php');
@@ -35,8 +35,15 @@ require_once ('lib/BCode.php');
 
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
-function print_new (array &$new)
+/** prints a news
+ * \param $new the array of the news
+ * \param $more whether to trunctate content and show 'more...' if news content
+ *        is longer than the configured size
+ */
+function print_new (array &$new, $more=false)
 {
+	$permalink = UrlTable::news ($new['id'], $new['title']);
+	
 	echo '
 	<div class="new">';
 	
@@ -55,7 +62,7 @@ function print_new (array &$new)
 	echo '
 		<div id="mn',$new['id'],'">
 			<h3 id="n',$new['id'],'">
-				<a href="',UrlTable::news ($new['id'], $new['title']),'">',
+				<a href="',$permalink,'">',
 					escape_html_quotes ($new['title']),
 				'</a>
 			</h3>
@@ -70,8 +77,16 @@ function print_new (array &$new)
 	}
 	echo '
 				</p>
-			</div>
-			',/*xmlstr_shortcut (*/$new['content']/*, 128)*/,'
+			</div>';
+	if ($more)
+	{
+		echo xmlstr_shortcut ($new['content'], NEWS_PREVIEW_SIZE,
+		                      '… <a href="'.$permalink.'" class="more">lire la suite</a>');
+	}
+	else
+		echo $new['content'];
+	echo '
+			<div class="clearer"></div>
 		</div>
 	</div>';
 }
