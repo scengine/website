@@ -30,7 +30,7 @@ define (ENGINE_NEWS_BY_PAGE, 16);
 define (ENGINE_NEWS_GET_PREFIX, 'devel_page');
 
 /* required JavaScript */
-$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
+//$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
 function get_engine_news ($start=0, $end=ENGINE_NEWS_BY_PAGE) {
 	$rv = Array ();

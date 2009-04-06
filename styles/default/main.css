@@ -261,12 +261,13 @@ border: none;
 height: 15px;
 }
 
-
-#lmenu {
-/*
-float: right;
-*/
+#rmenu, #lmenu {
 position: absolute;
+top: 100px;
+}
+#lmenu {
+/* float: right; */
+/*position: absolute;*/
 left: 0px;
 
 z-index: 1;
@@ -279,10 +280,8 @@ background-color: #eee;
 font-size: 11px;
 }
 #rmenu {
-/*
-float: right;
-*/
-position: absolute;
+/* float: right; */
+/*position: absolute;*/
 right: 0px;
 
 z-index: 1;

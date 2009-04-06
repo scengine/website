@@ -33,7 +33,7 @@ require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/BCode.php');
 
-$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
+//$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
 /** prints a news
  * \param $new the array of the news

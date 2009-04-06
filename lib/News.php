@@ -27,7 +27,7 @@ require_once ('lib/User.php');
 require_once ('lib/misc.php');
 
 /* required JavaScript */
-$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
+//$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
 
 abstract class News
