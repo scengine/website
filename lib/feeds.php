@@ -21,6 +21,7 @@
 
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
+require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 
 
