@@ -21,6 +21,7 @@
 
 define (TITLE, 'Téléchargements');
 
+require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
 require_once ('lib/medias.php');
 require_once ('lib/misc.php');
@@ -80,13 +81,13 @@ function print_downloads ()
 				{
 					echo '
 					<td>
-						<a href="admin.php?page=medias&amp;action=edit&amp;media=',$media['id'],'"
+						<a href="',UrlTable::admin_medias ('edit', $media['id']),'"
 						   title="Éditer">
 							<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
 						</a>
 					</td>
 					<td>
-						<a href="admin.php?page=medias&amp;action=rm&amp;media=',$media['id'],'"
+						<a href="',UrlTable::admin_medias ('rm', $media['id']),'"
 						   title="Supprimer">
 							<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
 						</a>
@@ -139,10 +140,7 @@ require_once ('include/top.minc');
 		{
 			echo '
 			<div>
-				<a href="admin.php?page=medias&amp;action=new"
-				   onclick="window.location.replace (this.href); return false;">
-					<input type="button" value="Ajouter un téléchargement" />
-				</a>
+				',print_button ('Ajouter un téléchargement', UrlTable::admin_medias ('new')),'
 			</div>';
 		}
 		

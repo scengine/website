@@ -22,6 +22,7 @@
 define (PAGE, 'medias');
 
 
+require_once ('lib/UrlTable.php');
 require_once ('lib/misc.php');
 require_once ('lib/User.php');
 require_once ('lib/MyDB.php');
@@ -34,15 +35,13 @@ function print_return_link ($button=false)
 	{
 		echo '
 		<p>
-			<a href="?page=',PAGE,'">&lArr; Retour à la gestion des médias</a>
+			<a href="',UrlTable::admin_medias (),'">&lArr; Retour à la gestion des médias</a>
 		</p>';
 	}
 	else
 	{
-		echo '
-		<a href="?page=',PAGE,'" onclick="window.location.replace(this.href)">
-			<input type="button" value="Retour" />
-		</a>';
+		print_button ('Retour', UrlTable::admin_medias (),
+		              'Retour à la gestion des médias');
 	}
 }
 
@@ -81,11 +80,16 @@ function print_media_show ($media_id, $show_return_links=true,
 				<th>Commentaire</th>
 			</tr>
 			<tr>
-				<th>', $show_admin_links ? '
-					<a href="?page='.PAGE.'&amp;action=edit&amp;media='.$media['id'].'" title="Éditer">
-						<img src="styles/'.STYLE.'/edit.png" alt="Éditer" />
-					</a>' : '', '
-				</th>
+				<th>';
+		if ($show_admin_links)
+		{
+			echo '
+					<a href="',UrlTable::admin_medias ('edit', $media['id']),'" title="Éditer">
+						<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
+					</a>';
+		}
+		echo '
+			</th>
 				<td rowspan="2" align="center">
 					<a class="noicon" href="',$media['uri'],'" title="',$media['desc'],'">
 						<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
@@ -95,10 +99,15 @@ function print_media_show ($media_id, $show_return_links=true,
 				<td rowspan="2">',$media['comment'],'</td>
 			</tr>
 			<tr>
-				<th>', $show_admin_links ? '
-					<a href="?page='.PAGE.'&amp;action=rm&amp;media='.$media['id'].'" title="Supprimer">
-						<img src="styles/'.STYLE.'/delete.png" alt="Supprimer" />
-					</a>' : '', '
+				<th>';
+		if ($show_admin_links)
+		{
+			echo '
+					<a href="',UrlTable::admin_medias ('rm', $media['id']),'" title="Supprimer">
+						<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
+					</a>';
+		}
+		echo '
 				</th>
 			</tr>
 			<tr>
@@ -148,12 +157,12 @@ function print_media_table_for_type ($type, array &$medias)
 			echo '
 			<tr>
 				<td>
-					<a href="?page=',PAGE,'&amp;action=edit&amp;media=',$media['id'],'" title="Éditer">
+					<a href="',UrlTable::admin_medias ('edit', $media['id']),'" title="Éditer">
 						<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
 					</a>
 				</td>
 				<td>
-					<a href="?page=',PAGE,'&amp;action=rm&amp;media=',$media['id'],'" title="Supprimer">
+					<a href="',UrlTable::admin_medias ('rm', $media['id']),'" title="Supprimer">
 						<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
 					</a>
 				</td>
@@ -163,7 +172,7 @@ function print_media_table_for_type ($type, array &$medias)
 				<td>',$media['desc'],'</td>
 				<td>',$media['uid'],'</td>
 				<td>
-					<a href="?page=',PAGE,'&amp;action=show&amp;media=',$media['id'],'" title="Afficher">
+					<a href="',UrlTable::admin_medias ('show', $media['id']),'" title="Afficher">
 						',$media['uri'],'
 					</a>
 				</td>
@@ -185,10 +194,7 @@ function print_media_tables ()
 {
 	echo '
 	<p>
-		<a href="?page=',PAGE,'&amp;action=new"
-		   onclick="window.location.replace(this.href)">
-			<button type="button">Ajouter un média</button>
-		</a>
+		',print_button ('Ajouter un média', UrlTable::admin_medias ('new')),'
 	</p>';
 	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
@@ -197,7 +203,7 @@ function print_media_tables ()
 	{
 		$medias = array ();
 		
-		$db->select ('*', '`type`=\''.$type.'\'');
+		$db->select ('*', "`type`='$type'");
 		while (($resp = $db->fetch_response ()) !== false)
 		{
 			media_unescape_db_array ($resp);
@@ -236,7 +242,7 @@ function remove_media_query ($media_id)
 		else
 		{
 			echo '
-			<form method="post" action="?page=',PAGE,'&amp;action=rm&amp;media=',$media_id,'">
+			<form method="post" action="',UrlTable::admin_medias ('rm', $media_id),'">
 				<p>
 					Voulez-vous vraiment supprimer le média ci-dessous&nbsp;?
 				</p>
@@ -258,7 +264,7 @@ define (FFIELD,  'ffield');
 define (TBFIELD, 'tbfield');
 define (MAX_FILE_SIZE, 1073741824); // maximum filesize to be uploaded (in bytes).
 
-function print_upload_form ($action, $fillwith=false, $upload=true)
+function print_upload_form ($action, $id=false, $fillwith=false, $upload=true)
 {
 	$DPATHS = array ('screens/', 'movies/', 'downloads/', 'news/');
 	
@@ -304,7 +310,7 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 	<?php if ($upload) { ?>
 		<p>Vous ne pourrez probablement pas uploader de fichiers de plus de <?php echo ini_get ('upload_max_filesize'); ?>.</p>
 	<?php } ?>
-	<form action="?page=<?php echo PAGE; ?>&amp;action=<?php echo $action; ?>"
+	<form action="<?php echo UrlTable::admin_medias ($action, $id); ?>"
 				method="post" enctype="multipart/form-data">
 		<div>
 			<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo MAX_FILE_SIZE; ?>" />
@@ -443,7 +449,7 @@ function print_upload_form ($action, $fillwith=false, $upload=true)
 						echo $display_dest;
 						?>
 						<input class="nosize" type="text" id="manual_entry"
-									 name="manual_entry" value="/" />
+						       name="manual_entry" value="/" />
 					</label>
 				</td>
 			</tr>
@@ -848,7 +854,7 @@ function update_media_query ($media_id)
 	}
 	
 	$media = media_get_by_id ($media_id);
-	print_upload_form ('edit&amp;media='.$media_id, &$media, false);
+	print_upload_form ('edit', $media_id, &$media, false);
 }
 
 /******************************************************************************/
@@ -873,24 +879,24 @@ if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		switch ($_GET['action'])
 		{
 			case 'show':
-				if (! isset ($_GET['media']))
+				if (! isset ($_GET['id']))
 					$error = 'Média manquant';
 				else
-					print_media_show ($_GET['media']);
+					print_media_show ($_GET['id']);
 				break;
 			
 			case 'rm':
-				if (! isset ($_GET['media']))
+				if (! isset ($_GET['id']))
 					$error = 'Média manquant';
 				else
-					remove_media_query ($_GET['media']);
+					remove_media_query ($_GET['id']);
 				break;
 			
 			case 'edit':
-				if (! isset ($_GET['media']))
+				if (! isset ($_GET['id']))
 					$error = 'Média manquant';
 				else
-					update_media_query ($_GET['media']);
+					update_media_query ($_GET['id']);
 				break;
 			
 			case 'new':

@@ -30,8 +30,8 @@ require_once ('lib/News.php');
 
 /* this function display a form containg or not values. */
 function display_form ($title='', $source='', $action='new', $id='') {
-	News::print_form ($title, $source, $action, $id, 'admin.php?page='.strtolower (PAGE), 
-	                  get_button ('Annuler', '?page='.strtolower (PAGE)));
+	News::print_form ($title, $source, $action, $id, UrlTable::admin (strtolower (PAGE)), 
+	                  get_button ('Annuler', UrlTable::admin (strtolower (PAGE))));
 }
 
 function display_form_new () {
@@ -74,20 +74,20 @@ function print_all_messages ()
 		echo '
 		<tr>
 			<td>
-				<a href="?page=',$page,'&amp;action=edit&amp;id=',$new['id'],'"
+				<a href="',UrlTable::admin_news ('edit', $new['id']),'"
 					title="Modifier «&nbsp;',$title,'&nbsp;»">
 					',$title,'
 				</a>
 			</td>
 			<td>
-				<a href="?page=administrateurs&amp;pseudo=',$author,'"
+				<a href="',UrlTable::admin_admins ('show', $author),'"
 				  title="Voir la fiche de ',$auteur,'">
 					',$author,'
 				</a>
 			</td>
 			<td>', date ('d/m/y (H:i)', $new['date']), '</td>
 			<td>
-				<a href="?page=',$page,'&amp;action=rm&amp;id=',$new['id'],'"
+				<a href="',UrlTable::admin_news ('rm', $new['id']),'"
 				   onclick="return news_delete (\'',$new['id'],'\')"
 				   title="Supprimer «&nbsp;',$title,'&nbsp;»">
 					<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
@@ -131,7 +131,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 				echo '
 				<p>Erreur&bsnp;: message inéxistant.</p>
 				<p>
-					',print_button ('Retour', '?page='.strtolower (PAGE)),'
+					',print_button ('Retour', UrlTable::admin_news ()),'
 				</p>';
 			}
 		}
@@ -139,7 +139,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
 			<p>Erreur&nbsp;: pas d\'ID</p>
 			<p>
-				',print_button ('Retour', '?page='.strtolower (PAGE)),'
+				',print_button ('Retour', UrlTable::admin_news ()),'
 			</p>';
 		}
 	}
@@ -155,11 +155,11 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 				echo '
 				<p>Voulez-vous vraiment supprimer «&nbsp;', $title, '&nbsp;»&nbsp;?</p>
 				<form method="post"
-				      action="post.php?sec=news&amp;act=rm&amp;id=',$_GET['id'],'&amp;redirect=',urlencode ('admin.php?page='.strtolower (PAGE)),'">
+				      action="post.php?sec=news&amp;act=rm&amp;id=',$_GET['id'],'&amp;redirect=',UrlTable::admin (strtolower (PAGE)),'">
 					<p>
 						<input type="hidden" name="rm" value="rm" />
 						<input type="submit" value="Supprimer" />
-						',print_button ('Annuler', '?page='.strtolower (PAGE)),'
+						',print_button ('Annuler', UrlTable::admin_news ()),'
 					</p>
 				</form>';
 			}
@@ -168,7 +168,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 				echo '
 				<p>Erreur : ID inéxistante.</p>
 				<p>
-					',print_button ('Retour', '?page='.strtolower (PAGE)),'
+					',print_button ('Retour', UrlTable::admin_news ()),'
 				</p>';
 			}
 		}
@@ -177,7 +177,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
 			<p>Erreur : pas d\'ID</p>
 			<p>
-				',print_button ('Retour', '?page='.strtolower (PAGE)),'
+				',print_button ('Retour', UrlTable::admin_news ()),'
 			</p>';
 		}
 	}
@@ -192,7 +192,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
 			<p>Flux mis à jour avec succès</p>
 			<p>
-				',print_button ('Retour', '?page='.strtolower (PAGE)),'
+				',print_button ('Retour', UrlTable::admin_news ()),'
 			</p>';
 		}
 		else
@@ -200,7 +200,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			echo '
 			<p>Erreur lors de la mise à jour des flux</p>
 			<p>
-				',print_button ('Retour', '?page='.strtolower (PAGE)),'
+				',print_button ('Retour', UrlTable::admin_news ()),'
 			</p>';
 		}
 	}
@@ -208,10 +208,10 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	{
 		echo '
 		<p>
-			',print_button ('Nouvelle nouvelle', '?page='.strtolower (PAGE).'&action=new',
+			',print_button ('Nouvelle nouvelle', UrlTable::admin_news ('new'),
 			                'Créer une nouvelle actualité'),'
 			
-			',print_button ('Forcer la mise à jour des flux', '?page='.strtolower (PAGE).'&action=update_feeds',
+			',print_button ('Forcer la mise à jour des flux', UrlTable::admin_news ('update_feeds'),
 			                'Forcer la mise à jour des fulx Atom et RSS pour les actualités et les actualités du développement'),'
 		</p>';
 		print_all_messages ();

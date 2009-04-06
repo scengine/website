@@ -150,7 +150,7 @@ function print_team_table (array &$team, $project) {
 <?php
 if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 ?>
-			<form action="<?php echo '?page=', PAGE ?>" method="post">
+			<form action="<?php echo UrlTable::admin (strtolower (PAGE)); ?>" method="post">
 				<div>
 					<label>Nom du projet&nbsp;:<br /><input type="text" name="name" value="<?php echo htmlspecialchars ($MDI->get_name ()); ?>" /></label><br />
 					<label>Version du projet&nbsp;:<br /><input type="text" name="version" value="<?php echo htmlspecialchars ($MDI->get_version ()); ?>" /></label><br />
@@ -161,9 +161,6 @@ if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 				<p class="form_buttons">
 					<input type="submit" value="Appliquer" />
 					<input type="reset" value="Réinitialiser" />
-					<!--a href="?page=metadatas" onclick="window.location.replace(this.href);return false;">
-						<input type="button" value="Annuler" />
-					</a-->
 				</p>
 			</form>
 <?php

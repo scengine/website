@@ -118,8 +118,8 @@ function print_media ($media_id)
 		{
 			echo '
 			<div class="admin">
-				[<a href="admin.php?page=medias&amp;action=edit&amp;media=',$media['id'],'">Éditer</a>]
-				[<a href="admin.php?page=medias&amp;action=rm&amp;media=',$media['id'],'">Supprimer</a>]
+				[<a href="',UrlTable::admin_medias ('edit', $media['id']),'">Éditer</a>]
+				[<a href="',UrlTable::admin_medias ('rm', $media['id']),'">Supprimer</a>]
 			</div>';
 		}
 		echo '
@@ -175,18 +175,11 @@ function print_media ($media_id)
 	/* wether we want to return to the media page and not the previous one */
 	if ($_GET['noreturn'])
 	{
-		echo '
-		<a href="',basename ($_SERVER['PHP_SELF']),'">
-			Retour
-		</a>';
+		print_button ('Retour', UrlTable::medias ());
 	}
 	else
 	{
-		echo '
-		<a href="',basename ($_SERVER['PHP_SELF']),'"
-			onclick="window.history.back(1);return false;">
-			&lArr;&nbsp;Retour
-		</a>';
+		print_backbutton ('Retour', UrlTable::medias ());
 	}
 	echo '
 	</p>';
@@ -207,7 +200,8 @@ function print_tag_links ($type, $tags)
 		$n_tags = count ($tags);
 		for ($i = 0; $i < $n_tags; $i++)
 		{
-			echo '<a href="?type=',$type,'&amp;showtag=',$tags[$i],'">',$tags[$i],'</a>';
+			//echo '<a href="?type=',$type,'&amp;showtag=',$tags[$i],'">',$tags[$i],'</a>';
+			echo '<a href="',UrlTable::medias_tags (array ($type), array ($tags[$i])),'">',$tags[$i],'</a>';
 			if ($i < ($n_tags -1))
 				echo ', ';
 		}
@@ -215,7 +209,8 @@ function print_tag_links ($type, $tags)
 	else
 	{
 		$tagged = false;
-		echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
+		//echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
+		echo '<a href="',UrlTable::medias_tags (array ($type), array ('')),'">Non taggé</a>';
 	}
 	
 	return $tagged;
@@ -243,12 +238,12 @@ function print_medias_internal (&$medias, $bytags=false)
 			echo
 			'<div class="mediacontainer">
 				<div class="media">
-					<a href="?watch=',$media['id'],'#watch" title="',$media['desc'],'" class="noicon">
+					<a href="',UrlTable::medias ($media['id'], false, $media['desc']),'#watch" title="',$media['desc'],'" class="noicon">
 						<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
 					</a>
 				</div>
 				<div class="links">
-					[<a class="noicon" href="?watch=',$media['id'],'" title="Voir « ',$name,' »">Voir</a>]
+					[<a class="noicon" href="',UrlTable::medias ($media['id'], false, $media['desc']),'#watch" title="Voir « ',$name,' »">Voir</a>]
 					[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
 				</div>';
 			/* tags if any */
@@ -364,15 +359,15 @@ else if (isset ($_GET['showtag']))
 			Ici sont répertoriés les divers médias du moteur. Voici la liste des catégories disponibles :
 		</p>
 			<ul>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>#medias_screens">Screenshots</a></li>
-				<li><a href="<?php echo basename ($_SERVER['PHP_SELF']); ?>#medias_movies">Vidéos</a></li>
+				<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
+				<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Vidéos</a></li>
 			</ul>
 		<p>
 			Chaque catégorie classe ses médias en fonction de la version du moteur,
 			en allant de la plus récente à la plus ancienne. Bon visionnage :o)
 		</p>
 		<div class="foldable" id="fld_mtt0">
-			<form method="post" action="<?php echo basename (__FILE__); ?>">
+			<form method="post" action="<?php echo UrlTable::medias (); ?>">
 				<fieldset>
 					<legend>
 						Filtrage des médias…
@@ -445,7 +440,7 @@ else if (isset ($_GET['showtag']))
 		{
 			echo '
 			<div class="admin">
-				[<a href="admin.php?page=medias&amp;action=new">Ajouter un média</a>]
+				[<a href="',UrlTable::admin_medias ('new'),'">Ajouter un média</a>]
 			</div>';
 		}
 		

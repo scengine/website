@@ -25,22 +25,65 @@
 
 define (TITLE, 'Accueil');
 define (NEWS_OFFSET, 8);
+define (NEWS_BY_PAGE, 8);
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/BCode.php');
 
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
+function print_new (array &$new)
+{
+	echo '
+	<div class="new">';
+	
+	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
+		echo '
+		<div class="admin">
+			[<a href="',UrlTable::admin_news ('edit', $new['id']),'"
+			    onclick="return news_edit (\'n',$new['id'],'\', this);">Éditer</a>]
+			[<a href="',UrlTable::admin_news ('rm', $new['id']),'"
+			    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
+		</div>';
+		News::print_form ($new['title'], $new['source'], 'edit', $new['id'],
+		                  null, '', 'style="display:none;"');
+	}
+	
+	echo '
+		<div id="mn',$new['id'],'">
+			<h3 id="n',$new['id'],'">
+				<a href="',UrlTable::news ($new['id'], $new['title']),'">',
+					escape_html_quotes ($new['title']),
+				'</a>
+			</h3>
+			<div class="author">
+				<p>
+					Par <span class="b">',$new['author'],'</span> le ',
+					date ('d/m/Y à H:i', $new['date']);
+	if ($new['date'] < $new['mdate'])
+	{
+		echo ' &ndash; édité par <span class="b">',$new['mauthor'],
+			'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
+	}
+	echo '
+				</p>
+			</div>
+			',/*xmlstr_shortcut (*/$new['content']/*, 128)*/,'
+		</div>
+	</div>';
+}
+
 function print_news ($start=0) {
-	$news = News::get ($start, NEWS_OFFSET);
+	$news = News::get ($start, NEWS_BY_PAGE);
 	
 	// pour permetre aux admins d'ajouter une news
 	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 		echo '
 		<div class="fleft">
-			[<a href="admin.php?page=actualités&amp;action=new"
+			[<a href="',UrlTable::admin_news ('new'),'"
 			    onclick="return toggle_display (\'fld_nnew\', \'block\');">Ajouter une news</a>]
 		</div>';
 	}
@@ -65,44 +108,8 @@ function print_news ($start=0) {
 		echo '</div>';
 	}
 	
-	foreach ($news as $new) {
-		echo '
-		<div class="new">';
-		
-		if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-			echo '
-			<div class="admin">
-				[<a href="admin.php?page=actualités&amp;id=',$new['id'],'&amp;action=edit"
-				    onclick="return news_edit (\'n',$new['id'],'\', this);">Éditer</a>]
-				[<a href="admin.php?page=actualités&amp;id=',$new['id'],'&amp;action=rm"
-				    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
-			</div>';
-			News::print_form ($new['title'], $new['source'], 'edit', $new['id'],
-			                 null, '', 'style="display:none;"');
-		}
-		
-		echo '
-			<div id="mn',$new['id'],'">
-				<h3 id="n',$new['id'],'">
-					<a href="#n',$new['id'],'">',
-						escape_html_quotes ($new['title']),
-					'</a>
-				</h3>
-				<div class="author">
-					<p>
-						Par <span class="b">',$new['author'],'</span> le ',
-						date ('d/m/Y à H:i', $new['date']);
-		if ($new['date'] < $new['mdate'])
-		{
-			echo ' &ndash; édité par <span class="b">',$new['mauthor'],
-				'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
-		}
-		echo '
-					</p>
-				</div>
-				',$new['content'],'
-			</div>
-		</div>';
+	foreach ($news as &$new) {
+		print_new ($new);
 	}
 }
 
@@ -111,48 +118,63 @@ function print_page_browser ($current)
 {
 	$bstr = '';
 	$n_news = News::get_n ();
-	$n_pages = ceil ($n_news / NEWS_OFFSET);
+	$n_pages = ceil ($n_news / NEWS_BY_PAGE);
 	$has_prev = ($current > 0) ? true : false;
-	$has_next = ($n_news > $current + NEWS_OFFSET) ? true : false;
+	$has_next = ($n_pages > $current + 1) ? true : false;
 	
 	if ($has_prev)
-		echo '<a href="?s=',
-			($current >= NEWS_OFFSET) ? $current - NEWS_OFFSET : 0,
-			'">&lt;</a> ';
+		echo '<a href="',UrlTable::news_page ($current),'">&lt;</a> ';
 	
-	for ($i=0; $i<$n_pages; $i++)
+	for ($i=0; $i < $n_pages; $i++)
 	{
-		$cur_offset = $i * NEWS_OFFSET;
-		
-		if ($cur_offset == $current)
-			echo $i+1, ' ';
+		if ($i == $current)
+			echo $i + 1, ' ';
 		else
-			echo '<a href="?s=', $cur_offset, '">', $i+1, '</a> ';
+			echo '<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a> ';
 	}
 	
 	if ($has_next)
-		echo ' <a href="?s=', $current + NEWS_OFFSET, '">&gt;</a>';
+		echo ' <a href="',UrlTable::news_page ($current + 1 + 1),'">&gt;</a>';
 }
 
-
-/***********/
-
-
-$start_news = (isset ($_GET['s'])) ? $_GET['s'] : 0;
-settype ($start_news, integer);
-if ($start_news < 0) $start_news = 0;
-
-require_once ('include/top.minc');
-
+function print_one_news ($id)
+{
+	$news = News::get_by_id ($id);
 ?>
+	<div id="content" class="nopresentation">
+		<?php
+		
+		if ($news !== false)
+			print_new ($news);
+		else
+		{
+			echo '
+			<h2>Erreur&nbsp;!</h2>
+			<p>
+				La news que vous cherchez n\'existe pas, a été supprimée ou déplacée.
+			</p>
+			<p><a href="',UrlTable::news (),'">Retour à la liste des news</a></p>';
+		}
+		
+		?>
+	</div>
+<?php
+}
 
+function print_home ()
+{
+	$start_news = (isset ($_GET['page'])) ? (int)($_GET['page'] - 1) : 0;
+	if ($start_news < 0)
+		$start_news = 0;
+	
+?>
 	<div id="presentation">
 		<h2>Bienvenue sur le site officiel du SCEngine</h2>
 		<p>
 			Le <acronym title="Simple C Engine">SCEngine</acronym> est un
 			<a href="http://fr.wikipedia.org/wiki/Moteur_3D">moteur 3D</a> programmé,
 			comme son nom l'indique, en langage C. Il est libre, open-source, et distribué sous
-			<a href="licence.php">licence GNU GPL</a>. Il utilise exclusivement
+			<a href="<?php echo UrlTable::license (); ?>">licence GNU GPL</a>. Il utilise exclusivement
 			l'<acronym title="Application Programming Interface">API</acronym> OpenGL pour le rendu.
 		</p>
 	</div>
@@ -162,7 +184,7 @@ require_once ('include/top.minc');
 		
 		<?php
 		
-		print_news ($start_news);
+		print_news ($start_news * NEWS_BY_PAGE);
 		
 		/* buttons for other pages */
 		echo '<div class="newslinks">';
@@ -172,7 +194,21 @@ require_once ('include/top.minc');
 		?>
 	
 	</div>
-
 <?php
+}
+
+/***********/
+
+
+require_once ('include/top.minc');
+
+if (isset ($_GET['shownews']) && settype ($_GET['shownews'], integer))
+{
+	print_one_news ($_GET['shownews']);
+}
+else
+{
+	print_home ();
+}
 
 require_once ('include/bottom.minc');

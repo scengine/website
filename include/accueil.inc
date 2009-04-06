@@ -18,6 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
+
+require_once('lib/misc.php');
+require_once('lib/User.php');
+
+
 ?>
 			<div id="presentation">
 				<h2>Administration</h2>
@@ -26,19 +31,15 @@
 			<div id="content">
 			<p>
 				Bienvenue sur la partie d'administration du site du SCEngine&nbsp;!
-				<a href="index.php">Retour au site</a>
+				<a href="<?php echo UrlTable::home (); ?>">Retour au site</a>
 			</p>
 <?php
-	require_once('lib/User.php');
 
 	if(User::get_logged ())
 	{
 ?>
 		<p>
-			<a href="connexion.php?act=logout"
-				onclick="window.location.replace(this.href)">
-				<input type="button" value="Déconnexion" />
-			</a>
+			<?php print_button ('Déconnexion', UrlTable::logout ()); ?>
 		</p>
 		<h3>Pages</h3>
 		<ul>
@@ -61,7 +62,7 @@
 	foreach ($tpages as $tpage) {
 		$tname = ucfirst ($tpage);
 		
-		echo '<li><a href="?page=', $tpage, '">', $tname, '</a></li>';
+		echo '<li><a href="',UrlTable::admin ($tpage),'">',$tname,'</a></li>';
 	}
 ?>
 		</ul>
@@ -78,7 +79,7 @@
 <?php
 		}
 ?>
-			<form method="post" action="connexion.php?act=login">
+			<form method="post" action="<?php echo UrlTable::login (); ?>">
 				<div>
 					<label>Nom d'utilisateur&nbsp;: <input type="text" name="username" /></label><br />
 					<label>Mot de passe&nbsp;: <input type="password" name="password" /></label><br />

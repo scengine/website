@@ -22,6 +22,8 @@
 /* page d'administration des admins */
 
 require_once ('include/defines.php');
+require_once ('lib/misc.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
 require_once ('lib/MyDB.php');
 
@@ -44,96 +46,130 @@ function display_table()
 					<th>Éditer</th>
 					<th></th>
 				</tr>';
-
-	while($response = $db->fetch_response ())
+	
+	while (false !== ($response = $db->fetch_response ()))
 	{
 		echo '<tr>
-			<td><a href="?page=administrateurs&amp;pseudo=', $response['username'], '" title="Voir la fiche de ', $response['username'], '">', $response['username'], '</a></td>
-			<td>', $response['level'], '</td>
-			<td>', ($response['logged']) ? 'Oui' : 'Non', '</td>
+			<td>
+				<a href="',UrlTable::admin_admins ('show', $response['username']),'"
+				   title="Voir la fiche de ',$response['username'],'">',$response['username'],'</a>
+			</td>
+			<td>',$response['level'],'</td>
+			<td>',($response['logged']) ? 'Oui' : 'Non','</td>
 			<td>';
-
-		if($master || User::get_name() == $response['username'])
-			echo '<a href="?page=administrateurs&amp;pseudo=', $response['username'], '&amp;action=édit" title="Éditer la fiche de ', $response['username'], '"><img src="styles/', STYLE, '/edit.png" alt="Éditer" /></a>';
+		
+		if ($master || User::get_name() == $response['username'])
+		{
+			echo '
+			<a href="',UrlTable::admin_admins ('edit', $response['username']),'"
+			   title="Éditer la fiche de ',$response['username'],'">
+				<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
+			</a>';
+		}
 		else
 			echo ' - ';
 		
-		echo '</td>
+		echo '
+		</td>
 		<td>';
 		
-		if($master)
-			echo '<a href="?page=administrateurs&amp;pseudo=', $response['username'], '&amp;action=remove" title="Supprimer ', $response['username'], '"><img src="styles/', STYLE, '/delete.png" alt="Supprimer" /></a>';
+		if ($master)
+		{
+			echo '
+			<a href="',UrlTable::admin_admins ('rm', $response['username']),'"
+			   title="Supprimer ',$response['username'],'">
+				<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
+			</a>';
+		}
 		else
 			echo ' - ';
 		
-		echo '</td>
+		echo '
+		</td>
 		</tr>';
 	}
-
+	
 	echo '</table>';
-
-	if($master)
+	
+	if ($master)
 	{
-		echo '<p>
-		<a href="?page=administrateurs&amp;action=add" onclick="window.location.replace(this.href);return false;"><input type="button" value="Ajouter un administrateur" /></a>
+		echo '
+		<p>
+			',print_button ('Ajouter un administrateur', UrlTable::admin_admins ('add')),'
 		</p>';
 	}
-
+	
 	unset ($db);
 }
 
 function display_user($pseudo)
 {
 	global $master;
-
+	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table(USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
-
+	
 	$response = $db->fetch_response ();
-
-	echo '<h3>Fiche de ', $response['username'], '</h3>';
-	echo '<table>
-				<tr>
-					<th>Pseudonyme</th>
-					<th>Niveau</th>
-					<th>Loggué ?</th>
-					<th>Éditer</th>
-					<th></th>
-				</tr>
-				<tr>
-					<td>', $response['username'], '</td>
-					<td>', $response['level'], '</td>
-					<td>', ($response['logged']) ? 'Oui' : 'Non', '</td>
-					<td>';
-	if($master || User::get_name() == $response['username'])
-		echo '<a href="?page=administrateurs&amp;pseudo=', $response['username'], '&amp;action=édit" title="Éditer la fiche de ', $response['username'], '"><img src="styles/', STYLE, '/edit.png" alt="Éditer" /></a>';
+	
+	echo '
+	<h3>Fiche de ',$response['username'],'</h3>
+	<table>
+	<tr>
+		<th>Pseudonyme</th>
+		<th>Niveau</th>
+		<th>Loggué ?</th>
+		<th>Éditer</th>
+		<th></th>
+	</tr>
+	<tr>
+		<td>',$response['username'],'</td>
+		<td>',$response['level'],'</td>
+		<td>',($response['logged']) ? 'Oui' : 'Non','</td>
+		<td>';
+	if ($master || User::get_name() == $response['username'])
+	{
+		echo '
+		<a href="',UrlTable::admin_admins ('edit', $response['username']),'"
+		   title="Éditer la fiche de ',$response['username'],'">
+			<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
+		</a>';
+	}
 	else
 		echo ' - ';
-
-	echo '</td>
+	
+	echo '
+	</td>
 	<td>';
-
-	if($master)
-		echo '<a href="?page=administrateurs&amp;pseudo=', $response['username'], '&amp;action=remove" title="Supprimer ', $response['username'], '"><img src="styles/', STYLE, '/delete.png" alt="Supprimer" /></a>';
+	
+	if ($master)
+	{
+		echo '
+		<a href="',UrlTable::admin_admins ('rm', $response['username']),'"
+		   title="Supprimer ',$response['username'],'">
+			<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
+		</a>';
+	}
 	else
 		echo ' - ';
-
-	echo '</td>
+	
+	echo '
+			</td>
 		</tr>
 	</table>
 	<p>
-		<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+		',print_button ('Retour', UrlTable::admin_admins (),
+		                'Retour à la gestion des administrateurs'),'
 	</p>';
-
+	
 	unset ($db);
 }
 
-function edit_user($pseudo)
+function edit_user ($pseudo)
 {
 	global $master;
 
-	if($master || User::get_name() == $_GET['pseudo'])
+	if ($master || User::get_name () == $_GET['pseudo'])
 	{
 		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
@@ -141,8 +177,9 @@ function edit_user($pseudo)
 		
 		$response = $db->fetch_response ();
 		
-		echo '<h3>Éditer la fiche de ', $response['username'], '</h3>';
-		echo '<form method="post" action="?page=administrateurs&amp;action=save&amp;pseudo=', $response['username'], '">
+		echo '
+		<h3>Éditer la fiche de ',$response['username'],'</h3>
+		<form method="post" action="',UrlTable::admin_admins ('save', $response['username']),'">
 			<div>
 				<input type="hidden" name="oldpseudo" value="',$response['username'],'" />
 				<label>Pseudonyme&nbsp;: <input type="text" name="pseudo" value="',$response['username'],'" /></label>
@@ -152,26 +189,29 @@ function edit_user($pseudo)
 				<label>Répéter le mot de passe&nbsp;: <input type="password" name="newpasswdconf" /></label>
 				<br />
 			';
-		if($master)
+		if ($master)
 		{
-			echo '<input type="hidden" name="oldlevel" value="',$response['level'],'" />
+			echo '
+				<input type="hidden" name="oldlevel" value="',$response['level'],'" />
 				<label>Niveau d\'administration&nbsp;: 
 					<select name="level">
-						<option value="0" ', ($response['level'] == 0) ? 'selected="selected"' : '','>0</option>
-						<option value="1" ', ($response['level'] == 1) ? 'selected="selected"' : '','>1</option>
-						<option value="2" ', ($response['level'] == 2) ? 'selected="selected"' : '','>2</option>
-						<option value="3" ', ($response['level'] == 3) ? 'selected="selected"' : '','>3</option>
+						<option value="0" ',($response['level'] == 0) ? 'selected="selected"' : '','>0</option>
+						<option value="1" ',($response['level'] == 1) ? 'selected="selected"' : '','>1</option>
+						<option value="2" ',($response['level'] == 2) ? 'selected="selected"' : '','>2</option>
+						<option value="3" ',($response['level'] == 3) ? 'selected="selected"' : '','>3</option>
 					</select>
 				</label>
-				<br />
 			';
 		}
-		echo '<input type="submit" value="Enregistrer" /> <input type="reset" value="Réinitialiser"/>
+		echo '
 			</div>
-		</form>
-		<p>
-			<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
-		</p>';
+			<p>
+				<input type="submit" value="Enregistrer" />
+				<input type="reset" value="Réinitialiser"/>
+				',print_button ('Retour', UrlTable::admin_admins (),
+				                'Retour à la gestion des administrateurs'),'
+			</p>
+		</form>';
 
 		unset ($db);
 	}
@@ -182,20 +222,21 @@ function edit_user($pseudo)
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 	}
 }
 
-function save_edit_user($oldpseudo, $pseudo, 
-                        $mdp, $mdp2, // ne sont de toutes façons là que si l'on en change
-                        $oldlevel, $level)
+function save_edit_user ($oldpseudo, $pseudo, 
+                         $mdp, $mdp2, // ne sont de toutes façons là que si l'on en change
+                         $oldlevel, $level)
 {
 	global $master;
 	$return = true;
-
-	// si l'ancien nom n'existe pas, on quite pour éviter les erreurs
-	if(!$oldpseudo) 
+	
+	// si l'ancien nom n'existe pas, on quitte pour éviter les erreurs
+	if (! $oldpseudo) 
 	{
 		echo '<h3>Erreur</h3>
 		<p>
@@ -206,110 +247,127 @@ function save_edit_user($oldpseudo, $pseudo,
 		<fieldset class="error">
 			<legend>Erreur&nbsp;:</legend>
 				failed to get <span class="phpvar">$oldpseudo</span> (value: 
-				"<span class="phpval">', $oldpseudo, '</span>") in function 
-				"<span class="phpfunc">', __FUNCTION__ ,'()</span>" in file "', 
-				__FILE__, '"
+				"<span class="phpval">',$oldpseudo,'</span>") in function 
+				"<span class="phpfunc">',__FUNCTION__,'()</span>" in file "', 
+				__FILE__,'"
 		</fieldset>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
+	
 	/* on vérifie que l'utilisateur a le droit de faire ce qu'il fait 
-				(si c'est un superadmin ou qu'il modifie son compte */
-	if(!$master && User::get_name() != $oldpseudo)
+	 * (si c'est un superadmin ou qu'il modifie son compte */
+	if (! $master && User::get_name() != $oldpseudo)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
+	
 	// si tout est OK, on commence les choses sérieuses :
-
+	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
-
+	
 	echo '<h3>Données mises à jour</h3>';
-
+	
 	// pseudo
 	if ($pseudo != $oldpseudo) // si le pseudo a été changé
 	{
-		if (gettype($pseudo) == 'string' && // si le pseudo est une chaîne de caractères
-			strlen($pseudo) >= 3) // et qu'il fait au moins 3 caractères de long
+		if (is_string ($pseudo) && // si le pseudo est une chaîne de caractères
+		    strlen ($pseudo) >= 3) // et qu'il fait au moins 3 caractères de long
 		{
 			if ($db->update("`username`='$pseudo'", "`username`='$oldpseudo'"))
 				echo '<p>Login mis à jour avec succès !</p>';
 			else
-				echo '<p><span class="error">Erreur de modification du login&nbsp;:</span> il est probable que vous ayez choisi un login déjà utilisé par un autre administrateur.</p>';
-				
+			{
+				echo '
+				<p>
+					<span class="error">Erreur de modification du login&nbsp;:</span> il
+					est probable que vous ayez choisi un login déjà utilisé par un autre
+					administrateur.
+				</p>';
+			}
 			/* si on modifie l'utilisateur connecté, on met aussi le login de la 
-				session à jour pour ne pas être automatiquement déconnecté */
-			if(User::get_name() == $oldpseudo)
-				User::set_name($pseudo);
+			 * session à jour pour ne pas être automatiquement déconnecté */
+			if (User::get_name () == $oldpseudo)
+				User::set_name ($pseudo);
 		}
 		else // si ça n'a pas marché
 		{
-			echo '<p>
+			echo '
+			<p>
 				<span class="error">Erreur&nbsp;:</span> la mise à jour du pseudo à échouée&nbsp;: ';
-			
-			if(strlen($pseudo) < 3)
+			if (strlen ($pseudo) < 3)
 				echo 'le nouveau pseudo est trop court (3 caractères minimum sont requis).';
-			elseif(gettype($pseudo) != 'string')
+			elseif (! is_string ($pseudo))
 				echo 'le pseudo n\'a pas été reçu comme chaîne de caractère. <span class="error">Veuillez contacter votre administrateur principal.</span>';
 			else
-				echo '<span class="error">(erreur inconnue)</span> <span class="error">Veuillez contacter votre administrateur principal.</span>';
-			
-			echo '</p>';
+			{
+				echo '
+				<span class="error">(erreur inconnue)</span>
+				<span class="error">Veuillez contacter votre administrateur principal.</span>';
+			}
+			echo '
+			</p>';
 		}
 	}
-
+	
 	// mot de passe
-	if(!empty($mdp))
+	if (! empty($mdp))
 	{
-		if(gettype($mdp) == 'string' &&  // si le nouveau pass est bien une chaîne de caractères
-			strlen($mdp) >= 6 && // et que le nouveau pass fait au moins 6 caractères de long
-			$mdp === $mdp2) // et que le nouveau pass est identique à la confirmation
+		if (is_string ($mdp) &&  // si le nouveau pass est bien une chaîne de caractères
+		    strlen ($mdp) >= 6 && // et que le nouveau pass fait au moins 6 caractères de long
+		    $mdp === $mdp2) // et que le nouveau pass est identique à la confirmation
 		{
 			$db->update("`password`='".md5($mdp)."'", "`username`='$oldpseudo'");
 			/* si on modifie l'utilisateur connecté, on met aussi le mdp de la 
 				session à jour pour ne pas être automatiquement déconnecté */
-			if(User::get_name() == $oldpseudo)
-				User::set_password($mdp);
-				
+			if (User::get_name() == $oldpseudo)
+				User::set_password ($mdp);
+			
 			echo '<p>Mot de passe mis à jour avec succès !</p>';
 		}
 		else // si ça a chié
 		{
-			echo '<p>
+			echo '
+			<p>
 				<span class="error">Erreur&nbsp;:</span> la mise à jour du pseudo à échouée&nbsp;: ';
 			
-			if(strlen($mdp) < 6)
+			if (strlen ($mdp) < 6)
 				echo 'le nouveau mot de passe est trop court (6 caractères minimum sont requis).';
-			elseif(gettype($mdp) != 'string')
+			elseif (! is_string ($mdp))
 				echo 'le mot de passe n\'a pas été reçu comme chaîne de caractère. <span class="error">Veuillez contacter votre administrateur principal.</span>';
-			elseif($mdp != $mdp2)
+			elseif ($mdp !== $mdp2)
 				echo 'le mot de passe ne correspond pas au mot de passe de confirmation.';
 			else
-				echo '<span class="error">(erreur inconnue)</span> <span class="error">Veuillez contacter votre administrateur principal.</span>';
-				
-			echo '</p>';
+			{
+				echo '
+				<span class="error">(erreur inconnue)</span>
+				<span class="error">Veuillez contacter votre administrateur principal.</span>';
+			}
+			echo '
+			</p>';
 		}
 	}
-
+	
 	// niveau d'admin
-	if($level != $oldlevel) // si le niveau a changé
+	if ($level != $oldlevel) // si le niveau a changé
 	{
-		if(gettype($level) == 'integer' && // si le niveau est un entier
-			$level >= 0 && // et que le niveau est compris entre 0
-			$level <= 3) // ...et 3
+		if (is_int ($level) && // si le niveau est un entier
+		    $level >= 0)
 		{
 			// il n'y a que les maîtres qui ont le droit de changer le niveau d'admin
 			if($master)
@@ -330,166 +388,187 @@ function save_edit_user($oldpseudo, $pseudo,
 		}
 		else
 		{
-			echo '<p>
+			echo '
+			<p>
 				<span class="error">Erreur&nbsp;:</span> la mise à jour du pseudo à échouée&nbsp;: ';
 			
-			if($level < 0 || $level > 3)
-				echo 'le niveau n\'est pas valide (le niveau doit être compris entre 0 et 3 compris)';
-			elseif(gettype($level) != 'integer')
+			if ($level < 0)
+				echo 'le niveau n\'est pas valide (le niveau doit être supérieur ou égal à 0)';
+			elseif (is_int ($level) != 'integer')
 				echo 'le niveau n\'a pas été reçu comme entier. <span class="error">Veuillez contacter votre administrateur principal.</span>';
 			else
-				echo '<span class="error">(erreur inconnue)</span> <span class="error">Veuillez contacter votre administrateur principal.</span>';
-			
-			echo '</p>';
+			{
+				echo '
+				<span class="error">(erreur inconnue)</span>
+				<span class="error">Veuillez contacter votre administrateur principal.</span>';
+			}
+			echo '
+			</p>';
 		}
 	}
-
+	
 	unset ($db);
-
-	echo '<p>
-		<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+	
+	echo '
+	<p>
+		',print_button ('Retour', UrlTable::admin_admins (),
+		                'Retour à la gestion des administrateurs'),'
 	</p>';
-
+	
 	return $return;
 }
 
-function remove_user_query($pseudo)
+function remove_user_query ($pseudo)
 {
 	global $master;
-
-	if(!$master)
+	
+	if (!$master)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
-	if(!$pseudo)
+	
+	if (! $pseudo)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Aucun utilisateur sélectionné !
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
-
+	$pseudo = addslashes ($pseudo);
+	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
-	$db->select('*', "`username`='$pseudo'");
+	$db->select ('*', "`username`='$pseudo'");
 	$response = $db->fetch_response ();
 	unset ($db);
-
-	echo '<h3>Supprimer ', $response['username'], '&nbsp;?</h3>';
-
-	echo '<p>
-		Êtes-vous sûr de vouloir supprimer l\'administrateur ', $response['username'], '&nbsp;?
+	
+	echo '
+	<h3>Supprimer «&nbsp;',$response['username'],'&nbsp;»&nbsp;?</h3>
+	<p>
+		Êtes-vous sûr de vouloir supprimer l\'administrateur «&nbsp;',$response['username'],'&nbsp;»&nbsp;?
 	</p>
 	<table>
-		<caption>Caractéristique de ', $response['username'], '</caption>
+		<caption>Caractéristique de «&nbsp;',$response['username'],'&nbsp;»</caption>
 		<tr>
 			<th>Pseudonyme</th>
 			<th>Niveau</th>
 			<th>Loggué ?</th>
 		</tr>
 		<tr>
-			<td>', $response['username'], '</td>
-			<td>', $response['level'], '</td>
-			<td>', ($response['logged']) ? 'Oui' : 'Non', '</td>
+			<td>',$response['username'],'</td>
+			<td>',$response['level'],'</td>
+			<td>',($response['logged']) ? 'Oui' : 'Non','</td>
 		</tr>
 	</table>
-	<form method="post" action="?page=administrateurs&amp;pseudo=', $response['username'], '&amp;action=remove">
-		<div>
+	<form method="post" action="',UrlTable::admin_admins ('rm', $response['username']),'">
+		<p>
 			<input type="hidden" name="rmuser" value="yes" />
 			<input type="submit" value="Supprimer" />
-			<a href="?page=administrateurs" onclick="window.location.replace(this.href);return false;"><input type="button" value="Annuler" /></a>
-		</div>
+			',print_button ('Annuler', UrlTable::admin_admins ()),'
+		</p>
 	</form>';
-
+	
 	return true;
 }
 
-function remove_user($pseudo)
+function remove_user ($pseudo)
 {
 	global $master;
 	$return = true;
-
-	if(!$pseudo)
+	
+	if (! $pseudo)
 		return false;
-
-	if(!$master)
+	
+	if (! $master)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
+	$pseudo = addslashes ($pseudo);
+	
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
-	if(!$db->delete ("`username`='$pseudo'"))
+	if(! $db->delete ("`username`='$pseudo'"))
 		$return = false;
 	unset ($db);
-
-	if($return) // s'il n'y a pas de problème
+	
+	if ($return) // s'il n'y a pas de problème
 	{
-		echo '<h3>Suppression réussie&nbsp;!</h3>
+		echo '
+		<h3>Suppression réussie&nbsp;!</h3>
 		<p>
 			L\'administrateur ', $pseudo, ' a été supprimé avec succès.
 		</p>
 		<p>
-			<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+			',print_button ('Retour', UrlTable::admin_admins (),
+			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
 	else
 	{
-		echo '<h2>Échec de la suppression</h2>
+		echo '
+		<h2>Échec de la suppression</h2>
 		<p>
-			La suppression de l\'administrateur ', $pseudo, ' a échouée.<br />
+			La suppression de l\'administrateur ',$pseudo,' a échouée.<br />
 			Veuillez reporter ce problème à votre administrateur principal.
 		</p>
 		<p>
-			<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+			',print_button ('Retour', UrlTable::admin_admins (),
+			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
-
+	
 	return $return;
 }
 
 function add_user_query()
 {
 	global $master;
-
-	if(!$master)
+	
+	if (! $master)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
-	echo '<h3>Ajouter un administrateur</h3>';
-	echo '<form method="post" action="?page=administrateurs&amp;action=add">
+	
+	echo '
+	<h3>Ajouter un administrateur</h3>
+	<form method="post" action="?',UrlTable::admin_admins ('add'),'">
 		<div>
 			<label>Pseudonyme&nbsp;: <input type="text" name="pseudo" /></label>
 			<br />
@@ -510,35 +589,37 @@ function add_user_query()
 		</div>
 	</form>
 	<p>
-		<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+		',print_button ('Retour', UrlTable::admin_admins (),
+		                'Retour à la gestion des administrateurs'),'
 	</p>';
-
+	
 	return true;
 }
 
-function add_user($pseudo, $pass, $passconf, $level)
+function add_user ($pseudo, $pass, $passconf, $level)
 {
 	global $master;
 	$return = true;
-
-	if(!$master)
+	$error = false;
+	
+	if (! $master)
 	{
-		echo '<h3>Erreur</h3>
+		echo '
+		<h3>Erreur</h3>
 		<p>
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 		
 		return false;
 	}
-
-
-
-	if(gettype($pseudo) == 'string' && strlen($pseudo) >= 3 && 
-		gettype($pass) == 'string' && strlen($pass) >= 6 && $pass === $passconf &&
-		gettype($level) == 'integer' && $level >= 0 && $level <= 3)
+	
+	if (is_string ($pseudo) && strlen ($pseudo) >= 3 && 
+	    is_string ($pass) && strlen ($pass) >= 6 && $pass === $passconf &&
+	    is_int ($level) && $level >= 0)
 	{
 		/* cryptage du mot de passe */
 		$pass = md5($pass);
@@ -547,52 +628,67 @@ function add_user($pseudo, $pass, $passconf, $level)
 		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
 		$return = $db->insert("'$pseudo', '$pass', '$level', 'false'");
+		$error = ! $return;
 		unset ($db);
 	}
 	else
 	{
 		/* ... */
+		$error = true;
 	}
 
-	if($return)
+	if (! $error)
 	{
-		echo '<h3>Ajout de l\'administrateur ', $pseudo, '</h3>';
-		echo '<p>
-			L\'administrateur ', $pseudo, ' a été ajouté avec succès&nbsp;!
+		echo '
+		<h3>Ajout de l\'administrateur ',$pseudo,'</h3>
+		<p>
+			L\'administrateur ',$pseudo,' a été ajouté avec succès&nbsp;!
 		</p>
 		<p>
-			<a href="?page=administrateurs&amp;pseudo=', $pseudo, '">Voir la fiche de ', $pseudo, '</a>
+			<a href="',UrlTable::admin_admins ('show', $pseudo),'">Voir la fiche de ',$pseudo,'</a>
 		</p>
 		<p>
-			<a href="?page=administrateurs">&lArr; Retour à la page de gestion des administrateurs</a>
+			',print_button ('Retour', UrlTable::admin_admins (),
+			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
 	else
 	{
-		echo '<h3>Erreur</h3>
-		<p>
-			Une erreur interne s\'est produite, et l\'action a été arrêtée pour 
-			éviter des erreurs. Veuillez contacter votre administrateur principal
-			et lui comuniquer le message suivant&nbsp;:
-		</p>
-		<fieldset class="error">
-			<legend>Erreur&nbsp;:</legend>
+		echo '
+		<h3>Erreur</h3>';
+		if ($return)
+		{
+			echo '
+			<p>Les données que vous avez entrées sont erronées.</p>';
+		}
+		else
+		{
+			echo '
+			<p>
+				Une erreur interne s\'est produite, et l\'action a été arrêtée pour 
+				éviter des erreurs. Veuillez contacter votre administrateur principal
+				et lui comuniquer le message suivant&nbsp;:
+			</p>
+			<fieldset class="error">
+				<legend>Erreur&nbsp;:</legend>
 				SQL query failed. The response of <span class="phpfunc">MyDB::insert()</span> is: 
-				<span class="phpbool">', ($return) ? 'true' : 'false' , '</span> <br />
+				<span class="phpbool">',($return) ? 'true' : 'false','</span> <br />
 				The values of variables are: <br />
 				<span class="phpvar">$pseudo</span>: &nbsp; <span class="phpval">',$pseudo,'</span>;<br />
 				<span class="phpvar">$pass</span>: &nbsp; &nbsp; <span class="phpval">',$pass,'</span>;<br />
 				<span class="phpvar">$passconf</span>: <span class="phpval">',$passconf,'</span>;<br />
 				<span class="phpvar">$level</span>: &nbsp; &nbsp;<span class="phpval">',$level,'</span>.<br />
 				<br />
-				In function <span class="phpfunc">', __FUNCTION__ ,'()</span> in file "', 
-				__FILE__, '"
-		</fieldset>
+				In function <span class="phpfunc">',__FUNCTION__,'()</span> in file "',__FILE__,'"
+			</fieldset>';
+		}
+		echo '
 		<p>
-			<a href="?page=administrateurs" onclick="history.back(1); return false;">&lArr; Retour à la page pérécédente</a>
+			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			                    'Retour à la page précédente'),'
 		</p>';
 	}
-
+	
 	return $return;
 }
 
@@ -603,48 +699,52 @@ function add_user($pseudo, $pass, $passconf, $level)
 $master = User::has_rights (ADMIN_LEVEL_MASTER);
 
 
-
 /* affichage de la page */
-echo '<div id="presentation">
-			<h2>Gestion des administrateurs</h2>
-				<p>
-				</p>
-		</div>
-				
-		<div id="content">';
+echo '
+	<div id="presentation">
+		<h2>Gestion des administrateurs</h2>
+		<p>
+		</p>
+	</div>
+	<div id="content">';
 // =================================================================
 
 
-if($_GET['pseudo'] != '')
+if (isset ($_GET['action']))
 {
-	if(urldecode($_GET['action']) == 'édit')
+	if ($_GET['action'] == 'edit')
 	{
-		edit_user($_GET['pseudo']);
+		edit_user ($_GET['pseudo']);
 	}
-	elseif($_GET['action'] == 'save')
+	elseif ($_GET['action'] == 'save')
 	{
-		save_edit_user($_POST['oldpseudo'], $_POST['pseudo'], 
-							$_POST['newpasswd'], $_POST['newpasswdconf'], 
-							(integer)$_POST['oldlevel'], (integer)$_POST['level']);
+		save_edit_user ($_POST['oldpseudo'], $_POST['pseudo'], 
+		                $_POST['newpasswd'], $_POST['newpasswdconf'], 
+		                (integer)($_POST['oldlevel']), (integer)($_POST['level']));
 	}
-	elseif($_GET['action'] == 'remove')
+	elseif ($_GET['action'] == 'rm')
 	{
-		if($_POST['rmuser'] == 'yes')
-			remove_user($_GET['pseudo']);
+		if ($_POST['rmuser'] == 'yes')
+			remove_user ($_GET['pseudo']);
 		else
-			remove_user_query($_GET['pseudo']);
+			remove_user_query ($_GET['pseudo']);
+	}
+	elseif ($_GET['action'] == 'show')
+	{
+		display_user ($_GET['pseudo']);
+	}
+	elseif ($_GET['action'] == 'add')
+	{
+		if (isset ($_POST['pseudo'], $_POST['passwd'], $_POST['passwdconf'], $_POST['level']))
+			add_user ($_POST['pseudo'], $_POST['passwd'], $_POST['passwdconf'], (integer)$_POST['level']);
+		else
+			add_user_query ();
 	}
 	else
 	{
-		display_user($_GET['pseudo']);
+		echo '
+		<p>Action invalide.</p>';
 	}
-}
-elseif($_GET['action'] == 'add')
-{
-	if(isset($_POST['pseudo'], $_POST['passwd'], $_POST['passwdconf'], $_POST['level']))
-		add_user($_POST['pseudo'], $_POST['passwd'], $_POST['passwdconf'], (integer)$_POST['level']);
-	else
-		add_user_query();
 }
 else
 {

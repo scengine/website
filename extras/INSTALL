@@ -17,11 +17,15 @@ Basic setup
    encrypted with md5() in the `password` field, and fill the two last fields
    with a 0 (zero).
 
-3) You may want to create some files in your media directory:
+3) If you kept URL rewriting truned on on the configuration, you need to copy
+   (or move, or merge with an existing one) .htaccess.default to .htaccess.
+   Remember to modify it for RewriteBase to fit your configuration.
+
+4) You may want to create some files in your media directory:
    * default/media_unknown.png that is the default icon for uploaded files if no
      thumbnail is available;
    * default/media_compressed.png that is the default icon for compressed files
      if no specific thumbnail is available.
 
-4) You can, if you want, safely remove the extras/ directory, or not upload it
+5) You can, if you want, safely remove the extras/ directory, or not upload it
    to your server

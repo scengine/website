@@ -32,7 +32,15 @@ function print_gpl () {
 	if ($gpl)
 		echo nls2p (htmlspecialchars ($gpl));
 	else
-		echo 'Le <a href="http://www.gnu.org/">site du projet <acronym title="GNU is Not Unix">GNU</acronym></a> est actuellement en dérangement. Nous vous prions de bien vouloir réessayer ultérieurement ou de consulter la licence GPL <a href="http://www.fsf.org/...">sur le site de la <abbr title="Free Software Foundation">FSF</abbr></a>.';
+	{
+		echo '
+		Le <a href="http://www.gnu.org/">site du projet
+		<acronym title="GNU is Not Unix">GNU</acronym></a> est actuellement en
+		dérangement. Nous vous prions de bien vouloir réessayer ultérieurement ou de
+		consulter la licence GPL
+		<a href="http://www.fsf.org/licensing/licenses/gpl.html">sur le site de la
+		<abbr title="Free Software Foundation">FSF</abbr></a>.';
+	}
 }
 
 ?>

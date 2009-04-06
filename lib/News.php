@@ -104,12 +104,9 @@ abstract class News
 	{
 		$news = false;
 		
-		if ($n < 0)
-			$n = 0;
-		
 		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', '', '`id`', 'DESC', $start_offset, $n))
+		if ($db->select ('*', '', '`id`', 'DESC', intval ($start_offset), intval ($n)))
 		{
 			$news = array ();
 			while (false !== ($resp = $db->fetch_response ()))
@@ -128,13 +125,12 @@ abstract class News
 	 */
 	public function get_by_id ($id)
 	{
-		if (! settype ($id, integer))
-			return false;
+		$id = intval ($id);
 		
 		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', "`id`=$id"))
-			return self::convert_db_response ($db->fetch_response ());
+		if ($db->select ('*', "`id`=$id") && ($resp = $db->fetch_response ()) !== false)
+			return self::convert_db_response ($resp);
 		else
 			return false;
 	}

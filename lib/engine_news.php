@@ -21,21 +21,22 @@
 
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/User.php');
 require_once ('lib/string.php');
 
-define (ENGINE_NEWS_OFFSET, 16);
-define (ENGINE_NEWS_GET_PREFIX, 's_e');
+define (ENGINE_NEWS_BY_PAGE, 16);
+define (ENGINE_NEWS_GET_PREFIX, 'devel_page');
 
 /* required JavaScript */
 $HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
-function get_engine_news ($start=0, $end=ENGINE_NEWS_OFFSET) {
+function get_engine_news ($start=0, $end=ENGINE_NEWS_BY_PAGE) {
 	$rv = Array ();
 
 	if ($end < 0)
-		$end = $start + ENGINE_NEWS_OFFSET;
+		$end = $start + ENGINE_NEWS_BY_PAGE;
 
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (DEVEL_TABLE);
@@ -73,27 +74,23 @@ function get_engine_n_news ($reload=false)
 function print_engine_page_browser ($current)
 {
 	$n_news = get_engine_n_news ();
-	$n_pages = ceil ($n_news / ENGINE_NEWS_OFFSET);
+	$n_pages = ceil ($n_news / ENGINE_NEWS_BY_PAGE);
 	$has_prev = ($current > 0) ? true : false;
-	$has_next = ($n_news > $current + ENGINE_NEWS_OFFSET) ? true : false;
+	$has_next = ($n_pages > $current + 1) ? true : false;
 	
 	if ($has_prev)
-		echo '<a href="?',ENGINE_NEWS_GET_PREFIX,'=',
-			($current >= ENGINE_NEWS_OFFSET) ? $current - ENGINE_NEWS_OFFSET : 0,
-			'">&lt;</a> ';
+		echo '<a href="',UrlTable::devel_news_page ($current),'">&lt;</a> ';
 	
-	for ($i=0; $i<$n_pages; $i++)
+	for ($i=0; $i < $n_pages; $i++)
 	{
-		$cur_offset = $i * ENGINE_NEWS_OFFSET;
-		
-		if ($cur_offset == $current)
-			echo $i+1, ' ';
+		if ($i == $current)
+			echo $i + 1, ' ';
 		else
-			echo '<a href="?',ENGINE_NEWS_GET_PREFIX,'=',$cur_offset,'">',$i+1,'</a> ';
+			echo '<a href="',UrlTable::devel_news_page ($i + 1),'">',$i + 1,'</a> ';
 	}
 	
 	if ($has_next)
-		echo ' <a href="?',ENGINE_NEWS_GET_PREFIX,'=',$current + ENGINE_NEWS_OFFSET,'">&gt;</a>';
+		echo ' <a href="',UrlTable::devel_news_page ($current + 1 + 1),'">&gt;</a>';
 }
 
 
@@ -119,16 +116,65 @@ function get_color_for_oldness ($age)
 	return $out;
 }
 
+function print_one_engine_news (array &$new)
+{
+	$user_can_post = User::has_rights (ADMIN_LEVEL_NEWSDEVEL);
+	
+	/* color box */
+	echo '
+	<div class="datecolor"
+	     style="background-color: #',get_color_for_oldness ($new['date']),';">
+	</div>';
+	
+	/* title */
+	echo '
+	<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
+	
+	if ($user_can_post)
+	{
+		echo '
+		<div class="admin">
+			[<a onclick="news_edit(\'m',$new['id'],'\', this)" title="éditer">éditer</a>]
+			[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
+			    onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
+			    title="Supprimer">X</a>]
+		</div>';
+	}
+	
+	echo '
+	<p id="mm',$new['id'],'">',
+		stripslashes ($new['content']),
+	'</p>';
+	
+	if ($user_can_post)
+	{
+		echo '
+		<div class="formedit" id="fm',$new['id'],'" style="display:none;">
+			<a href="javascript:entry_more(\'tm',$new['id'],'\')">[+]</a>
+			<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
+			<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
+				<p>
+					<input type="hidden" name="date" value="',$new['date'],'"/>
+					<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
+						br2nl (stripslashes ($new['content'])),
+					'</textarea>
+					<input type="submit" value="Poster" />
+					<input type="reset" value="Reset" />
+				</p>
+			</form>
+		</div>';
+	}
+}
+
 function print_engine_news ()
 {
 	$user_can_post = User::has_rights (ADMIN_LEVEL_NEWSDEVEL);
 	$start_news = 0;
 	
-	$start_news = (isset ($_GET[ENGINE_NEWS_GET_PREFIX])) ? $_GET[ENGINE_NEWS_GET_PREFIX] : 0;
-	settype ($start_news, 'integer');
+	$start_news = (isset ($_GET[ENGINE_NEWS_GET_PREFIX])) ? (int)($_GET[ENGINE_NEWS_GET_PREFIX] - 1) : 0;
 	if ($start_news < 0) $start_news = 0;
 	
-	$news = get_engine_news ($start_news, ENGINE_NEWS_OFFSET);
+	$news = get_engine_news ($start_news * ENGINE_NEWS_BY_PAGE, ENGINE_NEWS_BY_PAGE);
 	
 	echo '
 	<div class="links right">
@@ -173,55 +219,12 @@ function print_engine_news ()
 	}
 	
 	echo '
-	<div class="news_engine_box">';
+	<div class="devel_news_box">';
 	
-	foreach ($news as $new)
+	foreach ($news as &$new)
 	{
-		/* color box */
-		echo '
-		<div class="datecolor"
-		     style="background-color: #',get_color_for_oldness ($new['date']),';">
-		</div>';
-		
-		/* title */
-		echo '
-		<h4 id="m',$new['id'],'">',date ('d/m/Y à H\hi', $new['date']),'</h4>';
-		
-		if ($user_can_post)
-		{
-			echo '
-			<div class="admin">
-				[<a onclick="news_edit(\'m',$new['id'],'\', this)" title="éditer">éditer</a>]
-				[<a href="post.php?sec=devel&amp;act=rm&amp;id=',$new['id'],'"
-				    onclick="return confirm(\'Voulez-vous vraiment supprimer ce post ?\')"
-				    title="Supprimer">X</a>]
-			</div>';
-		}
-		
-		echo '
-		<p id="mm',$new['id'],'">',
-			stripslashes ($new['content']),
-		'</p>';
-		
-		if ($user_can_post)
-		{
-			echo '
-			<div class="formedit" id="fm',$new['id'],'" style="display:none;">
-				<a href="javascript:entry_more(\'tm',$new['id'],'\')">[+]</a>
-				<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
-				<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
-					<p>
-						<input type="hidden" name="date" value="',$new['date'],'"/>
-						<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
-							br2nl (stripslashes ($new['content'])),
-						'</textarea>
-						<input type="submit" value="Poster" />
-						<input type="reset" value="Reset" />
-					</p>
-				</form>
-			</div>';
-		}
-	} //endwhile
+		print_one_engine_news ($new);
+	}
 	
 	echo '
 	</div>';

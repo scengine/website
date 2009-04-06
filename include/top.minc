@@ -25,6 +25,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/engine_news.php');
 require_once ('lib/random_screenshot.php');
 require_once ('lib/User.php');
@@ -57,20 +58,20 @@ function print_head_adds (&$adds) {
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<meta name="description" content="<?php echo DESCRIPTION; ?>" />
 		
-		<link rel="start" title="Accueil" href="index.php" />
-		<link rel="icon" href="styles/<?php echo STYLE; ?>/icon.png" type="image/png" />
+		<link rel="start" title="Accueil" href="<?php echo UrlTable::home (); ?>" />
+		<link rel="icon" href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/icon.png" type="image/png" />
 <!-- Feuille de style par défaut -->
 		<link rel="stylesheet" media="screen" type="text/css" title="default"
-			href="styles/<?php echo STYLE; ?>/main.css" />
+			href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/main.css" />
 		
-		<link rel="alternate" title="Flux des actualités (Atom)"
-			type="application/atom+xml" href="<?php echo NEWS_ATOM_FEED_FILE; ?>" />
-		<link rel="alternate" title="Flux des actualités (RSS)"
-			type="application/rss+xml" href="<?php echo NEWS_RSS_FEED_FILE; ?>" />
-		<link rel="alternate" title="Flux de l'actualité du développement (Atom)"
-			type="application/atom+xml" href="<?php echo DEVEL_ATOM_FEED_FILE; ?>" />
-		<link rel="alternate" title="Flux de l'actualité du développement (RSS)"
-			type="application/rss+xml" href="<?php echo DEVEL_RSS_FEED_FILE; ?>" />
+		<link rel="alternate" title="Actualités (Atom)"
+			type="application/atom+xml" href="<?php echo BSE_BASE_PATH,NEWS_ATOM_FEED_FILE; ?>" />
+		<link rel="alternate" title="Actualités (RSS)"
+			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,NEWS_RSS_FEED_FILE; ?>" />
+		<link rel="alternate" title="Actualités du développement (Atom)"
+			type="application/atom+xml" href="<?php echo BSE_BASE_PATH,DEVEL_ATOM_FEED_FILE; ?>" />
+		<link rel="alternate" title="Actualités du développement (RSS)"
+			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,DEVEL_RSS_FEED_FILE; ?>" />
 		
 		<!--script type="text/javascript" src="include/js/hour.js"></script-->
 		<?php
@@ -82,24 +83,24 @@ function print_head_adds (&$adds) {
 
 	<body>
 		<div id="header">
-			<h1><span><a href="index.php"><?php echo $MDI->get_name (); ?></a></span></h1> <!-- TODO A remplacer par une image d'en-tete /-->
+			<h1><span><a href="<?php echo UrlTable::home (); ?>"><?php echo $MDI->get_name (); ?></a></span></h1> <!-- TODO A remplacer par une image d'en-tete /-->
 		</div>
 		
 		<div id="menu">
 			<ul>
-				<li><a href="index.php">Accueil</a></li>
-				<li><a href="medias.php">Médias</a>
+				<li><a href="<?php echo UrlTable::home (); ?>">Accueil</a></li>
+				<li><a href="<?php echo UrlTable::medias (); ?>">Médias</a>
 					<ul>
-						<li><a href="medias.php#medias_screens">Screenshots</a></li>
-						<li><a href="medias.php#medias_movies">Vidéos</a></li>
+						<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
+						<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Vidéos</a></li>
 					</ul>
 				</li>
-				<li><a href="downloads.php">Téléchargements</a></li>
+				<li><a href="<?php echo UrlTable::downloads (); ?>">Téléchargements</a></li>
 				<li><a href="forums/index.php">Forums</a></li>
 				<li><a href="doc/index.html">Documentation</a></li>
-				<li><a href="tuto.php">Tutoriel</a></li>
-				<li><a href="licence.php">Licence</a></li>
-				<li><a href="about.php">À propos</a></li>
+				<li><a href="<?php echo UrlTable::tuto (); ?>">Tutoriel</a></li>
+				<li><a href="<?php echo UrlTable::license (); ?>">Licence</a></li>
+				<li><a href="<?php echo UrlTable::about (); ?>">À propos</a></li>
 				
 				<?php if (User::get_logged ()) { // administration menu
 					$dir = opendir ('include'); // dossier contenant les pages
@@ -117,13 +118,13 @@ function print_head_adds (&$adds) {
 					sort ($tpages); // sorting array
 					
 					// base admin entry
-					echo '<li><a href="admin.php">Admin</a><ul>';
+					echo '<li><a href="',UrlTable::admin (),'">Admin</a><ul>';
 					
 					// dispaying result
 					foreach ($tpages as $tpage) {
 						$tname = ucfirst ($tpage);
 						
-						echo '<li><a href="admin.php?page=', $tpage, '">', $tname, '</a></li>';
+						echo '<li><a href="',UrlTable::admin ($tpage),'">',$tname,'</a></li>';
 					}
 					
 					// end of adin menu
@@ -200,13 +201,13 @@ function print_head_adds (&$adds) {
 					Bienvenue <span class="b"><?php echo User::get_name ();?></span>&nbsp;!
 				</p>
 				<ul>
-					<li><a href="admin.php">Administration</a></li>
-					<li><a href="admin.php?page=actualités">Gérer les news</a></li>
-					<li><a href="admin.php?page=medias">Gérer les médias</a></li>
-					<li><a href="admin.php?page=administrateurs">Gérer les admins</a></li>
+					<li><a href="<?php echo UrlTable::admin (); ?>">Administration</a></li>
+					<li><a href="<?php echo UrlTable::admin ('actualités'); ?>">Gérer les news</a></li>
+					<li><a href="<?php echo UrlTable::admin ('medias'); ?>">Gérer les médias</a></li>
+					<li><a href="<?php echo UrlTable::admin ('administrateurs'); ?>">Gérer les admins</a></li>
 				</ul>
 				<p>
-					<a href="connexion.php?act=logout"
+					<a href="<?php echo UrlTable::logout (); ?>"
 						onclick="window.location.replace(this.href)">
 						<input type="button" value="Déconnexion" />
 					</a>
@@ -218,7 +219,7 @@ function print_head_adds (&$adds) {
 			?>
 			<div class="lsmenu">
 				<h3>Connexion</h3>
-				<form method="post" action="connexion.php">
+				<form method="post" action="<?php echo UrlTable::login (); ?>">
 					<p>
 						<label>Nom d'utilisateur&nbsp;: <input type="text" name="username" /></label><br />
 						<label>Mot de passe&nbsp;: <input type="password" name="password" /></label><br />
@@ -261,7 +262,7 @@ function print_head_adds (&$adds) {
 			<div class="rsmenu">
 				<h3>Dernière version</h3>
 				<p>
-					 La version <span class="b"><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></span> est disponible !
+					 La version <span class="b"><a href="<?php echo UrlTable::downloads (); ?>"><?php echo $MDI->get_version (); ?></a></span> est disponible !
 				</p>
 			</div>
 			

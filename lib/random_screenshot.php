@@ -20,6 +20,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/medias.php');
 require_once ('lib/MyDB.php');
 
@@ -39,7 +40,7 @@ function random_screenshot_print ()
 		
 		echo '
 		<div class="media center">
-			<a href="medias.php?watch=',$media['id'],'&amp;noreturn=1">
+			<a href="',UrlTable::medias ($media['id'], true),'">
 				<img src="',MEDIA_DIR_R,'/',$media['tb_uri'],'" alt="',$media['desc'],'"
 					style="max-width: 100%;" />
 			</a>

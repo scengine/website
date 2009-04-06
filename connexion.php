@@ -22,11 +22,12 @@
 /*connecxion/déconnexion*/
 
 require_once ('lib/User.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/string.php');
 require_once ('lib/TypedDialog.php');
 
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
-$refresh = 'index.php';
+$refresh = UrlTable::home ();
 
 // on vérifie que le client a donné une adresse de page précédante
 if ($_SERVER['HTTP_REFERER']) {
@@ -35,8 +36,8 @@ if ($_SERVER['HTTP_REFERER']) {
 		$refresh = '';
 		
 		// si l'utilisateur viens d'une page d'admin, il serait redirigé vers un 404
-		if (preg_match ('#/admin\.php#', $_SERVER['HTTP_REFERER'])) {
-			$refresh = 'index.php';
+		if (preg_match ('#/admin\.(?:php|html)#', $_SERVER['HTTP_REFERER'])) {
+			$refresh = UrlTable::home ();
 		}
 		// sinon, on le renvoi d'où il vient (sans les args GET)
 		// heu, pourquoi sans les GET ?

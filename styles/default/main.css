@@ -361,6 +361,9 @@ margin-bottom: 9px; /*!!*/
 */
 margin-top: 10px; /* 9 for FF2 but FF3 & Konqueor don't fuck */
 }
+#content.nopresentation {
+-moz-border-radius: 12px 12px 0 0;
+}
 
 #content img {
 /*
@@ -419,7 +422,7 @@ text-align: center;
 font-size: 85%;
 }
 
-.news_engine_box {
+.devel_news_box {
 max-height: 400px;
 overflow: auto;
 border-top: 1px solid #bfbfbf;
@@ -449,7 +452,7 @@ border-bottom: 1px solid #83C9FC;
 margin-bottom: 10px;
 */
 text-align: center;
-font-size: 12px;
+font-size: 11px;
 }
 
 
@@ -577,7 +580,7 @@ margin-top: 0;
 font-size: 80%;
 }
 
-.news_engine_box .datecolor {
+.datecolor {
 height: 5px;
 width: 5px;
 float: left;

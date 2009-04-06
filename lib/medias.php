@@ -20,6 +20,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/string.php');
 require_once ('lib/MyDB.php');
 
@@ -400,7 +401,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 				echo
 					__media_print_code_snippet_textarea (
-						'[['.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch|{{'.
+						'[['.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).'#watch|{{'.
 						$tb_uri.'|'.$media['desc'].'}}]]'
 					);
 				?>
@@ -409,7 +410,7 @@ function media_print_code_snippets (array &$media)
 				BBCode&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'[url='.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch][img]'.
+						'[url='.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).'#watch][img]'.
 						$tb_uri.'[/img][/url]'
 					);
 				?>
@@ -418,7 +419,7 @@ function media_print_code_snippets (array &$media)
 				ZCode&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'<lien url="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'<lien url="'.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).
 						'#watch"><image>'.$tb_uri.'</image></lien>'
 					);
 				?>
@@ -427,7 +428,7 @@ function media_print_code_snippets (array &$media)
 				XHTML&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'<a href="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'<a href="'.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).
 						'#watch"><img src="'.$tb_uri.'" alt="'.$media['desc'].'" /></a>'
 					);
 				?>
@@ -485,7 +486,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 				echo
 					__media_print_code_snippet_textarea (
-						'[['.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch|{{'.
+						'[['.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).'#watch|{{'.
 						$uri.'|'.$media['desc'].'}}]]'
 					);
 				?>
@@ -494,7 +495,7 @@ function media_print_code_snippets (array &$media)
 				BBCode&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'[url='.BSE_BASE_URL.'medias.php?watch='.$media['id'].'#watch][img]'.
+						'[url='.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).'#watch][img]'.
 						$uri.'[/img][/url]'
 					);
 				?>
@@ -503,7 +504,7 @@ function media_print_code_snippets (array &$media)
 				ZCode&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'<lien url="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'<lien url="'.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).
 						'#watch"><image>'.$uri.'</image></lien>'
 					);
 				?>
@@ -512,7 +513,7 @@ function media_print_code_snippets (array &$media)
 				XHTML&nbsp;:
 				<?php
 					__media_print_code_snippet_textarea (
-						'<a href="'.BSE_BASE_URL.'medias.php?watch='.$media['id'].
+						'<a href="'.BSE_BASE_URL.UrlTable::medias ($media['id'], false, $media['desc']).
 						'#watch"><img src="'.$uri.'" alt="'.$media['desc'].'" /></a>'
 					);
 				?>

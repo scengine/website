@@ -33,11 +33,12 @@ require_once ('lib/BCode.php');
 require_once ('lib/string.php');
 require_once ('lib/TypedDialog.php');
 require_once ('lib/feeds.php');
+require_once ('lib/UrlTable.php');
 
 
 
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
-$refresh = 'index.php';
+$refresh = UrlTable::home ();
 
 if (isset ($_GET['redirect'])) {
 	// if a redirect was sepcified, use it
@@ -54,10 +55,13 @@ else {
 			if ($_GET['id'] && ctype_digit ($_GET['id']))
 			{
 				if (PostDevel::SECTION == $_GET['sec'])
-					$refresh .= '#m';
+				{
+					$refresh .= '#m'.$_GET['id'];
+				}
 				else
-					$refresh .= '#n';
-				$refresh .= $_GET['id'];
+				{
+					$refresh = UrlTable::news ($_GET['id']);
+				}
 			}
 		}
 	}

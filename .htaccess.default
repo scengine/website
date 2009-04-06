@@ -1,0 +1,32 @@
+RewriteEngine On
+# BSE's root directory.
+# Not always needed, depending on your hosting
+RewriteBase /sites/scengine/
+
+# basic pages
+RewriteRule ^(index|medias|downloads|tuto|license|about|admin).html$ $1.php [L]
+# connexion pages
+RewriteRule ^login.html$ connexion.php [L]
+RewriteRule ^logout.html$ connexion.php?act=logout [L]
+
+# news-pageNUM[.html]
+RewriteRule ^news-page([0-9]+)(?:\.html)?$ index.php?page=$1 [L]
+# news-ID[...[.html]]
+RewriteRule ^news-([0-9]+)(?:-.*)?(?:\.html)?$ index.php?shownews=$1 [L]
+
+# devel-pageNUM[.html]
+RewriteRule ^devel-page([0-9]+)(?:\.html)?$ index.php?devel_page=$1 [L]
+
+# medias-TYPE[.html]
+RewriteRule ^medias-([0-9,]*)(?:\.html)?$ medias.php?type=$1 [L]
+# medias-TYPE-TAGS.html
+RewriteRule ^medias-([0-9,]*)-(.*)\.html$ medias.php?type=$1&showtag=$2 [L]
+# media-ID[-NOTRETURN[...[.html]]]
+RewriteRule ^media-([0-9]+)(?:-([01]))?(?:-.*)?(?:\.html)?$ medias.php?watch=$1&noreturn=$2 [L]
+
+# admin-actualités-ACTION[-ID].html
+RewriteRule ^admin-(actualités|medias)-([^-]+)(?:-([0-9]+))?.html$ admin.php?page=$1&action=$2&id=$3 [L]
+# admin-administrateurs-PSEUDO[-ACTION].html
+RewriteRule ^admin-(administrateurs)-([^-]+)(?:-(.+))?.html$ admin.php?page=$1&action=$2&pseudo=$3 [L]
+# admin-PAGE.html
+RewriteRule ^admin-(.+).html$ admin.php?page=$1 [L]

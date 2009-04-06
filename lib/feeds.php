@@ -20,6 +20,7 @@
  */
 
 require_once ('include/defines.php');
+require_once ('lib/UrlTable.php');
 require_once ('lib/MyDB.php');
 
 
@@ -85,7 +86,6 @@ define (RSS_FEED_NEWS_ITEM_TPL,
 			</description>
 			<pubDate>{date}</pubDate>
 			<guid isPermaLink="false">{id}</guid>
-			<!--author>{author}</author-->
 		</item>
 ');
 
@@ -199,34 +199,41 @@ function feed_update_news ()
 	$rss_data = array ();
 	$rss_items = array ();
 	
+	/*
 	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', '`id`', 'DESC', 0, 10);
 	while (($news = $db->fetch_response ()) !== false)
+	*/
+	$all_news = News::get (0, 10);
+	foreach ($all_news as &$news)
 	{
+		$alternate_url = BSE_BASE_URL.UrlTable::news ($news['id']);
+		$id = /*sha1 (*/$alternate_url/*)*/;
+		
 		$atom_items[] = array (
 			'tpl'     => ATOM_FEED_NEWS_ITEM_TPL,
 			'replace' => array (
 				'lang'          => 'fr',
-				'title'         => stripslashes ($news['titre']),
+				'title'         => $news['title'],
 				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 				 * the use HTML, even if it is not good as XHTML */
-				'content'       => htmlspecialchars ($news['contenu'], ENT_COMPAT, 'UTF-8'),
+				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
 				'date'          => date ('c', $news['mdate']),
-				'alternate_url' => BSE_BASE_URL.'index.php#n'.$news['id'],
-				'id'            => BSE_BASE_URL.'index.php#n'.$news['id'],
-				'author'        => $news['auteur']
+				'alternate_url' => $alternate_url,
+				'id'            => $id,
+				'author'        => $news['author']
 			)
 		);
 		$rss_items[] = array (
 			'tpl'     => RSS_FEED_NEWS_ITEM_TPL,
 			'replace' => array (
-				'title'         => stripslashes ($news['titre']),
-				'content'       => htmlspecialchars ($news['contenu'], ENT_COMPAT, 'UTF-8'),
+				'title'         => $news['title'],
+				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
 				'date'          => date ('r', $news['mdate']),
-				'alternate_url' => BSE_BASE_URL.'index.php#n'.$news['id'],
-				'id'            => BSE_BASE_URL.'index.php#n'.$news['id'],
-				'author'        => $news['auteur']
+				'alternate_url' => $alternate_url,
+				'id'            => $id,
+				'author'        => $news['author']
 			)
 		);
 	}
