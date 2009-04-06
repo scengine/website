@@ -42,13 +42,13 @@ define (DESCRIPTION, 'Administration du '.$MDI->get_name ());
 $name = urldecode($_GET['page']);
 
 // on vérifie que la page existe et que l'admin est loggué :
-$page = 'include/'.$name.'.inc';
-if (file_exists ('./'.$page) && User::get_logged ()) {
-	define (TITLE, ucfirst($name).' - Administration');
+$page = './include/'.$name.'.inc';
+if (file_exists ($page) && User::get_logged ()) {
+	define (TITLE, ucfirst ($name).' - Administration');
 	define (PAGE, $name);
 }
 else {
-	$page = 'include/accueil.inc';
+	$page = './include/accueil.inc';
 	
 	define (TITLE, 'Accueil - Administration');
 	define (PAGE, 'accueil');

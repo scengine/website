@@ -44,9 +44,29 @@ function print_head_adds (&$adds) {
 	unset ($added, $add);
 }
 
+function get_admin_pages ()
+{
+	$pages = array (); // tableau des pages
+	
+	$dir = opendir ('include'); // dossier contenant les pages
+	// getting files from directory
+	while (false !== ($file = readdir ($dir)))
+	{
+		// vreifying filename
+		if (filename_getext ($file) == 'inc')
+		{
+			$filename = file_getname ($file);
+			$pages[ucfirst ($filename)] = $filename;
+		}
+	}
+	closedir ($dir);
+	
+	ksort ($pages);
+	return $pages;
+}
+
+
 ?>
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 	<head>
@@ -57,7 +77,6 @@ function print_head_adds (&$adds) {
 		
 		<link rel="start" title="Accueil" href="<?php echo UrlTable::home (); ?>" />
 		<link rel="icon" href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/icon.png" type="image/png" />
-<!-- Feuille de style par défaut -->
 		<link rel="stylesheet" media="screen" type="text/css" title="default"
 			href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/main.css" />
 		
@@ -71,11 +90,11 @@ function print_head_adds (&$adds) {
 			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,DEVEL_RSS_FEED_FILE; ?>" />
 		
 		<script type="text/javascript" src="include/js/actions.js"></script>
-		<?php
+<?php
 			if (isset ($HEAD_ADDS) && is_array ($HEAD_ADDS)) {
 				print_head_adds ($HEAD_ADDS);
 			}
-		?>
+?>
 	</head>
 
 	<body>
@@ -98,37 +117,24 @@ function print_head_adds (&$adds) {
 				<li><a href="<?php echo UrlTable::tuto (); ?>">Tutoriel</a></li>
 				<li><a href="<?php echo UrlTable::license (); ?>">Licence</a></li>
 				<li><a href="<?php echo UrlTable::about (); ?>">À propos</a></li>
-				
-				<?php if (User::get_logged ()) { // administration menu
-					$dir = opendir ('include'); // dossier contenant les pages
-					$tpages = Array (); // tableau des pages
-				
-					// getting files from directory
-					for ($i = 0; False !== ($file = readdir ($dir)); $i++) {
-						// vreifying filename
-						if (filename_getext ($file) == 'inc')
-							 $tpages[$i] = file_getname ($file);
+<?php
+				/* admin menu */
+				if (User::get_logged ())
+				{
+					echo '
+					<li>
+						<a href="',UrlTable::admin (),'">Admin</a>
+						<ul>';
+					/* $__... is to avoid conflicts width pages including top */
+					foreach (get_admin_pages () as $__name => $__page) {
+						echo '
+							<li><a href="',UrlTable::admin ($__page),'">',$__name,'</a></li>';
 					}
-					
-					closedir ($dir); // fermeture du répertoire
-					
-					sort ($tpages); // sorting array
-					
-					// base admin entry
-					echo '<li><a href="',UrlTable::admin (),'">Admin</a><ul>';
-					
-					// dispaying result
-					foreach ($tpages as $tpage) {
-						$tname = ucfirst ($tpage);
-						
-						echo '<li><a href="',UrlTable::admin ($tpage),'">',$tname,'</a></li>';
-					}
-					
-					// end of adin menu
-					echo '</ul></li>';
-				} ?>
-
-			<!--li><span id="hour">Loading...</span></li-->
+					echo '
+						</ul>
+					</li>';
+				}
+?>
 			</ul>
 		</div>
 
