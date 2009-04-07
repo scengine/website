@@ -1,4 +1,3 @@
  * Unifier le news engine ? (post.php vs lib/News.php)
- * Permettre de modifier la date des médias
  * Permettre de modifier les fichiers des médias (?)
  * Amélioration de la gestion des utilisateurs (UID & cie)

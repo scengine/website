@@ -458,6 +458,14 @@ function print_upload_form ($action, $id=false, $fillwith=false, $upload=true)
 		?>
 			<tr>
 				<th>
+					<label for="f__7" title="Date du média au format « YYYY/MM/DD hh:mm:ss » (laisser vide pour la date par défaut)">Date&nbsp;:</label>
+				</th>
+				<td colspan="2">
+					<input type="text" id="f__7" name="mdate" value="<?php if ($fillwith) echo strftime ('%Y/%m/%d %H:%M:%S', $fillwith['mdate']); ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th>
 					<label for="f__4" title="Attention, un tag ne peut pas contenir d'espace">Tags&nbsp;:</label>
 				</th>
 				<td colspan="2">
@@ -611,6 +619,25 @@ function create_thumbnail ($mime, $input, $output)
 	return false;
 }
 
+function get_safe_mdate ($strtime, $default_timestamp)
+{
+	$mdate = $default_timestamp;
+	if ($strtime)
+	{
+		$mdate = strtotime ($strtime);
+		if ($mdate === false)
+		{
+			$mdate = $default_timestamp;
+			echo '
+			<p class="error">
+				Le format de la date semble invalide, la date n\'a pas été modifiée.
+			</p>';
+		}
+	}
+	
+	return $mdate;
+}
+
 function add_media_query ()
 {
 	$error = '';
@@ -734,8 +761,10 @@ function add_media_query ()
 				
 				if (! $error)
 				{
+					$mdate = get_safe_mdate ($_POST['mdate'], $statbuf['mtime']);
+					
 					if (media_add ($path, $tb_path, $statbuf['size'],
-					               $statbuf['mtime'], $_POST['type'], $_POST['uid'], 
+					               $mdate, $_POST['type'], $_POST['uid'], 
 					               $_POST['tags'], $_POST['desc'], $_POST['comment']))
 					{
 						echo '
@@ -831,12 +860,14 @@ function add_media_query ()
 function update_media_query ($media_id)
 {
 	if (isset ($_POST[FFIELD], $_POST[TBFIELD], $_POST['type'], $_POST['uid'], 
-	           $_POST['tags'], $_POST['desc'], $_POST['comment']))
+	           $_POST['tags'], $_POST['desc'], $_POST['comment'], $_POST['mdate']))
 	{
 		$media = media_get_by_id ($media_id);
+		$mdate = get_safe_mdate ($_POST['mdate'], $media['mdate']);
+		
 		if (media_set_from_values ($media_id,
 		                           $_POST[FFIELD], $_POST[TBFIELD], $media['size'],
-		                           $media['mdate'], $_POST['type'], $_POST['uid'], 
+		                           $mdate, $_POST['type'], $_POST['uid'], 
 		                           $_POST['tags'], $_POST['desc'], $_POST['comment']))
 		{
 			echo '
