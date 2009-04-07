@@ -57,7 +57,7 @@ abstract class News
 						print_button_js ('+', "entry_more('tn$id')", 'Agrandir le formulaire'),
 						print_button_js ('-', "entry_lesser('tn$id')", 'Rapetisser le formulaire'),
 						print_button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insérer un lien'),
-						print_button_js ('img', "textarea_insert('tn$id', '{{', '|Texte aleternatif}}')", 'Insérer une image'),
+						print_button_js ('img', "textarea_insert('tn$id', '{{', '|Texte alternatif}}')", 'Insérer une image'),
 						print_button_js ('<span class="b">G</span>', "textarea_insert_around('tn$id', '**')", 'Mettre en gras'),
 						print_button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Mettre en italique'),
 						print_button_js ('<span class="u">S</span>', "textarea_insert_around('tn$id', '__')", 'Souligner'),

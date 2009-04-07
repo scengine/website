@@ -60,7 +60,11 @@ else {
 				}
 				else
 				{
-					$refresh = UrlTable::news ($_GET['id']);
+					/* don't redirect to an removed page */
+					if ($_GET['act'] == 'rm')
+						$refresh = UrlTable::news ();
+					else
+						$refresh = UrlTable::news ($_GET['id']);
 				}
 			}
 		}
