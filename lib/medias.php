@@ -24,11 +24,11 @@ require_once ('lib/UrlTable.php');
 require_once ('lib/string.php');
 require_once ('lib/MyDB.php');
 
-define (MEDIA_THUMBNAIL_WIDTH,  160.0);
-define (MEDIA_THUMBNAIL_HEIGHT, 120.0);
+define ('MEDIA_THUMBNAIL_WIDTH',  160.0);
+define ('MEDIA_THUMBNAIL_HEIGHT', 120.0);
 /* default thumbnails if none */
-define (MEDIA_UNKNOWN_THUMBNAIL_URI,    'default/media_unknown.png');
-define (MEDIA_COMPRESSED_THUMBNAIL_URI, 'default/media_compressed.png');
+define ('MEDIA_UNKNOWN_THUMBNAIL_URI',    'default/media_unknown.png');
+define ('MEDIA_COMPRESSED_THUMBNAIL_URI', 'default/media_compressed.png');
 
 
 abstract class MediaType

@@ -24,10 +24,10 @@
 require_once ('lib/Dialog.php');
 
 
-define (DIALOG_TYPE_NONE, 0);
-define (DIALOG_TYPE_INFO, 1);
-define (DIALOG_TYPE_ERROR, 2);
-define (DIALOG_TYPE_WARNING, 3);
+define ('DIALOG_TYPE_NONE', 0);
+define ('DIALOG_TYPE_INFO', 1);
+define ('DIALOG_TYPE_ERROR', 2);
+define ('DIALOG_TYPE_WARNING', 3);
 
 class TypedDialog extends Dialog {
 	private $type;

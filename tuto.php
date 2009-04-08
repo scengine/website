@@ -1,5 +1,5 @@
 <?php
-define (TITLE, 'Tutoriel');
+define ('TITLE', 'Tutoriel');
 
 require_once ('include/top.minc');
 ?>

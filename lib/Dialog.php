@@ -23,7 +23,7 @@
 
 require_once ('include/defines.php');
 
-define (DIALOG_REDIRECT_TIME, 1);
+define ('DIALOG_REDIRECT_TIME', 1);
 
 
 class Dialog {

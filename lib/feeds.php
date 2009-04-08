@@ -27,7 +27,7 @@ require_once ('lib/MyDB.php');
 
 /** Feed templates for devel news **/
 /* Atom */
-define (ATOM_FEED_NEWS_TPL,
+define ('ATOM_FEED_NEWS_TPL',
 '<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<generator>BSE</generator>
@@ -41,7 +41,7 @@ define (ATOM_FEED_NEWS_TPL,
 {items}
 </feed>
 ');
-define (ATOM_FEED_NEWS_ITEM_TPL,
+define ('ATOM_FEED_NEWS_ITEM_TPL',
 '	<entry>
 		<title xml:lang="{lang}">{title}</title>
 		<content type="html" xml:lang="{lang}">
@@ -56,7 +56,7 @@ define (ATOM_FEED_NEWS_ITEM_TPL,
 	</entry>
 ');
 /* RSS */
-define (RSS_FEED_NEWS_TPL,
+define ('RSS_FEED_NEWS_TPL',
 '<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
@@ -78,7 +78,7 @@ define (RSS_FEED_NEWS_TPL,
 	</channel>
 </rss>
 ');
-define (RSS_FEED_NEWS_ITEM_TPL,
+define ('RSS_FEED_NEWS_ITEM_TPL',
 '		<item>
 			<title>{title}</title>
 			<link>{alternate_url}</link>
@@ -92,7 +92,7 @@ define (RSS_FEED_NEWS_ITEM_TPL,
 
 /** Feed templates for devel news **/
 /* Atom */
-define (ATOM_FEED_DEVEL_TPL,
+define ('ATOM_FEED_DEVEL_TPL',
 '<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<generator>BSE</generator>
@@ -109,7 +109,7 @@ define (ATOM_FEED_DEVEL_TPL,
 {items}
 </feed>
 ');
-define (ATOM_FEED_DEVEL_ITEM_TPL,
+define ('ATOM_FEED_DEVEL_ITEM_TPL',
 '	<entry>
 		<title xml:lang="{lang}">{title}</title>
 		<content type="html" xml:lang="{lang}">
@@ -121,7 +121,7 @@ define (ATOM_FEED_DEVEL_ITEM_TPL,
 	</entry>
 ');
 /* RSS */
-define (RSS_FEED_DEVEL_TPL,
+define ('RSS_FEED_DEVEL_TPL',
 '<?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
@@ -143,7 +143,7 @@ define (RSS_FEED_DEVEL_TPL,
 	</channel>
 </rss>
 ');
-define (RSS_FEED_DEVEL_ITEM_TPL,
+define ('RSS_FEED_DEVEL_ITEM_TPL',
 '		<item>
 			<title>{title}</title>
 			<link>{alternate_url}</link>

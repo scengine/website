@@ -26,8 +26,8 @@ require_once ('lib/MyDB.php');
 require_once ('lib/User.php');
 require_once ('lib/string.php');
 
-define (ENGINE_NEWS_BY_PAGE, 16);
-define (ENGINE_NEWS_GET_PREFIX, 'devel_page');
+define ('ENGINE_NEWS_BY_PAGE', 16);
+define ('ENGINE_NEWS_GET_PREFIX', 'devel_page');
 
 /* required JavaScript */
 //$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';

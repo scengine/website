@@ -116,18 +116,18 @@ function remove_special_chars ($str)
   return $str;
 }
 
-define (PARSER_PREV_NOPARSE, -1);
+define ('PARSER_PREV_NOPARSE', -1);
 
-define (PARSER_PREV_NONE,  0);
-define (PARSER_PREV_TITLE, 1);
-define (PARSER_PREV_P,     2);
-define (PARSER_PREV_UL,    3);
-define (PARSER_PREV_OL,    4);
-define (PARSER_PREV_QUOTE, 5);
-define (PARSER_PREV_HR,    6);
-define (PARSER_PREV_CODE,  7);
-define (PARSER_PREV_TABLE, 8);
-define (PARSER_PREV_COMMENT, 9);
+define ('PARSER_PREV_NONE',  0);
+define ('PARSER_PREV_TITLE', 1);
+define ('PARSER_PREV_P',     2);
+define ('PARSER_PREV_UL',    3);
+define ('PARSER_PREV_OL',    4);
+define ('PARSER_PREV_QUOTE', 5);
+define ('PARSER_PREV_HR',    6);
+define ('PARSER_PREV_CODE',  7);
+define ('PARSER_PREV_TABLE', 8);
+define ('PARSER_PREV_COMMENT', 9);
   
   
 class WKParser

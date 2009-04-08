@@ -35,8 +35,8 @@ if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 
 
 
-//define (TITLE, 'Administration - '.ENGINE);
-define (DESCRIPTION, 'Administration du '.$MDI->get_name ());
+//define ('TITLE',, 'Administration - '.ENGINE);
+define ('DESCRIPTION', 'Administration du '.$MDI->get_name ());
 
 
 $name = urldecode($_GET['page']);
@@ -44,14 +44,14 @@ $name = urldecode($_GET['page']);
 // on vérifie que la page existe et que l'admin est loggué :
 $page = './include/'.$name.'.inc';
 if (file_exists ($page) && User::get_logged ()) {
-	define (TITLE, ucfirst ($name).' - Administration');
-	define (PAGE, $name);
+	define ('TITLE', ucfirst ($name).' - Administration');
+	define ('PAGE', $name);
 }
 else {
 	$page = './include/accueil.inc';
 	
-	define (TITLE, 'Accueil - Administration');
-	define (PAGE, 'accueil');
+	define ('TITLE', 'Accueil - Administration');
+	define ('PAGE', 'accueil');
 }
 
 include('include/top.minc');

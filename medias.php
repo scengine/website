@@ -23,7 +23,7 @@
  * Media gesture (screenshots & movies)
  */
 
-define (TITLE, 'Médias');
+define ('TITLE', 'Médias');
 
 require_once ('include/defines.php');
 require_once ('lib/medias.php');

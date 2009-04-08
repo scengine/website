@@ -19,7 +19,7 @@
  * 
  */
 
-define (TITLE, 'Téléchargements');
+define ('TITLE', 'Téléchargements');
 
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');

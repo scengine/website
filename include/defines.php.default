@@ -22,74 +22,74 @@
 /* Default configuration for BanSE */
 
 /* Name of the database to use */
-define (DB_NAME, 'database');
+define ('DB_NAME', 'database');
 /* Database server uri */
-define (DB_SERVER, 'server');
+define ('DB_SERVER', 'server');
 /* Database user */
-define (DB_USER, 'user');
+define ('DB_USER', 'user');
 /* Database password */
-define (DB_PASSWORD, 'password');
+define ('DB_PASSWORD', 'password');
 /* Database transfert encoding. You may not have to modify it */
-define (DB_TRANSFERT_ENCODING, 'utf8_bin');
+define ('DB_TRANSFERT_ENCODING', 'utf8_bin');
 
 /* Administration level needed at least to post/edit/remove news.
  * Higher administration level is 0 */
-define (ADMIN_LEVEL_NEWS, 2);
+define ('ADMIN_LEVEL_NEWS', 2);
 /* same but for development news */
-define (ADMIN_LEVEL_NEWSDEVEL, 0);
+define ('ADMIN_LEVEL_NEWSDEVEL', 0);
 /* admin level for medias */
-define (ADMIN_LEVEL_MEDIA, 1);
+define ('ADMIN_LEVEL_MEDIA', 1);
 /* admin level for metadatas */
-define (ADMIN_LEVEL_METADATA, 0);
+define ('ADMIN_LEVEL_METADATA', 0);
 
 /* maximum level for admins (should be always 0) */
-define (ADMIN_LEVEL_MASTER, 0);
+define ('ADMIN_LEVEL_MASTER', 0);
 /* minimal level for admins (should be <= to all other levels) */
-define (ADMIN_LEVEL_MINIMAL, 3);
+define ('ADMIN_LEVEL_MINIMAL', 3);
 
 
-define (ENGINE, 'SCEngine'); // :D
-define (DESCRIPTION, 'Site officiel du SCEngine');
-define (STYLE, 'default');
+define ('ENGINE', 'SCEngine'); // :D
+define ('DESCRIPTION', 'Site officiel du SCEngine');
+define ('STYLE', 'default');
 
 /* Tables names */
-define (USERS_TABLE, '`bse_admins`');
-define (DEVEL_TABLE, '`bse_devel`');
-define (NEWS_TABLE, '`bse_news`');
-define (MEDIA_TABLE, '`bse_medias`');
-define (COUNTER_TABLE, '`bse_counter`');
+define ('USERS_TABLE', '`bse_admins`');
+define ('DEVEL_TABLE', '`bse_devel`');
+define ('NEWS_TABLE', '`bse_news`');
+define ('MEDIA_TABLE', '`bse_medias`');
+define ('COUNTER_TABLE', '`bse_counter`');
 
 /* File to store metadatas */
-define (METADATA_FILE, dirname (__FILE__).'/../data/metadatas');
+define ('METADATA_FILE', dirname (__FILE__).'/../data/metadatas');
 
 /* Base path where find medias. */
 /* Path/URI where read medias, especially used to provides links to users.
  * This doesn't need any write access possibility.
  * The better choice is an absolute URL to your site if you would make a massive
  * use of link snippets feature */
-define (MEDIA_DIR_R, './medias');
+define ('MEDIA_DIR_R', './medias');
 /* Path/URI where write medias. It is used to upload medias and thumbnails.
  * This is quite rarely used, meaning I/O are done not often. Obviously, this
  * needs write access. */
-define (MEDIA_DIR_W, './medias');
+define ('MEDIA_DIR_W', './medias');
 
 /* Whether to use URL rewriting. This value should be true unless your host
  * doesn't support rewriting */
-define (BSE_ENABLE_URL_REWRITING, true);
+define ('BSE_ENABLE_URL_REWRITING', true);
 
 /* Base site URL for getting absolute links to site pages right.
  * It is not really needed but provides nice features.
  * This path must be a complete prefix, with trailing slash, or be empty. */
-define (BSE_BASE_PATH, '/');
-define (BSE_BASE_URL, 'http://www.mysite.com'.BSE_BASE_PATH);
+define ('BSE_BASE_PATH', '/');
+define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
 
 /* Link to the BSE archive you use (or the latest, as you want). Please hos a
  * copy in your download repository since it has not official website.
  */
-define (BSE_TAR_FILE, 'http://www.mysite.com/downloads/bse.tar.gz');
+define ('BSE_TAR_FILE', 'http://www.mysite.com/downloads/bse.tar.gz');
 
 /* Feeds locations for both R & W */
-define (NEWS_ATOM_FEED_FILE,  'feeds/news.atom');
-define (NEWS_RSS_FEED_FILE,   'feeds/news.rss');
-define (DEVEL_ATOM_FEED_FILE, 'feeds/devel.atom');
-define (DEVEL_RSS_FEED_FILE,  'feeds/devel.rss');
+define ('NEWS_ATOM_FEED_FILE',  'feeds/news.atom');
+define ('NEWS_RSS_FEED_FILE',   'feeds/news.rss');
+define ('DEVEL_ATOM_FEED_FILE', 'feeds/devel.atom');
+define ('DEVEL_RSS_FEED_FILE',  'feeds/devel.rss');

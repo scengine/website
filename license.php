@@ -20,12 +20,12 @@
  */
 
 
-define (TITLE, 'Licence');
+define ('TITLE', 'Licence');
 require_once ('lib/string.php');
 require_once ('include/top.minc');
 
-//define (LICENSE_FILE, 'http://www.gnu.org/licenses/gpl.txt');
-define (LICENSE_FILE, 'COPYING');
+//define ('LICENSE_FILE', 'http://www.gnu.org/licenses/gpl.txt');
+define ('LICENSE_FILE', 'COPYING');
 
 function print_gpl () {
 	$gpl = @file_get_contents (LICENSE_FILE);

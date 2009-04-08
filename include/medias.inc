@@ -19,7 +19,7 @@
  * 
  */
 
-define (PAGE, 'medias');
+define ('PAGE', 'medias');
 
 
 require_once ('lib/UrlTable.php');
@@ -260,9 +260,9 @@ function remove_media_query ($media_id)
 
 /****/
 
-define (FFIELD,  'ffield');
-define (TBFIELD, 'tbfield');
-define (MAX_FILE_SIZE, 1073741824); // maximum filesize to be uploaded (in bytes).
+define ('FFIELD',  'ffield');
+define ('TBFIELD', 'tbfield');
+define ('MAX_FILE_SIZE', 1073741824); // maximum filesize to be uploaded (in bytes).
 
 function print_upload_form ($action, $id=false, $fillwith=false, $upload=true)
 {
@@ -539,8 +539,8 @@ function upload_error_to_string ($u_err)
 	}
 }
 
-define (TB_W, 160.0);
-define (TB_H, 120.0);
+define ('TB_W', 160.0);
+define ('TB_H', 120.0);
 
 function create_thumbnail_img (&$imgsrc)
 {

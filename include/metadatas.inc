@@ -64,11 +64,11 @@ if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 
 
 
-define (TEAM_AUTH,    1<<1);
-define (TEAM_DOC,     1<<2);
-define (TEAM_TRANS,   1<<3);
-define (TEAM_GRAPH,   1<<4);
-define (TEAM_CONTRIB, 1<<5);
+define ('TEAM_AUTH',    1<<1);
+define ('TEAM_DOC',     1<<2);
+define ('TEAM_TRANS',   1<<3);
+define ('TEAM_GRAPH',   1<<4);
+define ('TEAM_CONTRIB', 1<<5);
 
 $team = array();
 /* load team */

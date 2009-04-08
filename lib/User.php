@@ -27,7 +27,7 @@ session_start ();
 require_once ('include/defines.php');
 require_once ('lib/MyDB.php');
 
-define (COOKIE_EXPIRE, 0);
+define ('COOKIE_EXPIRE', 0);
 
 abstract class User
 {
