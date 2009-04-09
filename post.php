@@ -60,7 +60,7 @@ else {
 				}
 				else
 				{
-					/* don't redirect to an removed page */
+					/* don't redirect to a removed page */
 					if ($_GET['act'] == 'rm')
 						$refresh = UrlTable::news ();
 					else
@@ -93,13 +93,13 @@ abstract class PostDevel {
 		return $str;
 	}
 	
-	public static function save ($date, $content) {
+	public static function save ($content) {
 		global $dialog;
 		
-		// la date ne devrait-elle pas être cérée ici ?
+		$date = time ();
 		$content = addslashes (self::parse ($content));
 		
-		if (!empty ($date) && !empty ($content) ) {
+		if (! empty ($content)) {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
@@ -124,7 +124,7 @@ abstract class PostDevel {
 	public static function remove ($id) {
 		global $dialog;
 		
-		if (!empty ($id)) {
+		if (! empty ($id)) {
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
@@ -144,16 +144,16 @@ abstract class PostDevel {
 		}
 	}
 	
-	public static function edit ($id, $date, $content) {
+	public static function edit ($id, $content) {
 		global $dialog;
 		
-		if (!empty ($id) && !empty ($date) && !empty ($content)) {
+		if (! empty ($id) && ! empty ($content)) {
 			$content = addslashes (self::parse ($content));
 			
 			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->update ("`date`='$date', `content`='$content'", "`id`=$id")) {
+			if ($db->update ("`content`='$content'", "`id`=$id")) {
 				$dialog->add_info_message ('Message édité avec succès.');
 				
 				self::update_feed ();
@@ -279,13 +279,13 @@ if (User::get_logged ())
 		{
 			// new devel post
 			if ($_GET['act'] == 'new')
-				PostDevel::save ($_POST['date'], $_POST['content']);
+				PostDevel::save ($_POST['content']);
 			
 			// edit an existing devel post
 			else if ($_GET['act'] == 'edit')
 			{
 				if (!empty ($_GET['id']))
-					PostDevel::edit ($_GET['id'], $_POST['date'], $_POST['content']);
+					PostDevel::edit ($_GET['id'], $_POST['content']);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}

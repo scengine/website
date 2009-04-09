@@ -154,7 +154,6 @@ function print_one_engine_news (array &$new)
 			<a href="javascript:entry_lesser(\'tm',$new['id'],'\')">[-]</a>
 			<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
 				<p>
-					<input type="hidden" name="date" value="',$new['date'],'"/>
 					<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
 						br2nl (stripslashes ($new['content'])),
 					'</textarea>
@@ -211,7 +210,6 @@ function print_engine_news ()
 				<a href="javascript:entry_lesser(\'tnewdevel\')">[-]</a>
 			</div>
 			<p>
-				<input type="hidden" name="date" value="',time (),'"/>
 				<textarea name="content" cols="24" rows="8" id="tnewdevel"></textarea>
 				<input type="submit" value="Poster" />
 			</p>

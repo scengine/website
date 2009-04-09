@@ -35,7 +35,7 @@ if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 
 
 
-//define ('TITLE',, 'Administration - '.ENGINE);
+//define ('TITLE', 'Administration - '.ENGINE);
 define ('DESCRIPTION', 'Administration du '.$MDI->get_name ());
 
 
