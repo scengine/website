@@ -33,7 +33,7 @@ function display_table()
 {
 	global $master;
 
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table(USERS_TABLE);
 	$db->select('*', '');
 
@@ -106,7 +106,7 @@ function display_user($pseudo)
 {
 	global $master;
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table(USERS_TABLE);
 	$db->select('*', "`username`='$pseudo'");
 	
@@ -171,7 +171,7 @@ function edit_user ($pseudo)
 
 	if ($master || User::get_name () == $_GET['pseudo'])
 	{
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
 		$db->select ('*', "`username`='$pseudo'");
 		
@@ -278,7 +278,7 @@ function save_edit_user ($oldpseudo, $pseudo,
 	
 	// si tout est OK, on commence les choses sérieuses :
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 	
 	echo '<h3>Données mises à jour</h3>';
@@ -394,7 +394,7 @@ function save_edit_user ($oldpseudo, $pseudo,
 			
 			if ($level < 0)
 				echo 'le niveau n\'est pas valide (le niveau doit être supérieur ou égal à 0)';
-			elseif (is_int ($level) != 'integer')
+			elseif (! is_int ($level))
 				echo 'le niveau n\'a pas été reçu comme entier. <span class="error">Veuillez contacter votre administrateur principal.</span>';
 			else
 			{
@@ -453,7 +453,7 @@ function remove_user_query ($pseudo)
 	}
 	$pseudo = addslashes ($pseudo);
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 	$db->select ('*', "`username`='$pseudo'");
 	$response = $db->fetch_response ();
@@ -512,7 +512,7 @@ function remove_user ($pseudo)
 	}
 	$pseudo = addslashes ($pseudo);
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (USERS_TABLE);
 	if(! $db->delete ("`username`='$pseudo'"))
 		$return = false;
@@ -625,7 +625,7 @@ function add_user ($pseudo, $pass, $passconf, $level)
 		$pass = md5($pass);
 		//$passconf = md5($passconf);
 		
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (USERS_TABLE);
 		$return = $db->insert("'$pseudo', '$pass', '$level', 'false'");
 		$error = ! $return;

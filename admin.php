@@ -36,10 +36,10 @@ if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 
 
 //define ('TITLE', 'Administration - '.ENGINE);
-define ('DESCRIPTION', 'Administration du '.$MDI->get_name ());
+//define ('DESCRIPTION', 'Administration du '.$MDI->get_name ());
 
 
-$name = urldecode($_GET['page']);
+$name = (isset ($_GET['page'])) ? urldecode ($_GET['page']) : '__dummy__';
 
 // on vérifie que la page existe et que l'admin est loggué :
 $page = './include/'.$name.'.inc';

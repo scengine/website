@@ -116,8 +116,8 @@ echo '
 // =================================================================
 
 if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-	if ($_GET['action'] == 'edit') {
-		if ($_GET['id']) {
+	if (isset ($_GET['action']) && $_GET['action'] == 'edit') {
+		if (isset ($_GET['id'])) {
 			$new = News::get_by_id ($_GET['id']);
 			
 			if ($new !== false)
@@ -143,9 +143,9 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			</p>';
 		}
 	}
-	else if ($_GET['action'] == 'rm')
+	else if (isset ($_GET['action']) && $_GET['action'] == 'rm')
 	{
-		if ($_GET['id'])
+		if (isset ($_GET['id']))
 		{
 			$new = News::get_by_id ($_GET['id']);
 			
@@ -181,11 +181,11 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			</p>';
 		}
 	}
-	else if ($_GET['action'] == 'new')
+	else if (isset ($_GET['action']) && $_GET['action'] == 'new')
 	{
 		display_form_new ();
 	}
-	else if ($_GET['action'] == 'update_feeds')
+	else if (isset ($_GET['action']) && $_GET['action'] == 'update_feeds')
 	{
 		if (feed_update_news () && feed_update_devel ())
 		{

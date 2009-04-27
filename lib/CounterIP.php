@@ -54,7 +54,7 @@ class CounterIP_ {
 		if ($fp) {
 			while ($line = fgets ($fp)) {
 				$line = split (' ', $line);
-				settype ($line[1], int);
+				settype ($line[1], 'int');
 				$this->ips[$line[0]] = $line[1];
 			}
 			
@@ -119,7 +119,7 @@ class CounterIP {
 	protected $db;
 	
 	public function __construct ($count=false, $counter=COUNTER_TABLE) {
-		$this->db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
+		$this->db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
 		$this->db->select_table ($counter);
 		
 		if ($count)

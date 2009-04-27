@@ -27,7 +27,7 @@ require_once ('lib/string.php');
 
 abstract class UrlTable
 {
-	protected function basic_php_html ($name)
+	protected static function basic_php_html ($name)
 	{
 		$link = $name;
 		
@@ -39,12 +39,12 @@ abstract class UrlTable
 		return $link;
 	}
 	
-	public function home ()
+	public static function home ()
 	{
 		return self::basic_php_html ('index');
 	}
 	
-	public function medias ($id=false, $noreturn=false, $title=null)
+	public static function medias ($id=false, $noreturn=false, $title=null)
 	{
 		$link;
 		
@@ -76,7 +76,7 @@ abstract class UrlTable
 		
 		return $link;
 	}
-	public function medias_tags (array $type=null, array $tags=null)
+	public static function medias_tags (array $type=null, array $tags=null)
 	{
 		$link;
 		
@@ -110,27 +110,27 @@ abstract class UrlTable
 		return $link;
 	}
 	
-	public function downloads ()
+	public static function downloads ()
 	{
 		return self::basic_php_html ('downloads');
 	}
 	
-	public function tuto ()
+	public static function tuto ()
 	{
 		return self::basic_php_html ('tuto');
 	}
 	
-	public function license ()
+	public static function license ()
 	{
 		return self::basic_php_html ('license');
 	}
 	
-	public function about ()
+	public static function about ()
 	{
 		return self::basic_php_html ('about');
 	}
 	
-	public function admin ($page=null)
+	public static function admin ($page=null)
 	{
 		$link = 'admin';
 		
@@ -149,7 +149,7 @@ abstract class UrlTable
 		
 		return $link;
 	}
-	protected function generic_admin_action_id ($module, $action, $id)
+	protected static function generic_admin_action_id ($module, $action, $id)
 	{
 		$link = 'admin';
 		$module = $module;
@@ -178,15 +178,15 @@ abstract class UrlTable
 		
 		return $link;
 	}
-	public function admin_news ($action=null, $id=false)
+	public static function admin_news ($action=null, $id=false)
 	{
 		return self::generic_admin_action_id ('actualités', $action, $id);
 	}
-	public function admin_medias ($action=null, $id=false)
+	public static function admin_medias ($action=null, $id=false)
 	{
 		return self::generic_admin_action_id ('medias', $action, $id);
 	}
-	public function admin_admins ($action=null, $pseudo=null)
+	public static function admin_admins ($action=null, $pseudo=null)
 	{
 		$link = 'admin';
 		$module = 'administrateurs';
@@ -216,7 +216,7 @@ abstract class UrlTable
 		return $link;
 	}
 	
-	public function news ($id=false, $title=null)
+	public static function news ($id=false, $title=null)
 	{
 		$link;
 		
@@ -243,7 +243,7 @@ abstract class UrlTable
 		
 		return $link;
 	}
-	public function news_page ($page)
+	public static function news_page ($page)
 	{
 		$link;
 		
@@ -255,7 +255,7 @@ abstract class UrlTable
 		return $link;
 	}
 	
-	public function devel_news_page ($page)
+	public static function devel_news_page ($page)
 	{
 		$link;
 		
@@ -267,7 +267,7 @@ abstract class UrlTable
 		return $link;
 	}
 	
-	public function login ()
+	public static function login ()
 	{
 		if (! BSE_ENABLE_URL_REWRITING)
 			return 'connexion.php';
@@ -275,7 +275,7 @@ abstract class UrlTable
 			return 'login.html';
 	}
 	
-	public function logout ()
+	public static function logout ()
 	{
 		if (! BSE_ENABLE_URL_REWRITING)
 			return 'connexion.php?act=logout';

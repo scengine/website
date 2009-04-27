@@ -157,11 +157,13 @@ class WKParser
     
     ob_start ();
     
-    for ($i=0; ($cur = $str[$i]) != ''; $i++)
+    for ($i=0; isset ($str[$i]); $i++)
     {
+      $cur = $str[$i];
+      
       if ($cur == "\r")
       {
-        if ($str[$i +1] != "\n")
+        if (! isset ($str[$i+1]) || $str[$i+1] != "\n")
           $cur = "\n";
         else
           continue;
@@ -192,7 +194,7 @@ class WKParser
       else
         $line .= $cur;
       
-      if ($str[$i+1] == '' && $cur != "\n")
+      if (! isset ($str[$i+1]) && $cur != "\n")
         $str[$i+1] = "\n";
     }
     

@@ -41,15 +41,15 @@ require_once ('lib/Metadata.php'); /* gave MDI instance */
 		<h3>Auteurs</h3>
 		<?php 
 			$items = array (
-				array ('Développeurs',  get_authors),
-				array ('Documentation', get_documenters),
-				array ('Traducteurs',   get_translators),
-				array ('Graphistes',    get_graphists),
-				array ('Contributeurs', get_contributors),
+				array ('Développeurs',  'get_authors'),
+				array ('Documentation', 'get_documenters'),
+				array ('Traducteurs',   'get_translators'),
+				array ('Graphistes',    'get_graphists'),
+				array ('Contributeurs', 'get_contributors'),
 			);
 			
 			foreach ($items as &$item) {
-				$a = &$MDI->$item[1] ();
+				$a = $MDI->$item[1] ();
 				if ($a) {
 					echo '<h4>',$item[0],'</h4><ul>';
 					foreach ($a as &$i)

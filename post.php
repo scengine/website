@@ -52,7 +52,7 @@ else {
 		if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
 			$refresh = $_SERVER['HTTP_REFERER'];
 			
-			if ($_GET['id'] && ctype_digit ($_GET['id']))
+			if (isset ($_GET['id']) && ctype_digit ($_GET['id']))
 			{
 				if (PostDevel::SECTION == $_GET['sec'])
 				{
@@ -72,7 +72,7 @@ else {
 }
 
 /* dialog creation */
-$dialog = &new TypedDialog (DIALOG_TYPE_INFO, $refresh);
+$dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 
 /* abstract class to update devel news */
@@ -85,10 +85,10 @@ abstract class PostDevel {
 	}
 	
 	protected static function parse ($str) {
-		$str = &htmlspecialchars (&$str, ENT_COMPAT, 'UTF-8');
-		$str = &nl2br (&$str);
-		$str = &preg_replace ('# ([!?:;])#', '&nbsp;$1', &$str);
-		//$str = &addslashes (&$str); // secure SQL request
+		$str = htmlspecialchars (&$str, ENT_COMPAT, 'UTF-8');
+		$str = nl2br (&$str);
+		$str = preg_replace ('# ([!?:;])#', '&nbsp;$1', &$str);
+		//$str = addslashes (&$str); // secure SQL request
 		
 		return $str;
 	}
@@ -100,7 +100,7 @@ abstract class PostDevel {
 		$content = addslashes (self::parse ($content));
 		
 		if (! empty ($content)) {
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
 			if ($db->insert ("'', '$date', '$content'")) {
@@ -125,7 +125,7 @@ abstract class PostDevel {
 		global $dialog;
 		
 		if (! empty ($id)) {
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
 			if ($db->delete ("`id`='$id'")) {
@@ -150,7 +150,7 @@ abstract class PostDevel {
 		if (! empty ($id) && ! empty ($content)) {
 			$content = addslashes (self::parse ($content));
 			
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
 			if ($db->update ("`content`='$content'", "`id`=$id")) {
@@ -194,7 +194,7 @@ abstract class PostNews {
 		$date = time ();
 		
 		if (! empty ($title) && ! empty ($content) && ! empty ($source) && ! empty ($author)) {
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			if ($db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'")) {
 				$dialog->add_info_message ('News postée avec succès.');
@@ -217,7 +217,7 @@ abstract class PostNews {
 		global $dialog;
 		
 		if (!empty ($id)) {
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			if ($db->delete ("`id`='$id'")) {
 				$dialog->add_info_message ('News supprimée avec succès.');
@@ -246,7 +246,7 @@ abstract class PostNews {
 			$mdate = time ();
 			$mauthor = addslashes (User::get_name ());
 			
-			$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			if ($db->update ("`mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id")) {
 				$dialog->add_info_message  ('News éditée avec succès.');

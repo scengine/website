@@ -29,7 +29,7 @@ function random_screenshot_print ()
 {
 	$type = MediaType::SCREENSHOT;
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	
 	$db->random_row ('`id`', '`type`=\''.$type.'\'');

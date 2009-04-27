@@ -22,33 +22,33 @@
 require_once ('include/defines.php');
 require_once ('lib/Metadata.php'); /* gave MDI instance */
 
-//$md = &new Metadata (METADATA_FILE);
+//$md = new Metadata (METADATA_FILE);
 
 
 if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 	/* si on doit enregistrer les données */
-	if ($_POST['name']) {
+	if (isset ($_POST['name'])) {
 		$MDI->set_name ($_POST['name']);
 		$MDI->set_version ($_POST['version']);
 		$MDI->set_license ($_POST['license']);
 		
 		for ($i=0; true; $i++) {
 			/* hack to pass NEW author into this loop */
-			if (!isset ($_POST['author'.$i]))
+			if (! isset ($_POST['author'.$i]))
 				$i = 'NEW';
 			
 			$author = stripslashes ($_POST['author'.$i]);
 			
-			if ($_POST['dev'.$i])     $MDI->add_authors ($author);
-			else                      $MDI->remove_authors ($author);
-			if ($_POST['doc'.$i])     $MDI->add_documenters ($author);
-			else                      $MDI->remove_documenters ($author);
-			if ($_POST['trans'.$i])   $MDI->add_translators ($author);
-			else                      $MDI->remove_translators ($author);
-			if ($_POST['graph'.$i])   $MDI->add_graphists ($author);
-			else                      $MDI->remove_graphists ($author);
-			if ($_POST['contrib'.$i]) $MDI->add_contributors ($author);
-			else                      $MDI->remove_contributors ($author);
+			if (isset ($_POST['dev'.$i]))     $MDI->add_authors ($author);
+			else                              $MDI->remove_authors ($author);
+			if (isset ($_POST['doc'.$i]))     $MDI->add_documenters ($author);
+			else                              $MDI->remove_documenters ($author);
+			if (isset ($_POST['trans'.$i]))   $MDI->add_translators ($author);
+			else                              $MDI->remove_translators ($author);
+			if (isset ($_POST['graph'.$i]))   $MDI->add_graphists ($author);
+			else                              $MDI->remove_graphists ($author);
+			if (isset ($_POST['contrib'.$i])) $MDI->add_contributors ($author);
+			else                              $MDI->remove_contributors ($author);
 			
 			/* see on top of this loop for the hack explanation */
 			if ($i === 'NEW') break;
@@ -70,19 +70,34 @@ define ('TEAM_TRANS',   1<<3);
 define ('TEAM_GRAPH',   1<<4);
 define ('TEAM_CONTRIB', 1<<5);
 
-$team = array();
-/* load team */
-foreach ($MDI->get_authors () as $name)
-	$team[$name] |= TEAM_AUTH;
-foreach ($MDI->get_documenters () as $name)
-	$team[$name] |= TEAM_DOC;
-foreach ($MDI->get_translators () as $name)
-	$team[$name] |= TEAM_TRANS;
-foreach ($MDI->get_contributors () as $name)
-	$team[$name] |= TEAM_CONTRIB;
-foreach ($MDI->get_graphists () as $name)
-	$team[$name] |= TEAM_GRAPH;
+$team = array ();
 
+function add_to_cat ($name, $cat)
+{
+	global $team;
+	
+	if (! isset ($team[$name]))
+		$team[$name] = $cat;
+	else
+		$team[$name] |= $cat;
+}
+
+function load_team (&$MDI)
+{
+	/* load team */
+	foreach ($MDI->get_authors () as $name)
+		add_to_cat ($name, TEAM_AUTH);
+	foreach ($MDI->get_documenters () as $name)
+		add_to_cat ($name, TEAM_DOC);
+	foreach ($MDI->get_translators () as $name)
+		add_to_cat ($name, TEAM_TRANS);
+	foreach ($MDI->get_contributors () as $name)
+		add_to_cat ($name, TEAM_CONTRIB);
+	foreach ($MDI->get_graphists () as $name)
+		add_to_cat ($name, TEAM_GRAPH);
+}
+
+load_team ($MDI);
 //print_r ($team);
 
 

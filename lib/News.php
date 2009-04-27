@@ -33,8 +33,9 @@ require_once ('lib/misc.php');
 abstract class News
 {
 	/* Prints a news form */
-	public function print_form ($title='', $source='', $action='new', $id='',
-                              $redirect=null, $extra_buttons='', $extra_div_attrs='')
+	public static function print_form ($title='', $source='', $action='new',
+	                                   $id='', $redirect=null, $extra_buttons='',
+	                                   $extra_div_attrs='')
 	{
 		$title = escape_html_quotes ($title);
 		$source = htmlspecialchars ($source, ENT_COMPAT, 'UTF-8');
@@ -81,7 +82,7 @@ abstract class News
 	/*** Retriving of data from the DB ***/
 	
 	/* Converts DB response to news's array */
-	protected function convert_db_response (array &$resp)
+	protected static function convert_db_response (array &$resp)
 	{
 		return array (
 			'id'      => $resp['id'],
@@ -100,11 +101,11 @@ abstract class News
 	 * \param $n            number of news to get from $start_offset
 	 * \returns an array of news or false on failure.
 	 */
-	public function get ($start_offset=0, $n=0)
+	public static function get ($start_offset=0, $n=0)
 	{
 		$news = false;
 		
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
 		if ($db->select ('*', '', '`id`', 'DESC', intval ($start_offset), intval ($n)))
 		{
@@ -123,11 +124,11 @@ abstract class News
 	 * \param $id the ID of the news to get
 	 * \returns a news or false on failure.
 	 */
-	public function get_by_id ($id)
+	public static function get_by_id ($id)
 	{
 		$id = intval ($id);
 		
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
 		if ($db->select ('*', "`id`=$id") && ($resp = $db->fetch_response ()) !== false)
 			return self::convert_db_response ($resp);
@@ -136,9 +137,9 @@ abstract class News
 	}
 	
 	/* Gets the total number of news */
-	public function get_n ()
+	public static function get_n ()
 	{
-		$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
 		return $db->count ();
 	}

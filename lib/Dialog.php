@@ -125,7 +125,7 @@ class Dialog {
 }
 
 /*
-$d = &new Dialog ('Dialogue', true, 'page.html');
+$d = new Dialog ('Dialogue', true, 'page.html');
 $d->add_message ('Ceci est un message', 'Titre');
 $d->add_message ('Voici un deuxième message, mais il n\'a pas de titre.');
 $d->flush ();

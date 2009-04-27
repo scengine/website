@@ -22,7 +22,7 @@
 /* Display messages */
 
 abstract class Msg {
-	public function error ($msg) {
+	public static function error ($msg) {
 		echo '<div class="message">
 			<h2>Erreur</h2>
 			<p>
@@ -31,7 +31,7 @@ abstract class Msg {
 			</div>';
 	}
 
-	public function info ($msg) {
+	public static function info ($msg) {
 		echo '<div class="message">
 			<h2>Information</h2>
 			<p>

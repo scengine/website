@@ -445,7 +445,7 @@ else if (isset ($_GET['showtag']))
 		}
 		
 		/* watch a media if asked */
-		if (isset ($_GET['watch']) && settype ($_GET['watch'], integer))
+		if (isset ($_GET['watch']) && settype ($_GET['watch'], 'int'))
 		{
 			print_media ($_GET['watch']);
 		}

@@ -201,7 +201,7 @@ function feed_update_news ()
 	$rss_items = array ();
 	
 	/*
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', '`id`', 'DESC', 0, 10);
 	while (($news = $db->fetch_response ()) !== false)
@@ -277,7 +277,7 @@ function feed_update_devel ()
 	$rss_data = array ();
 	$rss_items = array ();
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', '`id`', 'DESC', 0, 16);
 	while (($news = $db->fetch_response ()) !== false)

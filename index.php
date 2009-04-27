@@ -217,7 +217,7 @@ function print_home ()
 
 require_once ('include/top.minc');
 
-if (isset ($_GET['shownews']) && settype ($_GET['shownews'], integer))
+if (isset ($_GET['shownews']) && settype ($_GET['shownews'], 'int'))
 {
 	print_one_news ($_GET['shownews']);
 }

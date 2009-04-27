@@ -45,10 +45,10 @@ class TypedDialog extends Dialog {
 	}
 	
 	/* this two overrides are to remove title set possibility */
-	public function set_message ($msg) {
+	public function set_message ($msg, $dontuse=null) {
 		parent::set_message ($msg);
 	}
-	public function add_message ($msg) {
+	public function add_message ($msg, $dontuse=null) {
 		parent::add_message ($msg);
 	}
 	
@@ -106,7 +106,7 @@ class TypedDialog extends Dialog {
 }
 
 /*
-$d = &new TypedDialog (DIALOG_TYPE_WARNING, 'page.html');
+$d = new TypedDialog (DIALOG_TYPE_WARNING, 'page.html');
 $d->set_message ('coucou les gens !');
 $d->flush ();
 unset ($d);

@@ -63,19 +63,14 @@ abstract class BCode
     'entity_quote' => 'quote'
   );
   
-  public function parse ($str)
+  public static function parse ($str)
   {
     $rv;
     
-    $p = &new WKParser ($str, self::$XHTML);
+    $p = new WKParser ($str, self::$XHTML);
     $rv = $p->get_xml ();
     unset ($p);
     
     return $rv;
-  }
-  
-  public function unparse ($str)
-  {
-    return $str;
   }
 }

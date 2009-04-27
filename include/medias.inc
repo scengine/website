@@ -19,9 +19,6 @@
  * 
  */
 
-define ('PAGE', 'medias');
-
-
 require_once ('lib/UrlTable.php');
 require_once ('lib/misc.php');
 require_once ('lib/User.php');
@@ -197,7 +194,7 @@ function print_media_tables ()
 		',print_button ('Ajouter un média', UrlTable::admin_medias ('new')),'
 	</p>';
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	for ($type = 1; $type < MediaType::N_TYPES; $type++)
 	{
@@ -225,7 +222,7 @@ function remove_media_query ($media_id)
 	}
 	else
 	{
-		if ($_POST['rm'] == 'rm')
+		if (isset ($_POST['rm']) && $_POST['rm'] == 'rm')
 		{
 			if (media_remove ($media_id))
 				echo '
@@ -692,6 +689,7 @@ function add_media_query ()
 			if (! $error)
 			{
 				// Thumbnail is created after uploading media to be able to read it
+				$prefix = '' /*time ()*/;
 				$tb_path = path_clean ($_POST['dest'].'/tb_'.$prefix.$file_old_name);
 				//$tb_r_path = MEDIA_DIR_R.'/'.$tb_path;
 				$tb_w_path = MEDIA_DIR_W.'/'.$tb_path;

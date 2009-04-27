@@ -69,9 +69,9 @@ abstract class MediaType
 		MediaType::N_TYPES    => 'type invalides'
 	);
 	
-	private function calibrate_media_type (&$media_type)
+	private static function calibrate_media_type (&$media_type)
 	{
-		if (! settype ($media_type, integer) ||
+		if (! settype ($media_type, 'int') ||
 		    $media_type > MediaType::N_TYPES || $media_type < 0)
 		{
 			$media_type = MediaType::N_TYPES;
@@ -80,7 +80,7 @@ abstract class MediaType
 		return $media_type;
 	}
 	
-	public function to_string ($media_type, $plurial = false)
+	public static function to_string ($media_type, $plurial = false)
 	{
 		self::calibrate_media_type ($media_type);
 		
@@ -90,7 +90,7 @@ abstract class MediaType
 			return self::$names[$media_type];
 	}
 	
-	public function to_id ($media_type)
+	public static function to_id ($media_type)
 	{
 		self::calibrate_media_type ($media_type);
 		
@@ -128,11 +128,11 @@ function media_escape_db_array (array &$arr)
 	$arr['tags']    = addslashes ($arr['tags']);
 	$arr['desc']    = addslashes ($arr['desc']);
 	$arr['comment'] = addslashes ($arr['comment']);
-	settype ($arr['id'],    integer) or die ('Bad ID');
-	settype ($arr['size'],  integer) or die ('Bad size');
-	settype ($arr['mdate'], integer) or die ('Bad mdate');
-	settype ($arr['type'],  integer) or die ('Bad type');
-	settype ($arr['uid'],   integer) or die ('Bad UID');
+	settype ($arr['id'],    'int') or die ('Bad ID');
+	settype ($arr['size'],  'int') or die ('Bad size');
+	settype ($arr['mdate'], 'int') or die ('Bad mdate');
+	settype ($arr['type'],  'int') or die ('Bad type');
+	settype ($arr['uid'],   'int') or die ('Bad UID');
 	
 	return $arr;
 }
@@ -142,7 +142,7 @@ function media_escape_db_array (array &$arr)
  */
 function media_get_by_id ($media_id)
 {
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	
 	$db->select ('*', '`id`=\''.$media_id.'\'');
@@ -217,7 +217,7 @@ function media_set ($id, array $values)
 	                     'tags', 'desc', 'comment');
 	media_escape_db_array ($values);
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	if ($id < 0)
 	{
@@ -262,7 +262,7 @@ function __media_is_default_thumbnail (&$uri)
 
 function media_remove ($id, $rm_files=true)
 {
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	
 	$db->select ('`uri`,`tb_uri`', "`id`='$id'");
@@ -308,9 +308,9 @@ function media_remove ($id, $rm_files=true)
 function media_get_array ($type, $bytags=false, $seltags=null)
 {
 	$medias = array ();
-	settype ($type, int) or die ('$type must be integer');
+	settype ($type, 'int') or die ('$type must be integer');
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	$db->select ('*', '`type`=\''.$type.'\'');
 	while (($resp = $db->fetch_response ()) !== false)
@@ -342,7 +342,7 @@ function media_get_all_tags ()
 {
 	$list_tags = array ();
 	
-	$db = &new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	$db->select ('*');
 	while (($resp = $db->fetch_response ()) !== false)

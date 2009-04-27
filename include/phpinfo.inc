@@ -7,7 +7,7 @@
 <div id="content">
 
 <?php
-if ($_GET['phpinfo']) {
+if (isset ($_GET['phpinfo'])) {
 	phpinfo ();
 }
 else {

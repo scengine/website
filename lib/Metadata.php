@@ -345,7 +345,7 @@ class Metadata
 
 /* insrance par défaut.
  * Cette classe pouraît être un calsse abstraite je pense, il faudrait voir */
-$MDI = &new Metadata (METADATA_FILE);
+$MDI = new Metadata (METADATA_FILE);
 
 /*
 $md = new Metadata ('/tmp/metadata');

@@ -52,7 +52,7 @@ if ($_SERVER['HTTP_REFERER']) {
 }
 
 
-$dialog = &new TypedDialog (DIALOG_TYPE_INFO, $refresh);
+$dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 
 

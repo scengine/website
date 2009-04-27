@@ -158,9 +158,9 @@ class MyDB
 		}
 		
 		if ($limite != 0)
-		{
 			$limit = 'LIMIT '.$limits.','.$limite;
-		}
+		else
+			$limit = '';
 		
 		$this->query ('SELECT '.$what.' FROM '.$this->table.' '.$where.' '.$orderby.' '.$limit);
 		

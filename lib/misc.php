@@ -25,7 +25,7 @@
  * \param $round Precision of the displayed size
  * \param $mul   Size of a uint (should not be modified since it displays false
  *               sizes for now.
- * \returns a string of the form 'size uint', e.g. '465.64 Kio'.
+ * \returns a string of the form 'size unit', e.g. '465.64 Kio'.
  */
 function get_size_string ($bytes, $round = 2, $mul = 1024)
 {
