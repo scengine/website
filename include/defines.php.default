@@ -87,6 +87,11 @@ define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
  * copy in your download repository since it has not official website.
  */
 define ('BSE_TAR_FILE', 'http://www.mysite.com/downloads/bse.tar.gz');
+/* URL to the GPLv3, absolute or from site root.
+ * Can be set to http://www.gnu.org/licenses/gpl.txt for the GNU.org's copy.
+ * You shouldn't have to modify this value.
+ */
+define ('LICENSE_URL', 'COPYING');
 
 /* Feeds locations for both R & W */
 define ('NEWS_ATOM_FEED_FILE',  'feeds/news.atom');

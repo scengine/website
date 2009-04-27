@@ -104,7 +104,7 @@ function get_admin_pages ()
 		
 		<div id="menu">
 			<ul>
-				<li><a href="<?php echo UrlTable::home (); ?>">Accueil</a></li>
+				<li><a href="<?php echo UrlTable::home (); ?>" accesskey="1">Accueil</a></li>
 				<li><a href="<?php echo UrlTable::medias (); ?>">Médias</a>
 					<ul>
 						<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
