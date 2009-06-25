@@ -53,11 +53,12 @@ if ($_SERVER['HTTP_REFERER']) {
 
 
 $dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
+$dialog->set_redirect (false);
 
 
 
 // logout
-if ($_GET['act'] == 'logout') {
+if (isset ($_GET['act']) && $_GET['act'] == 'logout') {
 	if (User::logout ()) {
 		$dialog->add_info_message ('Déconnexion réussie');
 	}
