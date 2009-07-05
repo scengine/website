@@ -59,10 +59,11 @@ function entry_lesser (id)
 
 function toggle_folding (button_id, element_id)
 {
-	var folded_height = '1.2em';
+	const folded_height = '1.2em';
 	var button = document.getElementById (button_id);
 	var element = document.getElementById (element_id);
-	if (element.style.height == folded_height)
+	if (element.style.height == folded_height ||
+	    element.style.height == '1,2em' /* hack for WebKit in french */)
 	{
 		button.innerHTML = '[-]';
 		element.style.height = '';
