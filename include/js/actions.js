@@ -22,14 +22,11 @@
 function news_edit (id, el) {
 	var f_e = document.getElementById ("f"+id);
 	var m_e = document.getElementById ("m"+id);
-	if (f_e.style.display == "none")
-	{
+	if (f_e.style.display == "none") {
 		f_e.style.display = "block";
 		m_e.style.display = "none";
 		el.innerHTML = "Annuler";
-	}
-	else
-	{
+	} else {
 		f_e.style.display = "none";
 		m_e.style.display = "block";
 		el.innerHTML = "Éditer";
@@ -40,36 +37,29 @@ function news_edit (id, el) {
 }
 // ask for deleting a news
 function news_delete (news_id) {
-	if (confirm ('Voulez-vous vraiment supprimer cette news ?'))
-	{
+	if (confirm ('Voulez-vous vraiment supprimer cette news ?')) {
 		window.location.replace ('post.php?sec=news&id='+news_id+'&act=rm');
 	}
 	// return false to ease use on oncklick links
 	return false;
 }
 
-function entry_more (id)
-{
+function entry_more (id) {
 	document.getElementById(id).rows++;
 }
-function entry_lesser (id)
-{
+function entry_lesser (id) {
 	document.getElementById(id).rows--;
 }
 
-function toggle_folding (button_id, element_id)
-{
+function toggle_folding (button_id, element_id) {
 	const folded_height = '1.2em';
 	var button = document.getElementById (button_id);
 	var element = document.getElementById (element_id);
 	if (element.style.height == folded_height ||
-	    element.style.height == '1,2em' /* hack for WebKit in french */)
-	{
+	    element.style.height == '1,2em' /* hack for WebKit in french */) {
 		button.innerHTML = '[-]';
 		element.style.height = '';
-	}
-	else
-	{
+	} else {
 		button.innerHTML = '[+]';
 		element.style.height = folded_height;
 	}
@@ -77,25 +67,22 @@ function toggle_folding (button_id, element_id)
 
 /* toggle visibility of an element
  * This function returns false to ease use of it in onclick links */
-function toggle_display (element_id, display_type)
-{
+function toggle_display (element_id, display_type) {
 	el = document.getElementById (element_id);
-	if (el.style.display == 'none')
+	if (el.style.display == 'none') {
 		el.style.display = display_type;
-	else
+	} else {
 		el.style.display = 'none';
+	}
 	
 	return false;
 }
 
 /* set all checkbox named \p name checked or not according to \p state */
-function set_checked_by_name (name, state)
-{
+function set_checked_by_name (name, state) {
 	var els = document.getElementsByName (name);
-	if (els)
-	{
-		for (i in els)
-		{
+	if (els) {
+		for (i in els) {
 			els[i].checked = state;
 		}
 	}
