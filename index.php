@@ -25,7 +25,7 @@
 
 define ('TITLE', 'Accueil');
 define ('NEWS_PREVIEW_SIZE', 250);
-define ('NEWS_BY_PAGE', 8);
+define ('NEWS_BY_PAGE', 3);
 
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
