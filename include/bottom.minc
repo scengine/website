@@ -25,6 +25,7 @@ require_once ('lib/engine_news.php');
 require_once ('lib/random_screenshot.php');
 require_once ('lib/User.php');
 require_once ('lib/CounterIP.php');
+require_once ('lib/FluxBB.php');
 require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 
@@ -38,16 +39,29 @@ require_once ('lib/Metadata.php'); /* gave MDI instance */
 				<?php random_screenshot_print (); ?>
 			</div>
 			
+			<!-- derniers posts du forum -->
+			<?php
+			$latest_posts = FluxBB::get_recent_list (8);
+			if ($latest_posts !== false) {
+				echo '
+				<div class="lsmenu">
+					<h3>Posts récents</h3>
+					<ul>',
+						$latest_posts,
+					'</ul>
+				</div>';
+			}
+			?>
+			
 			<!-- liste de moteurs 3D libres -->
-			<div class="lsmenu">
+			<!--div class="lsmenu">
 				<h3>Moteurs 3D libres</h3>
 				<ul>
-					<!-- <li><span class="b"><a href="http://nxengine.developpez.com">nxEngine</a></span>&nbsp;: moteur full shaders en C# utilisant DirectX, bientôt peut-être OpenGL.</li> -->
 					<li><span class="b"><a href="http://www.ogre3d.org">Ogre</a></span>&nbsp;: moteur en C++ mature compatible OpenGL et DirectX.</li>
 					<li><span class="b"><a href="http://irrlicht.sourceforge.net/">Irrlicht</a></span>&nbsp;: codé en C++, ce moteur est également compatible avec OpenGL et DirectX.</li>
 					<li><span class="b"><a href="http://www.crystalspace3d.org/">Crystal Space</a></span>&nbsp;: ce moteur 3D, sous licence LGPL, fonctionne uniquement avec OpenGL.</li>
 				</ul>
-			</div>
+			</div-->
 			
 			<!-- partenaires -->
 			<div class="lsmenu">

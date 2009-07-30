@@ -83,7 +83,15 @@ define ('BSE_ENABLE_URL_REWRITING', true);
 define ('BSE_BASE_PATH', '/');
 define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
 
-/* Link to the BSE archive you use (or the latest, as you want). Please hos a
+/* Base forum URL for communicating with FluxBB.
+ * It is only needed if you want to use the FluxBB integration.
+ * This path must be a complete prefix, with trailing slash, or be empty.
+ * The URL must be accessible for the web server but not for the users, then a
+ * localhost path should be cool. */
+define ('BSE_BASE_FLUXBB_PATH', BSE_BASE_PATH.'forums/');
+define ('BSE_BASE_FLUXBB_URL', 'http://localhost'.BSE_BASE_FLUXBB_PATH);
+
+/* Link to the BSE archive you use (or the latest, as you want). Please host a
  * copy in your download repository since it has not official website.
  */
 define ('BSE_TAR_FILE', 'http://www.mysite.com/downloads/bse.tar.gz');
