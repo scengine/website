@@ -47,10 +47,7 @@ function path_add_filename_prefix ($path, $prefix) {
 
 function str_has_prefix ($str, $prefix)
 {
-	if (substr ($str, 0, strlen ($prefix)) == $prefix)
-		return true;
-	
-	return false;
+	return (strncmp ($str, $prefix, strlen ($prefix)) == 0);
 }
 
 /* return the start of a string until @p $c is found */
