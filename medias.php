@@ -72,34 +72,26 @@ function print_by_thumbnail (array &$media)
  */
 function print_media_from_ext (array &$media)
 {
-	switch (strtolower (filename_getext ($media['uri'])))
+	$handlers = array (
+		'image/' => 'print_screenshot',
+		'video/' => 'print_movie'
+	);
+	$handled = false;
+	$mime = filename_get_mime_type ($media['uri']);
+	
+	foreach ($handlers as $mimesec => $hanlder)
 	{
-		case 'png':
-		case 'jpg':
-		case 'jpeg':
-		case 'gif':
-			print_screenshot ($media);
+		if (str_has_prefix ($mime, $mimesec))
+		{
+			$hanlder ($media);
+			$handled = true;
 			break;
-		
-		case 'ogm':
-		case 'ogg':
-		case 'ogv':
-		case 'mkv':
-		case 'flv':
-		case 'mpg':
-		case 'mpeg':
-		case 'mp4':
-		case 'mpeg4':
-		case 'm4v':
-		case 'avi':
-		case 'mov':
-		case 'wmv':
-			print_movie ($media);
-			break;
-		
-		default:
-			//echo 'Not implemented yet';
-			print_by_thumbnail ($media);
+		}
+	}
+	if (! $handled)
+	{
+		//echo 'Not implemented yet';
+		print_by_thumbnail ($media);
 	}
 }
 
