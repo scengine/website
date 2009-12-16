@@ -230,6 +230,11 @@ function mime_type_from_ext ($ext)
 			return 'image/jpeg';
 		case 'gif':
 			return 'image/gif';
+		case 'svg':
+			return 'image/svg+xml';
+		case 'tif':
+		case 'tiff':
+			return 'image/tiff';
 		/* Videos */
 		case 'ogm':
 		case 'ogg':
@@ -248,6 +253,9 @@ function mime_type_from_ext ($ext)
 			return 'video/mp4';
 		case 'avi':
 			return 'video/avi';
+		case 'mov':
+		case 'qt':
+			return 'video/quicktime';
 		case 'wmv':
 			return 'video/x-ms-wmv';
 		
