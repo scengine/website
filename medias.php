@@ -183,7 +183,7 @@ function print_tag_links ($type, $tags)
 	
 	if (! is_array ($tags))
 	{
-		$tags = split (' ', $tags);
+		$tags = explode (' ', $tags);
 		sort ($tags);
 	}
 	
@@ -259,11 +259,11 @@ function print_medias_internal (&$medias, $bytags=false)
 function print_medias ($types, $showtag=null)
 {
 	//if (! is_array ($types) && $types !== null)
-	//	$types = split (',', $types);
+	//	$types = explode (',', $types);
 	$bytags = $showtag !== null;
 	
 	if (! is_array ($showtag) && $showtag !== null)
-		$tags = split (' ', $showtag);
+		$tags = explode (' ', $showtag);
 	else
 		$tags = $showtag;
 	
@@ -324,7 +324,7 @@ if (isset ($_POST['post']))
 }
 else if (isset ($_GET['type']))
 {
-	$types = split (',', $_GET['type']);
+	$types = explode (',', $_GET['type']);
 }
 else
 {
@@ -339,7 +339,7 @@ if (isset ($_POST['showtag']))
 }
 else if (isset ($_GET['showtag']))
 {
-	$tags = split (' ', $_GET['showtag']);
+	$tags = explode (' ', $_GET['showtag']);
 }
 
 

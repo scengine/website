@@ -85,10 +85,10 @@ abstract class PostDevel {
 	}
 	
 	protected static function parse ($str) {
-		$str = htmlspecialchars (&$str, ENT_COMPAT, 'UTF-8');
-		$str = nl2br (&$str);
-		$str = preg_replace ('# ([!?:;])#', '&nbsp;$1', &$str);
-		//$str = addslashes (&$str); // secure SQL request
+		$str = htmlspecialchars ($str, ENT_COMPAT, 'UTF-8');
+		$str = nl2br ($str);
+		$str = preg_replace ('# ([!?:;])#', '&nbsp;$1', $str);
+		//$str = addslashes ($str); // secure SQL request
 		
 		return $str;
 	}

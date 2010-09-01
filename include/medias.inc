@@ -261,7 +261,7 @@ define ('FFIELD',  'ffield');
 define ('TBFIELD', 'tbfield');
 define ('MAX_FILE_SIZE', 1073741824); // maximum filesize to be uploaded (in bytes).
 
-function print_upload_form ($action, $id=false, $fillwith=false, $upload=true)
+function print_upload_form ($action, $id=false, &$fillwith=null, $upload=true)
 {
 	$DPATHS = array ('screens/', 'movies/', 'downloads/', 'news/');
 	
@@ -883,7 +883,7 @@ function update_media_query ($media_id)
 	}
 	
 	$media = media_get_by_id ($media_id);
-	print_upload_form ('edit', $media_id, &$media, false);
+	print_upload_form ('edit', $media_id, $media, false);
 }
 
 /******************************************************************************/

@@ -316,7 +316,7 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
-		$resp['tags'] = split (' ', $resp['tags']);
+		$resp['tags'] = explode (' ', $resp['tags']);
 		sort ($resp['tags']);
 		if ($bytags)
 		{
@@ -348,7 +348,7 @@ function media_get_all_tags ()
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
-		$tags = split (' ', $resp['tags']);
+		$tags = explode (' ', $resp['tags']);
 		foreach ($tags as $tag)
 		{
 			$list_tags[$tag] = ($tag === '') ? 'Non taggé' : $tag;
