@@ -288,9 +288,10 @@ function normalize_string_for_url ($str, $repl_char='-')
 	                    $str);
 	$final_str = '';
 	$prev_used = true;
+	$str_len = strlen ($str);
 	/* don't worry about MB strings here, we use UTF-8: sub-bytes don't match any
 	 * character */
-	for ($i=0; $i < strlen ($str); $i++)
+	for ($i=0; $i < $str_len; $i++)
 	{
 		if (strpos ('abcdefghijklmnopqrstuvwxyz0123456789-+', $str[$i]) === false)
 		{
@@ -305,5 +306,5 @@ function normalize_string_for_url ($str, $repl_char='-')
 		}
 	}
 	
-	return $final_str;
+	return rtrim ($final_str, $repl_char);
 }
