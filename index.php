@@ -129,7 +129,7 @@ function print_news ($start=0) {
 }
 
 
-function print_page_browser ($current)
+function print_page_browser ($current, $limit=2)
 {
 	$bstr = '';
 	$n_news = News::get_n ();
@@ -140,12 +140,24 @@ function print_page_browser ($current)
 	if ($has_prev)
 		echo '<a href="',UrlTable::news_page ($current),'">&lt;</a> ';
 	
+	$was_ok = true;
 	for ($i=0; $i < $n_pages; $i++)
 	{
-		if ($i == $current)
-			echo $i + 1, ' ';
-		else
-			echo '<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a> ';
+		if ($i < $limit ||
+		    abs ($i - $current) <= $limit ||
+		    $i + $limit >= $n_pages ||
+		    /* only hide page if it would save > 1 link */
+		    ($i < $current && $limit >= $current - 1 - $limit) ||
+		    ($i > $current && $n_pages - 1 - $limit <= $current + 1 + $limit)) {
+			if ($i == $current)
+				echo $i + 1, ' ';
+			else
+				echo '<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a> ';
+			$was_ok = true;
+		} else if ($was_ok) {
+			echo '... ';
+			$was_ok = false;
+		}
 	}
 	
 	if ($has_next)
@@ -203,7 +215,7 @@ function print_home ()
 		
 		/* buttons for other pages */
 		echo '<div class="newslinks">';
-		print_page_browser ($start_news);
+		print_page_browser ($start_news, 2);
 		echo '</div>';
 		
 		?>
