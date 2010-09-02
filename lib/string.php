@@ -132,6 +132,7 @@ function xmlstr_shortcut ($xml, $maxlen, $ellipsis='…')
 	$item;
 	$shortxml = '';
 	$end = true;
+	$j = 0;
 	$i;
 	
 	/* last pass is only to know it there's leaved data to know whether to add
