@@ -324,7 +324,7 @@ class WKParser
         
         $this->close_opened_tags ();
         $this->open_tag ($title, $this->language['id'].'="'.$id.'"');
-        echo $content;
+        echo $this->parse_all_inline ($content);
         $this->close_tag ($title);
         
         $this->set_prev (PARSER_PREV_TITLE);
