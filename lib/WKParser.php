@@ -152,6 +152,7 @@ class WKParser
   {
     $this->language = $language;
     $this->opened_tags = array ();
+    $this->prev = PARSER_PREV_NONE;
     $this->ids = array ();
     $line='';
     
