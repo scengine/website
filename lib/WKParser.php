@@ -556,7 +556,7 @@ class WKParser
       
       //$this->open_tag ($this->language['code']);
       /* une ligne vide n'est pas affichée par <pre> */
-      echo $founds[3]; //(ltrim($founds[2])) ? $founds[2] : ' ';
+      echo $this->parse_entities ($founds[3], true); //(ltrim($founds[2])) ? $founds[2] : ' ';
       //$this->close_tag ($this->language['li']);
       
       if (!$void)
@@ -756,13 +756,15 @@ class WKParser
     return $line;
   }
   
-  private function parse_entities ($line)
+  private function parse_entities ($line, $simple = false)
   {
     $line = str_replace ('&', '&'.$this->language['entity_amp'].';', $line);
-    $line = preg_replace ('# +([?!:;])#', '&'.$this->language['entity_space'].';$1', $line);
     $line = str_replace ('<', '&'.$this->language['entity_lt'].';', $line);
     $line = str_replace ('>', '&'.$this->language['entity_gt'].';', $line);
     //$line = str_replace ('"', '&'.$this->language['entity_quote'].';', $line);
+    if (! $simple) {
+      $line = preg_replace ('# +([?!:;])#', '&'.$this->language['entity_space'].';$1', $line);
+    }
     return $line;
   }
   
