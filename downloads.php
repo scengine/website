@@ -139,8 +139,9 @@ git clone git://gitorious.org/scengine/interface.git</pre><br />
 git clone git://git.tuxfamily.org/gitroot/scengine/core.git
 git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
 git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre><br />
-        Informations :<br />
-        <a alt="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home" />
+        Informations sur le Wiki de Gitorious :
+        <a alt="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home">
+https://gitorious.org/scengine/pages/Home</a>
 	</p>
 
 	<h3>Versions publiées</h3>
