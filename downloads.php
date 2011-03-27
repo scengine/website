@@ -129,9 +129,18 @@ require_once ('include/top.minc');
 <div id="content">
 	<h3>Version de développement</h3>
 	<p>
-		Vous pouvez obtenir la version de développement en utilisant
-		<a href="http://fr.wikipedia.org/wiki/Subversion_(logiciel)">SVN</a>&nbsp;:<br />
-		<code>svn co svn://svn.tuxfamily.org/svnroot/scengine/scengine scengine</code>
+        Un dépôt GIT contient la version de développement :<br />
+		<pre>git clone git://gitorious.org/scengine/utils.git
+git clone git://gitorious.org/scengine/core.git
+git clone git://gitorious.org/scengine/renderer-gl.git
+git clone git://gitorious.org/scengine/interface.git</pre><br />
+        Miroir :<br />
+        <pre>git clone git://git.tuxfamily.org/gitroot/scengine/utils.git
+git clone git://git.tuxfamily.org/gitroot/scengine/core.git
+git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
+git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre><br />
+        Informations :<br />
+        <pre>https://gitorious.org/scengine/pages/Home</pre>
 	</p>
 
 	<h3>Versions publiées</h3>
