@@ -140,7 +140,7 @@ git clone git://git.tuxfamily.org/gitroot/scengine/core.git
 git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
 git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre><br />
         Informations :<br />
-        <pre>https://gitorious.org/scengine/pages/Home</pre>
+        <a alt="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home" />
 	</p>
 
 	<h3>Versions publiées</h3>
