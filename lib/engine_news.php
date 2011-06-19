@@ -158,7 +158,7 @@ function print_one_engine_news (array &$new)
 						br2nl (stripslashes ($new['content'])),
 					'</textarea>
 					<input type="submit" value="Poster" />
-					<input type="reset" value="Reset" />
+					<!--input type="reset" value="Reset" /-->
 				</p>
 			</form>
 		</div>';

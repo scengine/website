@@ -491,7 +491,7 @@ function print_upload_form ($action, $id=false, &$fillwith=null, $upload=true)
 		
 		<p class="form_buttons">
 			<input type="submit" value="<?php echo ($upload) ? 'Upload' : 'Mettre à jour'; ?>" />
-			<input type="reset" value="Vider" />
+			<!--input type="reset" value="Vider" /-->
 			<?php print_return_link (true); ?>
 		</p>
 	</form>

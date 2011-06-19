@@ -207,7 +207,7 @@ function edit_user ($pseudo)
 			</div>
 			<p>
 				<input type="submit" value="Enregistrer" />
-				<input type="reset" value="Réinitialiser"/>
+				<!--input type="reset" value="Réinitialiser"/-->
 				',print_button ('Retour', UrlTable::admin_admins (),
 				                'Retour à la gestion des administrateurs'),'
 			</p>
@@ -585,7 +585,8 @@ function add_user_query()
 				</select>
 			</label>
 			<br />
-			<input type="submit" value="Enregistrer" /> <input type="reset" value="Réinitialiser"/>
+			<input type="submit" value="Enregistrer" />
+			<!--input type="reset" value="Réinitialiser"/-->
 		</div>
 	</form>
 	<p>

@@ -175,7 +175,7 @@ if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 				</div>
 				<p class="form_buttons">
 					<input type="submit" value="Appliquer" />
-					<input type="reset" value="Réinitialiser" />
+					<!--input type="reset" value="Réinitialiser" /-->
 				</p>
 			</form>
 <?php
