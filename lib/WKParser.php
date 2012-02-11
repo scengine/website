@@ -658,20 +658,33 @@ class WKParser
       //print_r ($founds);
       
       $href = $founds[1];
+      $title = isset ($founds[2]) ? $founds[2] : null;
       
-      /* support for easy Wikipedia links */
-      if (!strncmp ($href, 'wpfr:', 5)) {
-        $href = 'http://fr.wikipedia.org/wiki/'.substr ($href, 5);
-      }
-      else if (!strncmp ($href, 'wpen:', 5)) {
-        $href = 'http://en.wikipedia.org/wiki/'.substr ($href, 5);
-      }
-      else if (!strncmp ($href, 'wp:', 3)) {
-        $href = 'http://en.wikipedia.org/wiki/'.substr ($href, 3);
+      /* support for easy Wikipedia links of the format "wp[lang]:Page" */
+      if (strncmp ($href, 'wp', 2) == 0) {
+        $lang = null;
+        
+        $pos = strpos ($href, ':', 2);
+        if ($pos == 2) {
+          $lang = 'en'; /* default language is English */
+        } else if ($pos >= 4 && $pos <= 5) {
+          /* otherwise, use the 2/3 character after "wp" as the language */
+          $lang = substr ($href, 2, $pos - 2);
+        }
+        
+        if ($lang) {
+          $page = substr ($href, $pos + 1);
+          
+          /* if the link has no title, use the page name */
+          if ($title === null) {
+            $title = $page;
+          }
+          $href = 'http://' . $lang . '.wikipedia.org/wiki/'. $page;
+        }
       }
       
       $link = '<'.$this->language['link'].' '.$this->language['link_addr'].'="'.$href.'">';
-      $link .= ($founds[2]) ? $founds[2] : $href;
+      $link .= isset ($title) ? $title : $href;
       $link .= '</'.$this->get_close_tag ($this->language['link']).'>';
       
       $line = preg_replace ('#\[\[.*\]\]#U', $link, $line, 1);
