@@ -133,7 +133,9 @@ define ('PARSER_PREV_COMMENT', 9);
 class WKParser
 {
   /* Parser de WikiCode-like
-   * simple et rapide mais linéaire et peu puissant */
+   * simple et rapide mais linéaire et peu puissant
+   * noshit, pas si rapide que ça je dirais vu le nombre de regex et la
+   * stupidité de certains bouts de code...  */
   /* Il marche bien tant qu'on est gentil avec lui :D */
   /**
    * TODO:
@@ -214,10 +216,14 @@ class WKParser
     return $this->prev;
   }
   
-  private function open_tag ($tag, $attrs='')
+  private function open_tag ($tag, $attrs = array ())
   {
     array_push ($this->opened_tags, $tag);
-    echo '<',$tag,(($attrs)? ' '.$attrs : ''),'>';
+    echo '<',$tag;
+    foreach ($attrs as $attr => $value) {
+      echo $this->attr_s ($attr, $value);
+    }
+    echo '>';
   }
   
   private function get_close_tag ($tag)
@@ -250,6 +256,31 @@ class WKParser
     $this->close_tag (Null);
   }
   
+  /* creates a string representing XML attribute @name with value @value */
+  private function attr_s ($name, $value)
+  {
+    /* FIXME: handle special chars in @value */
+    return ' ' . $name . '="' . $value . '"';
+  }
+  
+  /* creates a string representing XML tag @name with data @data and
+   * attributes @attrs */
+  private function tag_s ($name, $data = null, $attrs = array ())
+  {
+    $tag = '<' . $name;
+    
+    foreach ($attrs as $attr => $value) {
+      $tag .= $this->attr_s ($attr, $value);
+    }
+    if ($data !== null) {
+      $tag .= '>' . $data . '</' . $this->get_close_tag ($name) . '>';
+    } else {
+      $tag .= '/>';
+    }
+    
+    return $tag;
+  }
+  
   private function id_from_string ($str)
   {
     $id = remove_special_chars ($str);
@@ -269,7 +300,7 @@ class WKParser
   
   private function parse_wkc_query (&$line)
   {
-    $founds;
+    $founds = array ();
     
     if (preg_match ('#^wkcp>(.*)#', $line, $founds))
     {
@@ -324,7 +355,7 @@ class WKParser
         $id = $this->id_from_string ($content);
         
         $this->close_opened_tags ();
-        $this->open_tag ($title, $this->language['id'].'="'.$id.'"');
+        $this->open_tag ($title, array ($this->language['id'] => $id));
         echo $this->parse_all_inline ($content);
         $this->close_tag ($title);
         
@@ -340,7 +371,7 @@ class WKParser
   private function parse_ul ($line)
   {
     static $level = 0;
-    $founds;
+    $founds = array ();
     
     if (preg_match ('#^([ \t]{2,})\* ?(.*)#', $line, $founds))
     {
@@ -386,7 +417,7 @@ class WKParser
   private function parse_ol ($line)
   {
     static $level = 0;
-    $founds;
+    $founds = array ();
     
     if (preg_match ('#^([ \t]{2,})- ?(.*)#', $line, $founds))
     {
@@ -432,7 +463,7 @@ class WKParser
   private function parse_quote ($line)
   {
     static $level = 0;
-    $founds;
+    $founds = array ();
     
     if (preg_match ('#^[ \t]+((?:> *)+)(.*)#', $line, $founds))
     {
@@ -493,7 +524,7 @@ class WKParser
   
   private function parse_table ($line)
   {
-    $founds;
+    $founds = array ();
     $in_tr = false;
     $i = 0;
     
@@ -511,10 +542,8 @@ class WKParser
       
       if ($founds[2] != '')
       {
-        if ($founds[1] == '^')
-          echo '<th>',trim ($this->parse_all_inline ($founds[2])),'</th>';
-        else
-          echo '<td>',trim ($this->parse_all_inline ($founds[2])),'</td>';
+        echo $this->tag_s (($founds[1] == '^') ? 'th' : 'td',
+                           trim ($this->parse_all_inline ($founds[2])));
       }
       
       $in_tr = true;
@@ -584,11 +613,11 @@ class WKParser
         $this->open_tag ($this->language['p']);
       }
       else
-        echo '<',$this->language['newline'],' />'; /* newlines are handeled as
-                                                    * newlines (Yno's choice...
-                                                    * below, single newline are
-                                                    * handeled as nothing, and
-                                                    * only \\ break lines.) */
+        echo $this->tag_s ($this->language['newline']); /* newlines are handeled as
+                                                         * newlines (Yno's choice...
+                                                         * below, single newline are
+                                                         * handeled as nothing, and
+                                                         * only \\ break lines.) */
         //echo ' '; // un sepace pour séparer les mots entre les retours de lignes
       //echo trim ($this->parse_links ($this->parse_images ($this->parse_other ($line))));
       echo trim ($this->parse_all_inline ($line));
@@ -611,7 +640,7 @@ class WKParser
     if (preg_match ('#^[ \t]*-{4,}[ \t]*$#', $line))
     {
       $this->close_opened_tags ();
-      echo '<',$this->language['hr'],' />';
+      echo $this->tag_s ($this->language['hr']);
       $this->set_prev (PARSER_PREV_HR);
       return '';
     }
@@ -627,7 +656,7 @@ class WKParser
       $prev = $this->get_prev ();
     }
     
-    if (substr ($line, 0, 2) == '!!')
+    if (str_has_prefix ($line, '!!'))
     {
       if ($this->get_prev () != PARSER_PREV_COMMENT)
       {
@@ -651,17 +680,15 @@ class WKParser
   
   private function parse_links ($line)
   {
-    $founds;
+    $founds = array ();
     
     while (preg_match ('#\[\[(.*)(?:\|(.*))?\]\]#U', $line, $founds))
     {
-      //print_r ($founds);
-      
       $href = $founds[1];
       $title = isset ($founds[2]) ? $founds[2] : null;
       
       /* support for easy Wikipedia links of the format "wp[lang]:Page" */
-      if (strncmp ($href, 'wp', 2) == 0) {
+      if (str_has_prefix ($href, 'wp')) {
         $lang = null;
         
         $pos = strpos ($href, ':', 2);
@@ -683,9 +710,9 @@ class WKParser
         }
       }
       
-      $link = '<'.$this->language['link'].' '.$this->language['link_addr'].'="'.$href.'">';
-      $link .= isset ($title) ? $title : $href;
-      $link .= '</'.$this->get_close_tag ($this->language['link']).'>';
+      $link = $this->tag_s ($this->language['link'],
+                            isset ($title) ? $title : $href,
+                            array ($this->language['link_addr'] => $href));
       
       $line = preg_replace ('#\[\[.*\]\]#U', $link, $line, 1);
     }
@@ -695,16 +722,21 @@ class WKParser
   
   private function parse_images ($line)
   {
-    $founds;
+    $founds = array ();
     
     while (preg_match ('#\{\{( +)?([^ ].*)(?:\?([0-9]*(?:x[0-9]+)?))?( +)?(?:\|(.*))?\}\}#U', $line, $founds))
     {
       //print_r ($founds);
+      $obj_attrs = array ();
+      $img_attrs = array (
+        $this->language['img_src'] => $founds[2],
+        $this->language['img_alt'] => (isset ($founds[5]) ? $founds[5] : $founds[2])
+      );
       
       if (!empty ($founds[1]) || !empty ($founds[4]))
       {
-        $lmargin = $founds[1];
-        $rmargin = $founds[4];
+        $lmargin = strlen ($founds[1]);
+        $rmargin = strlen ($founds[4]);
         
         if ($lmargin < $rmargin)
           $align = $this->language['align_left'];
@@ -713,24 +745,30 @@ class WKParser
         else
           $align = $this->language['align_center'];
         
-        unset ($lmargin, $rmargin);
-      }
-      
-      if ($founds[3])
-      {
-        $tmp = preg_split ('#x#', $founds[3]);
-        //print_r ($tmp);
+        $p = explode ('=', $align, 2);
+        $obj_attrs[$p[0]] = trim ($p[1], '"');
         
-        $w = $tmp[0];
-        $h = $tmp[1];
+        unset ($lmargin, $rmargin, $p);
       }
       
-      //$link = '<'.$this->language['link'].' '.$this->language['link_addr'].'="'.$founds[2].'">';
-      //~$link .= '<'.$this->language['img'].' '.$this->language['img_src'].'="'.$founds[2].'" '.$this->language['img_alt'].'="'.(($founds[5]) ? $founds[5] : $founds[2]).'"'.(($w)? ' width="'.$w.'"' : '').(($h)? ' height="'.$h.'"' : '').(($align)? ' '.$align : '').'/>';
-      $link = '<'.$this->language['inline_obj'].(($align)? ' '.$align : '').'><'.$this->language['img'].' '.$this->language['img_src'].'="'.$founds[2].'" '.$this->language['img_alt'].'="'.(($founds[5]) ? $founds[5] : $founds[2]).'"'.(($w)? ' width="'.$w.'"' : '').(($h)? ' height="'.$h.'"' : '').'/></'.$this->language['inline_obj'].'>';
-      //$link .= '</'.$this->get_close_tag ($this->language['link']).'>';
+      if (! empty ($founds[3])) {
+        $tmp = explode ('x', $founds[3], 2);
+        
+        if (isset ($tmp[0])) {
+          $img_attrs['width'] = $tmp[0];
+        }
+        if (isset ($tmp[1])) {
+          $img_attrs['width'] = $tmp[1];
+        }
+      }
       
-      $line = preg_replace ('#\{\{.*\}\}#U', $link, $line, 1);
+      $img = $this->tag_s ($this->language['inline_obj'],
+                           $this->tag_s ($this->language['img'],
+                                         null,
+                                         $img_attrs),
+                           $obj_attrs);
+      
+      $line = preg_replace ('#\{\{.*\}\}#U', $img, $line, 1);
     }
     
     return $line;
@@ -739,17 +777,15 @@ class WKParser
   
   private function parse_abbr ($line)
   {
-    $founds;
+    $founds = array ();
     
     while (preg_match ('#\(\((.*)(?:\|(.*))?\)\)#U', $line, $founds))
     {
-      //print_r ($founds);
+      $abbr = $this->tag_s ('abbr',
+                            isset ($founds[2]) ? $founds[2] : $founds[1],
+                            array ('title' => $founds[1]));
       
-      $link = '<abbr title="'.$founds[1].'">';
-      $link .= ($founds[2]) ? $founds[2] : $founds[1];
-      $link .= '</abbr>';
-      
-      $line = preg_replace ('#\(\(.*\)\)#U', $link, $line, 1);
+      $line = preg_replace ('#\(\(.*\)\)#U', $abbr, $line, 1);
     }
     
     return $line;
@@ -758,14 +794,14 @@ class WKParser
   private function parse_other ($line)
   {
     $line = $this->parse_entities ($line);
-    $line = preg_replace ('#([^:/]|^)//(.*)//#U', '$1<'.$this->language['italic'].'>$2</'.$this->get_close_tag ($this->language['italic']).'>', $line);
-    $line = preg_replace ('#\*\*(.*)\*\*#U', '<'.$this->language['bold'].'>$1</'.$this->get_close_tag ($this->language['bold']).'>', $line);
-    $line = preg_replace ('#__(.*)__#U', '<'.$this->language['underlined'].'>$1</'.$this->get_close_tag ($this->language['underlined']).'>', $line);
-    $line = preg_replace ('#--(.*)--#U', '<'.$this->language['strike'].'>$1</'.$this->get_close_tag ($this->language['strike']).'>', $line);
-    $line = preg_replace ('#\'\'(.*)\'\'#U', '<'.$this->language['smallcode'].'>$1</'.$this->get_close_tag ($this->language['smallcode']).'>', $line);
+    $line = preg_replace ('#([^:/]|^)//(.*)//#U', '$1' . $this->tag_s ($this->language['italic'], '$2'), $line);
+    $line = preg_replace ('#\*\*(.*)\*\*#U', $this->tag_s ($this->language['bold'], '$1'), $line);
+    $line = preg_replace ('#__(.*)__#U', $this->tag_s ($this->language['underlined'], '$1'), $line);
+    $line = preg_replace ('#--(.*)--#U', $this->tag_s ($this->language['strike'], '$1'), $line);
+    $line = preg_replace ('#\'\'(.*)\'\'#U', $this->tag_s ($this->language['smallcode'], '$1'), $line);
     /* removed \\ below because now the newlines in paragraphs are handeled as
      * newlines */
-    //$line = str_replace ('\\\\', '<'.$this->language['newline'].' />', $line);
+    //$line = str_replace ('\\\\', $this->tag_s ($this->language['newline']), $line);
     return $line;
   }
   
