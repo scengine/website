@@ -187,7 +187,7 @@ require_once ('lib/Metadata.php'); /* gave MDI instance */
 				<p>
 					<a href="<?php echo BSE_TAR_FILE; ?>">BanSE</a>,
 					Copyright © 2007-2009 Colomban Wendling &lt;<span>ban</span>[at]<span>herbesfolles</span>[dot]<span>org</span>&gt;<br />
-					This whole site is licencied under the GNU GPL v3 or later.
+					This whole site is licensed under the GNU GPL v3 or later.
 					See <a href="<?php echo LICENSE_URL; ?>" accesskey="8">license</a> for more details.
 				</p>
 			</div>
