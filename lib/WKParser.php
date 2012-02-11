@@ -714,7 +714,7 @@ class WKParser
       
       //$link = '<'.$this->language['link'].' '.$this->language['link_addr'].'="'.$founds[2].'">';
       //~$link .= '<'.$this->language['img'].' '.$this->language['img_src'].'="'.$founds[2].'" '.$this->language['img_alt'].'="'.(($founds[5]) ? $founds[5] : $founds[2]).'"'.(($w)? ' width="'.$w.'"' : '').(($h)? ' height="'.$h.'"' : '').(($align)? ' '.$align : '').'/>';
-      $link .= '<'.$this->language['inline_obj'].(($align)? ' '.$align : '').'><'.$this->language['img'].' '.$this->language['img_src'].'="'.$founds[2].'" '.$this->language['img_alt'].'="'.(($founds[5]) ? $founds[5] : $founds[2]).'"'.(($w)? ' width="'.$w.'"' : '').(($h)? ' height="'.$h.'"' : '').'/></'.$this->language['inline_obj'].'>';
+      $link = '<'.$this->language['inline_obj'].(($align)? ' '.$align : '').'><'.$this->language['img'].' '.$this->language['img_src'].'="'.$founds[2].'" '.$this->language['img_alt'].'="'.(($founds[5]) ? $founds[5] : $founds[2]).'"'.(($w)? ' width="'.$w.'"' : '').(($h)? ' height="'.$h.'"' : '').'/></'.$this->language['inline_obj'].'>';
       //$link .= '</'.$this->get_close_tag ($this->language['link']).'>';
       
       $line = preg_replace ('#\{\{.*\}\}#U', $link, $line, 1);
