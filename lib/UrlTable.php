@@ -222,7 +222,7 @@ abstract class UrlTable
 		
 		if (! BSE_ENABLE_URL_REWRITING)
 		{
-			$link = 'index.php';
+			$link = 'news.php';
 			if ($id !== false)
 				$link .= '?shownews='.$id;
 		}
@@ -237,7 +237,7 @@ abstract class UrlTable
 					$link .= '-'.normalize_string_for_url ($title);
 			}
 			else
-				$link = 'index';
+				$link = 'news';
 			$link .= '.html';
 		}
 		

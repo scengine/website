@@ -4,18 +4,18 @@ RewriteEngine On
 RewriteBase /
 
 # basic pages
-RewriteRule ^(index|medias|downloads|tuto|license|about|admin)\.html$ $1.php [L]
+RewriteRule ^(index|news|medias|downloads|tuto|license|about|admin)\.html$ $1.php [L]
 # connexion pages
 RewriteRule ^login\.html$ connexion.php [L]
 RewriteRule ^logout\.html$ connexion.php?act=logout [L]
 
 # news-pageNUM[.html]
-RewriteRule ^news-page([0-9]+)(?:\.html)?$ index.php?page=$1 [L]
+RewriteRule ^news-page([0-9]+)(?:\.html)?$ news.php?page=$1 [L]
 # news-ID[...[.html]]
-RewriteRule ^news-([0-9]+)(?:-.*)?(?:\.html)?$ index.php?shownews=$1 [L]
+RewriteRule ^news-([0-9]+)(?:-.*)?(?:\.html)?$ news.php?shownews=$1 [L]
 
 # devel-pageNUM[.html]
-RewriteRule ^devel-page([0-9]+)(?:\.html)?$ index.php?devel_page=$1 [L]
+RewriteRule ^devel-page([0-9]+)(?:\.html)?$ news.php?devel_page=$1 [L]
 
 # medias-TYPE[.html]
 RewriteRule ^medias-([0-9,]*)(?:\.html)?$ medias.php?type=$1 [L]
