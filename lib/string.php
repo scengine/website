@@ -41,40 +41,9 @@ function filename_getext ($filename)
 	return $e;
 }
 
-function path_add_filename_prefix ($path, $prefix) {
-	return dirname ($path).'/'.$prefix.basename ($path);
-}
-
 function str_has_prefix ($str, $prefix)
 {
 	return (strncmp ($str, $prefix, strlen ($prefix)) == 0);
-}
-
-/* return the start of a string until @p $c is found */
-#string sstrchr (string str, char c)
-function sstrchr ($str, $c)
-{
-	$f = '';
-	
-	for ($i = 0; $str[$i] != $c && $str[$i] !== False; $i++)
-		$f .= $str[$i];
-	
-	return $f;
-}
-
-
-/* check if a filename has the prfix $prfix
- * note tha $filename can be a path, only th prefix of the filename will be checked */
-function filename_has_prefix ($path, $prefix)
-{
-	return str_has_prefix (basename ($path), $prefix);
-}
-
-/* check if a file have an extension */
-#boolean file_hasext (string filename)
-function file_hasext ($filename)
-{
-	return (filename_getext ($filename) === false) ? false : true;
 }
 
 function nls2p ($string)
