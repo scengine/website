@@ -23,6 +23,7 @@ require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
+require_once ('lib/Template.php');
 
 
 /** Feed templates for devel news **/
@@ -156,32 +157,6 @@ define ('RSS_FEED_DEVEL_ITEM_TPL',
 ');
 
 
-function tpl_process (array &$arr)
-{
-	$out = '';
-	
-	foreach ($arr as &$subarr)
-	{
-		$tpl = &$subarr['tpl'];
-		$search_replace = &$subarr['replace'];
-		
-		foreach ($search_replace as &$replace)
-		{
-			if (is_array ($replace))
-				$replace = tpl_process ($replace);
-		}
-		
-		$searches = array_keys ($search_replace);
-		foreach ($searches as &$search)
-		{
-			$search = '{'.$search.'}';
-		}
-		$out .= str_replace ($searches, $search_replace, $tpl);
-	}
-	
-	return $out;
-}
-
 
 /*
  * \brief small wrapper for locked file_put_contents()
@@ -195,9 +170,7 @@ function feed_update ($file, $data)
 
 function feed_update_news ()
 {
-	$atom_data = array ();
 	$atom_items = array ();
-	$rss_data = array ();
 	$rss_items = array ();
 	
 	/*
@@ -207,14 +180,13 @@ function feed_update_news ()
 	while (($news = $db->fetch_response ()) !== false)
 	*/
 	$all_news = News::get (0, 10);
-	foreach ($all_news as &$news)
-	{
+	foreach ($all_news as &$news) {
 		$alternate_url = BSE_BASE_URL.UrlTable::news ($news['id']);
 		$id = /*sha1 (*/$alternate_url/*)*/;
 		
-		$atom_items[] = array (
-			'tpl'     => ATOM_FEED_NEWS_ITEM_TPL,
-			'replace' => array (
+		$atom_items[] = new StringTemplate (
+			ATOM_FEED_NEWS_ITEM_TPL,
+			array (
 				'lang'          => 'fr',
 				'title'         => $news['title'],
 				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
@@ -226,9 +198,9 @@ function feed_update_news ()
 				'author'        => $news['author']
 			)
 		);
-		$rss_items[] = array (
-			'tpl'     => RSS_FEED_NEWS_ITEM_TPL,
-			'replace' => array (
+		$rss_items[] = new StringTemplate (
+			RSS_FEED_NEWS_ITEM_TPL,
+			array (
 				'title'         => $news['title'],
 				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
 				'date'          => date ('r', $news['mdate']),
@@ -240,9 +212,9 @@ function feed_update_news ()
 	}
 	unset ($db);
 	
-	$atom_data[] = array (
-		'tpl'     => ATOM_FEED_NEWS_TPL,
-		'replace' => array (
+	$atom_data = new StringTemplate (
+		ATOM_FEED_NEWS_TPL,
+		array (
 			'title'         => 'News du SCEngine',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'self_url'      => BSE_BASE_URL.NEWS_ATOM_FEED_FILE,
@@ -252,9 +224,9 @@ function feed_update_news ()
 			'items'         => &$atom_items
 		)
 	);
-	$rss_data[] = array (
-		'tpl'     => RSS_FEED_NEWS_TPL,
-		'replace' => array (
+	$rss_data = new StringTemplate (
+		RSS_FEED_NEWS_TPL,
+		array (
 			'title'         => 'News du SCEngine',
 			'description'   => 'Site officiel du SCEngine',
 			'self_url'      => BSE_BASE_URL.NEWS_RSS_FEED_FILE,
@@ -266,25 +238,22 @@ function feed_update_news ()
 		)
 	);
 	
-	return feed_update (NEWS_ATOM_FEED_FILE, tpl_process ($atom_data)) &&
-	       feed_update (NEWS_RSS_FEED_FILE, tpl_process ($rss_data));
+	return feed_update (NEWS_ATOM_FEED_FILE, (string) $atom_data) &&
+	       feed_update (NEWS_RSS_FEED_FILE, (string) $rss_data);
 }
 
 function feed_update_devel ()
 {
-	$atom_data = array ();
 	$atom_items = array ();
-	$rss_data = array ();
 	$rss_items = array ();
 	
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', '`id`', 'DESC', 0, 16);
-	while (($news = $db->fetch_response ()) !== false)
-	{
-		$atom_items[] = array (
-			'tpl'     => ATOM_FEED_DEVEL_ITEM_TPL,
-			'replace' => array (
+	while (($news = $db->fetch_response ()) !== false) {
+		$atom_items[] = new StringTemplate (
+			ATOM_FEED_DEVEL_ITEM_TPL,
+			array (
 				'lang'          => 'fr',
 				'title'         => date ('d/m/Y à H\hi', $news['date']),
 				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
@@ -295,9 +264,9 @@ function feed_update_devel ()
 				'id'            => BSE_BASE_URL.'index.php#m'.$news['id']
 			)
 		);
-		$rss_items[] = array (
-			'tpl'     => RSS_FEED_DEVEL_ITEM_TPL,
-			'replace' => array (
+		$rss_items[] = new StringTemplate (
+			RSS_FEED_DEVEL_ITEM_TPL,
+			array (
 				'title'         => date ('d/m/Y à H\hi', $news['date']),
 				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
 				'date'          => date ('r', $news['date']),
@@ -308,9 +277,9 @@ function feed_update_devel ()
 	}
 	unset ($db);
 	
-	$atom_data[] = array (
-		'tpl'     => ATOM_FEED_DEVEL_TPL,
-		'replace' => array (
+	$atom_data = new StringTemplate (
+		ATOM_FEED_DEVEL_TPL,
+		array (
 			'title'         => 'News du développement du SCEngine',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 			'self_url'      => BSE_BASE_URL.DEVEL_ATOM_FEED_FILE,
@@ -321,9 +290,9 @@ function feed_update_devel ()
 			'author'        => 'Yno'
 		)
 	);
-	$rss_data[] = array (
-		'tpl'     => RSS_FEED_DEVEL_TPL,
-		'replace' => array (
+	$rss_data = new StringTemplate (
+		RSS_FEED_DEVEL_TPL,
+		array (
 			'title'         => 'News du développement du SCEngine',
 			'description'   => 'Site officiel du SCEngine',
 			'self_url'      => BSE_BASE_URL.DEVEL_RSS_FEED_FILE,
@@ -335,55 +304,6 @@ function feed_update_devel ()
 		)
 	);
 	
-	return feed_update (DEVEL_ATOM_FEED_FILE, tpl_process ($atom_data)) &&
-	       feed_update (DEVEL_RSS_FEED_FILE, tpl_process ($rss_data));
+	return feed_update (DEVEL_ATOM_FEED_FILE, (string) $atom_data) &&
+	       feed_update (DEVEL_RSS_FEED_FILE, (string) $rss_data);
 }
-
-
-/*
-$err = feed_update_news ();
-if (! $err)
-	echo "$err\n";
-else
-	echo "Réussi\n";
-*/
-/*
-$replace_ = array (
-	'{content}' => 'relol',
-	'{title}' => 'lol',
-	'{date}' => '12463542112',
-	'{link}' => 'http://patate.com',
-	'{id}' => 'rda:uuid:1001:a144:45ab:b11f',
-	'{author}' => 'moi'
-);
-
-$all = array (
-	array (
-		'tpl' => ATOM_FEED_TPL,
-		'replace' => array (
-			'title' => 'News du SCEngine',
-			'icon' => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
-			'self_url' => BSE_BASE_URL.NEWS_FEED_FILE,
-			'alternate_url' => BSE_BASE_URL,
-			'date' => date ('c'),
-			'id' => 'rda:uuid:1001:a144:45cc:b11f',
-			'items' => array (
-				array (
-					'tpl' => ATOM_FEED_ITEM_TPL,
-					'replace' => array (
-						'content' => 'relol',
-						'title' => 'lol',
-						'date' => '12463542112',
-						'link' => 'http://patate.com',
-						'id' => 'rda:uuid:1001:a144:45ab:b11f',
-						'author' => 'moi'
-					)
-				)
-			)
-		)
-	)
-);
-
-
-echo tpl_process ($all);
-*/
