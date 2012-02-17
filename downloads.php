@@ -129,18 +129,20 @@ require_once ('include/top.minc');
 <div id="content">
 	<h3>Version de développement</h3>
 	<p>
-        Un dépôt GIT contient la version de développement :<br />
-		<pre>git clone git://gitorious.org/scengine/utils.git
+		Un dépôt GIT contient la version de développement :
+	</p>
+	<pre>git clone git://gitorious.org/scengine/utils.git
 git clone git://gitorious.org/scengine/core.git
 git clone git://gitorious.org/scengine/renderer-gl.git
-git clone git://gitorious.org/scengine/interface.git</pre><br />
-        Miroir :<br />
-        <pre>git clone git://git.tuxfamily.org/gitroot/scengine/utils.git
+git clone git://gitorious.org/scengine/interface.git</pre>
+	<p>Miroir&nbsp;:</p>
+	<pre>git clone git://git.tuxfamily.org/gitroot/scengine/utils.git
 git clone git://git.tuxfamily.org/gitroot/scengine/core.git
 git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
-git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre><br />
-        Informations sur le Wiki de Gitorious :
-        <a alt="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home">
+git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre>
+	<p>
+		Informations sur le Wiki de Gitorious :
+		<a title="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home">
 https://gitorious.org/scengine/pages/Home</a>
 	</p>
 
