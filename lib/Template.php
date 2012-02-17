@@ -118,36 +118,44 @@ abstract class Template
 	{
 		$expanded_tokens = array ();
 		$levels = array (&$expanded_tokens);
-		$cond = null;
 		
 		foreach ($tokens as &$token) {
 			$cmd = substr ($token, 1, -1);
 			
 			if (preg_match (TPL_FOREACH_PATTERN, $cmd, $matches)) {
-				$loop = serialize (array ('foreach', $matches[1], $matches[2], $matches[3]));
 				array_unshift ($levels, array ());
-				$levels[1][$loop] = &$levels[0];
+				$levels[1][] = array (
+					'foreach',
+					$matches[1], /* key */
+					$matches[2], /* value */
+					$matches[3], /* expression */
+					&$levels[0]  /* body */
+				);
 			} else if (preg_match (TPL_IF_PATTERN, $cmd, $matches)) {
-				$cond = serialize (array ('if', $matches[1]));
 				array_unshift ($levels, array ());
-				$levels[1][$cond][0] = &$levels[0];
-				$levels[1][$cond][1] = array ();
+				$levels[1][] = array (
+					'if',
+					$matches[1],  /* condition */
+					&$levels[0],  /* if branch */
+					array ()      /* else branch */
+				);
 			} else if ($token == '{else}') {
-				if ($cond == null) {
+				if (count ($levels) < 2 ||
+						($k = count ($levels[1]) - 1) < 0 ||
+						! is_array ($levels[1][$k]) ||
+						$levels[1][$k][0] != 'if') {
 					die ('ERROR: else without an if before');
 					return null;
 				}
 				array_shift ($levels);
 				array_unshift ($levels, array ());
-				$levels[1][$cond][1] = &$levels[0];
-				$cond = null;
+				$levels[1][$k][3] = &$levels[0];
 			} else if ($token == '{end}') {
 				array_shift ($levels);
 				if (count ($levels) < 1) {
 					die ('ERROR: end with no open block');
 					return null;
 				}
-				$cond = null;
 			} else {
 				$levels[0][] = $token;
 			}
@@ -233,35 +241,34 @@ abstract class Template
 	{
 		$str = '';
 		
-		foreach ($tokens as $id => $token) {
+		foreach ($tokens as $token) {
 			if (is_array ($token)) {
 				/* a condition or loop */
 				
-				$data = unserialize ($id);
-				switch ($data[0]) {
+				switch ($token[0]) {
 					case 'foreach':
-						$array = self::parse_var ($data[3], $vars, false);
+						$array = self::parse_var ($token[3], $vars, false);
 						
 						if (! is_array ($array)) {
-							die ('ERROR: variable "'.$data[3].'" is not an array');
+							die ('ERROR: variable "'.$token[3].'" is not an array');
 						}
 						foreach ($array as $k => $v) {
 							$sub_vars = $vars;
-							if (! empty ($data[1])) {
-								$sub_vars[$data[1]] = $k;
+							if (! empty ($token[1])) {
+								$sub_vars[$token[1]] = $k;
 							}
-							$sub_vars[$data[2]] = $v;
-							$str .= self::parse ($token, $sub_vars);
+							$sub_vars[$token[2]] = $v;
+							$str .= self::parse ($token[4], $sub_vars);
 						}
 						break;
 					
 					case 'if':
-						$cond = self::parse_var ($data[1], $vars);
+						$cond = self::parse_var ($token[1], $vars);
 						
 						if ($cond) {
-							$str .= self::parse ($token[0], $vars);
+							$str .= self::parse ($token[2], $vars);
 						} else {
-							$str .= self::parse ($token[1], $vars);
+							$str .= self::parse ($token[3], $vars);
 						}
 						break;
 					
