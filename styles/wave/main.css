@@ -160,6 +160,25 @@ max-width: 160px;
 .mediacontainer:hover .links {
 	display: block;
 }
+.showmediacontainer .links ul,
+.mediacontainer .links ul {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+.showmediacontainer .links li,
+.mediacontainer .links li {
+	display: inline;
+}
+.showmediacontainer .links li:after,
+.mediacontainer .links li:after {
+	content: ', ';
+}
+.showmediacontainer .links li:last-child:after,
+.mediacontainer .links li:last-child:after {
+	content: '';
+}
+
 
 .code_snippet_box {
 font-size: 80%;

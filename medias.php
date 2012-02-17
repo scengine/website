@@ -179,33 +179,21 @@ function print_media ($media_id)
 
 function print_tag_links ($type, $tags)
 {
-	$tagged = true;
-	
 	if (! is_array ($tags))
 	{
 		$tags = explode (' ', $tags);
 		sort ($tags);
 	}
 	
-	if (! empty ($tags[0]))
-	{
-		$n_tags = count ($tags);
-		for ($i = 0; $i < $n_tags; $i++)
-		{
-			//echo '<a href="?type=',$type,'&amp;showtag=',$tags[$i],'">',$tags[$i],'</a>';
-			echo '<a href="',UrlTable::medias_tags (array ($type), array ($tags[$i])),'">',$tags[$i],'</a>';
-			if ($i < ($n_tags -1))
-				echo ', ';
+	echo '<ul>';
+	if (! empty ($tags[0])) {
+		foreach ($tags as $tag) {
+			echo '<li><a href="',UrlTable::medias_tags (array ($type), array ($tag)),'">',$tag,'</a></li>';
 		}
+	} else {
+		echo '<li><a href="',UrlTable::medias_tags (array ($type), array ('')),'">Untagged</a></li>';
 	}
-	else
-	{
-		$tagged = false;
-		//echo '<a href="?type=',$type,'&amp;showtag=">Non taggé</a>';
-		echo '<a href="',UrlTable::medias_tags (array ($type), array ('')),'">Non taggé</a>';
-	}
-	
-	return $tagged;
+	echo '</ul>';
 }
 
 function print_medias_internal (&$medias, $bytags=false)
