@@ -45,48 +45,51 @@ function print_new (array &$new, $more=false)
 	$permalink = UrlTable::news ($new['id'], $new['title']);
 	
 	echo '
-	<div class="new">';
+	<div class="news">';
+	
+	$content = $new['content'];
+	if ($more) {
+		$content = xmlstr_shortcut ($content, NEWS_PREVIEW_SIZE,
+		                            '… <a href="'.$permalink.'" class="more">read more</a>');
+	}
 	
 	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-		echo '
-		<div class="admin">
-			[<a href="',UrlTable::admin_news ('edit', $new['id']),'"
-			    onclick="return news_edit (\'n',$new['id'],'\', this);">Éditer</a>]
-			[<a href="',UrlTable::admin_news ('rm', $new['id']),'"
-			    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
-		</div>';
 		News::print_form ($new['title'], $new['source'], 'edit', $new['id'],
 		                  null, '', 'style="display:none;"');
 	}
-	
 	echo '
-		<div id="mn',$new['id'],'">
-			<h3 id="n',$new['id'],'">
-				<a href="',$permalink,'">',
-					escape_html_quotes ($new['title']),
-				'</a>
-			</h3>
-			<div class="author">
-				<p>
-					Par <span class="b">',$new['author'],'</span> le ',
-					date ('d/m/Y à H:i', $new['date']);
-	if ($new['date'] < $new['mdate'])
-	{
-		echo ' &ndash; édité par <span class="b">',$new['mauthor'],
-			'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
+		<div>
+			<div class="data" id="mn',$new['id'],'">
+				<h3 id="n',$new['id'],'">
+					<a href="',$permalink,'">',
+						escape_html_quotes ($new['title']),
+					'</a>
+				</h3>
+				<div class="content">
+					',$content,'
+				</div>
+				<div class="date">
+					Posted by <span class="b">',$new['author'],'</span> on ',
+					date ('Y-m-d \a\t H:i', $new['date']);
+	if ($new['date'] < $new['mdate']) {
+		echo ' &mdash; last updated by <span class="b">',$new['mauthor'],'</span> on ',
+			date ('Y-m-d \a\t H:i', $new['mdate']);
 	}
 	echo '
-				</p>
-			</div>';
-	if ($more)
-	{
-		echo xmlstr_shortcut ($new['content'], NEWS_PREVIEW_SIZE,
-		                      '… <a href="'.$permalink.'" class="more">lire la suite</a>');
+				</div>
+			</div>
+			<div class="links">
+				<ul>
+					<li><a href="',$permalink,'">Permalink</a></li>';
+	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
+		echo '<li><a href="',UrlTable::admin_news ('edit', $new['id']),'" ',
+			'onclick="return news_edit (\'n',$new['id'],'\', this);">Edit</a></li>';
+		echo '<li><a href="',UrlTable::admin_news ('rm', $new['id']),'" ',
+			'onclick="return news_delete (\'',$new['id'],'\');">Delete</a></li>';
 	}
-	else
-		echo $new['content'];
 	echo '
-			<div class="clearer"></div>
+				</ul>
+			</div>
 		</div>
 	</div>';
 }
@@ -97,23 +100,11 @@ function print_news ($start=0) {
 	// pour permetre aux admins d'ajouter une news
 	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 		echo '
-		<div class="fleft">
-			[<a href="',UrlTable::admin_news ('new'),'"
-			    onclick="return toggle_display (\'fld_nnew\', \'block\');">Ajouter une news</a>]
+		<div>
+			<a href="',UrlTable::admin_news ('new'),'"
+			    onclick="return toggle_display (\'fld_nnew\', \'block\');"><button>Add a news</button></a>
 		</div>';
 	}
-	
-	echo '
-	<div class="links right">
-		Flux
-			<a href="',NEWS_ATOM_FEED_FILE,'" title="S\'abonner au flux Atom">',
-				'Atom&nbsp;<img src="styles/',STYLE,'/feed-atom.png" alt="Flux Atom" />',
-			'</a>
-		/
-		<a href="',NEWS_RSS_FEED_FILE,'" title="S\'abonner au flux RSS">',
-			'RSS&nbsp;<img src="styles/',STYLE,'/feed-rss.png" alt="Flux RSS" />',
-		'</a>
-	</div>';
 	
 	if (User::has_rights (ADMIN_LEVEL_NEWS))
 	{
@@ -131,14 +122,17 @@ function print_news ($start=0) {
 
 function print_page_browser ($current, $limit=2)
 {
-	$bstr = '';
+	$sep = ' | ';
 	$n_news = News::get_n ();
 	$n_pages = ceil ($n_news / NEWS_BY_PAGE);
 	$has_prev = ($current > 0) ? true : false;
 	$has_next = ($n_pages > $current + 1) ? true : false;
 	
-	if ($has_prev)
-		echo '<a href="',UrlTable::news_page ($current),'">&lt;</a> ';
+	if ($has_prev) {
+		echo '<a href="',UrlTable::news_page ($current),'">newer</a>';
+	} else {
+		echo '<span class="disabled">newer</span>';
+	}
 	
 	$was_ok = true;
 	for ($i=0; $i < $n_pages; $i++)
@@ -150,18 +144,21 @@ function print_page_browser ($current, $limit=2)
 		    ($i < $current && $limit >= $current - 1 - $limit) ||
 		    ($i > $current && $n_pages - 1 - $limit <= $current + 1 + $limit)) {
 			if ($i == $current)
-				echo $i + 1, ' ';
+				echo $sep,'<span class="current">', $i + 1, '</span>';
 			else
-				echo '<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a> ';
+				echo $sep,'<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a>';
 			$was_ok = true;
 		} else if ($was_ok) {
-			echo '... ';
+			echo $sep,'...';
 			$was_ok = false;
 		}
 	}
 	
-	if ($has_next)
-		echo ' <a href="',UrlTable::news_page ($current + 1 + 1),'">&gt;</a>';
+	if ($has_next) {
+		echo $sep,'<a href="',UrlTable::news_page ($current + 1 + 1),'">older</a>';
+	} else {
+		echo $sep,'<span class="disabled">older</span>';
+	}
 }
 
 function print_one_news ($id)
@@ -196,7 +193,13 @@ function print_home ()
 	
 ?>
 	<div id="presentation">
-		<h2>News</h2>
+		<h2>News
+			<span class="fright">
+				<a href="<?php echo NEWS_ATOM_FEED_FILE; ?>" title="Subscribe to the Atom Feed">
+					<img src="styles/<?php echo STYLE; ?>/feed.png" alt="Atom Feed" />
+				</a>
+			</span>
+		</h2>
 		<p>
 			What's up in the SCEngine's world?  Here you'll find out!
 		</p>
@@ -210,7 +213,7 @@ function print_home ()
 		print_news ($start_news * NEWS_BY_PAGE);
 		
 		/* buttons for other pages */
-		echo '<div class="newslinks">';
+		echo '<div class="paging">';
 		print_page_browser ($start_news, 2);
 		echo '</div>';
 		

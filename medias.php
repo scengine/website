@@ -237,17 +237,14 @@ function print_medias_internal (&$medias, $bytags=false)
 				<div class="links">
 					[<a class="noicon" href="',UrlTable::medias ($media['id'], false, $media['desc']),'#watch" title="Voir « ',$name,' »">Voir</a>]
 					[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
-				</div>';
-			/* tags if any */
-			echo '<div class="links tags">Tags&nbsp;: ';
+					<div class="tags">
+						Tags: ';
+			/* tags */
 			print_tag_links ($media['type'], $media['tags']);
-			echo '</div>';
-			/* comment if any *//*
-			if (! empty ($media['comment']))
-			{
-				echo '<div class="comment"><p>',$media['comment'],'</p></div>';
-			}*/
-			echo '</div>';
+			echo '
+					</div>
+				</div>
+			</div>';
 		}
 	}
 }
@@ -432,7 +429,7 @@ else if (isset ($_GET['showtag']))
 		{
 			echo '
 			<div class="admin">
-				[<a href="',UrlTable::admin_medias ('new'),'">Ajouter un média</a>]
+				<a href="',UrlTable::admin_medias ('new'),'"><input type="button" value="Add a Media"/></a>
 			</div>';
 		}
 		

@@ -44,21 +44,23 @@ class TypedDialog extends Dialog {
 			throw new Exception ('Invalid type');
 	}
 	
-	/* this two overrides are to remove title set possibility */
-	public function set_message ($msg, $dontuse=null) {
-		parent::set_message ($msg);
-	}
-	public function add_message ($msg, $dontuse=null) {
-		parent::add_message ($msg);
+	private function title_from_type ($type)
+	{
+		switch ($type) {
+			case DIALOG_TYPE_ERROR:		return 'Error';
+			case DIALOG_TYPE_INFO:		return 'Information';
+			case DIALOG_TYPE_WARNING:	return 'Warning';
+		}
+		return null;
 	}
 	
 	public function set_typed_message ($type, $msg) {
 		$this->set_type ($type);
-		$this->set_message ($msg);
+		$this->set_message ($msg, $this->title_from_type ($type));
 	}
 	public function add_typed_message ($type, $msg) {
 		$this->set_type ($type);
-		$this->add_message ($msg);
+		$this->add_message ($msg, $this->title_from_type ($type));
 	}
 	
 	public function set_error_message ($msg) {
@@ -83,23 +85,9 @@ class TypedDialog extends Dialog {
 	}
 	
 	public function flush () {
-		switch ($this->type) {
-			case DIALOG_TYPE_NONE:
-				throw new Exception ('Dialog type cannot be DIALOG_TYPE_NONE for printing');
-				return;
-			case DIALOG_TYPE_ERROR:
-				$this->set_title ('Erreur');
-				break;
-			case DIALOG_TYPE_INFO:
-				$this->set_title ('Information');
-				break;
-			case DIALOG_TYPE_WARNING:
-				$this->set_title ('Attention');
-				break;
+		if (! $this->title) {
+			$this->set_title ($this->title_from_type ($this->type));
 		}
-		
-		/* hack to set the right title for the message */
-		$this->messages[0][1] = $this->title;
 		
 		parent::flush ();
 	}

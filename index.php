@@ -23,177 +23,192 @@
  * index & news
  */
 
-define ('TITLE', 'Accueil');
-define ('NEWS_PREVIEW_SIZE', 250);
-define ('NEWS_BY_PAGE', 3);
+define ('TITLE', 'Home');
+define ('NEWS_PREVIEW_SIZE', 350);
 
 require_once ('include/defines.php');
+require_once ('lib/medias.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
-require_once ('lib/BCode.php');
+require_once ('lib/FluxBB.php');
+require_once ('lib/FeedReader.php');
+require_once ('lib/FeedReaderAtom.php');
+require_once ('lib/Metadata.php');
+require_once ('lib/Template.php');
 
-//$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
-/** prints a news
- * \param $new the array of the news
- * \param $more whether to trunctate content and show 'more...' if news content
- *        is longer than the configured size
- */
-function print_new (array &$new, $more=false)
-{
-	$permalink = UrlTable::news ($new['id'], $new['title']);
+abstract class IndexModule {
+	public $name = null;
+	public $links = array ();
+	public $feed = null;
+	public $extra_classes = array ();
 	
-	echo '
-	<div class="new">';
+	protected $view;
 	
-	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-		echo '
-		<div class="admin">
-			[<a href="',UrlTable::admin_news ('edit', $new['id']),'"
-			    onclick="return news_edit (\'n',$new['id'],'\', this);">Éditer</a>]
-			[<a href="',UrlTable::admin_news ('rm', $new['id']),'"
-			    onclick="return news_delete (\'',$new['id'],'\');">Supprimer</a>]
-		</div>';
-		News::print_form ($new['title'], $new['source'], 'edit', $new['id'],
-		                  null, '', 'style="display:none;"');
-	}
+	protected abstract function get_tpl_vars ();
 	
-	echo '
-		<div id="mn',$new['id'],'">
-			<h3 id="n',$new['id'],'">
-				<a href="',$permalink,'">',
-					escape_html_quotes ($new['title']),
-				'</a>
-			</h3>
-			<div class="author">
-				<p>
-					Par <span class="b">',$new['author'],'</span> le ',
-					date ('d/m/Y à H:i', $new['date']);
-	if ($new['date'] < $new['mdate'])
+	public function display ()
 	{
-		echo ' &ndash; édité par <span class="b">',$new['mauthor'],
-			'</span> le ',date ('d/m/Y à H:i', $new['mdate']);
-	}
-	echo '
-				</p>
-			</div>';
-	if ($more)
-	{
-		echo xmlstr_shortcut ($new['content'], NEWS_PREVIEW_SIZE,
-		                      '… <a href="'.$permalink.'" class="more">lire la suite</a>');
-	}
-	else
-		echo $new['content'];
-	echo '
-			<div class="clearer"></div>
-		</div>
-	</div>';
-}
-
-function print_news ($start=0) {
-	$news = News::get ($start, NEWS_BY_PAGE);
-	
-	// pour permetre aux admins d'ajouter une news
-	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-		echo '
-		<div class="fleft">
-			[<a href="',UrlTable::admin_news ('new'),'"
-			    onclick="return toggle_display (\'fld_nnew\', \'block\');">Ajouter une news</a>]
-		</div>';
-	}
-	
-	echo '
-	<div class="links right">
-		Flux
-			<a href="',NEWS_ATOM_FEED_FILE,'" title="S\'abonner au flux Atom">',
-				'Atom&nbsp;<img src="styles/',STYLE,'/feed-atom.png" alt="Flux Atom" />',
-			'</a>
-		/
-		<a href="',NEWS_RSS_FEED_FILE,'" title="S\'abonner au flux RSS">',
-			'RSS&nbsp;<img src="styles/',STYLE,'/feed-rss.png" alt="Flux RSS" />',
-		'</a>
-	</div>';
-	
-	if (User::has_rights (ADMIN_LEVEL_NEWS))
-	{
-		// new news form is displayed only by JS, then without JS it doesn't bother
-		echo '<div class="new" id="fld_nnew" style="display: none">';
-			News::print_form ('', '', 'new', 'new');
-		echo '</div>';
-	}
-	
-	foreach ($news as &$new) {
-		print_new ($new);
+		$extra_classes = '';
+		foreach ($this->extra_classes as $class) {
+			$extra_classes .= ' '.$class;
+		}
+		
+		$data_tpl = new FileTemplate ($this->view, $this->get_tpl_vars ());
+		$tpl = new FileTemplate ('views/index-modules/module.tpl',
+			array (
+				'STYLE'         => STYLE,
+				'extra_classes' => $extra_classes,
+				'title'         => $this->name,
+				'feed'          => $this->feed,
+				'data'          => (string) $data_tpl,
+				'links'         => $this->links
+			)
+		);
+		
+		echo $tpl;
 	}
 }
 
-
-function print_page_browser ($current, $limit=2)
-{
-	$bstr = '';
-	$n_news = News::get_n ();
-	$n_pages = ceil ($n_news / NEWS_BY_PAGE);
-	$has_prev = ($current > 0) ? true : false;
-	$has_next = ($n_pages > $current + 1) ? true : false;
+class IndexModuleScreenshot extends IndexModule {
+	public $name = 'Random Screenshot';
+	protected $view = 'views/index-modules/screenshot.tpl';
 	
-	if ($has_prev)
-		echo '<a href="',UrlTable::news_page ($current),'">&lt;</a> ';
-	
-	$was_ok = true;
-	for ($i=0; $i < $n_pages; $i++)
+	protected function get_tpl_vars ()
 	{
-		if ($i < $limit ||
-		    abs ($i - $current) <= $limit ||
-		    $i + $limit >= $n_pages ||
-		    /* only hide page if it would save > 1 link */
-		    ($i < $current && $limit >= $current - 1 - $limit) ||
-		    ($i > $current && $n_pages - 1 - $limit <= $current + 1 + $limit)) {
-			if ($i == $current)
-				echo $i + 1, ' ';
-			else
-				echo '<a href="',UrlTable::news_page ($i + 1),'">',$i + 1,'</a> ';
-			$was_ok = true;
-		} else if ($was_ok) {
-			echo '... ';
-			$was_ok = false;
+		$type = MediaType::SCREENSHOT;
+		
+		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+		$db->select_table (MEDIA_TABLE);
+		
+		$db->random_row ('`id`', '`type`=\''.$type.'\'');
+		$media = $db->fetch_response ();
+		
+		if ($media) {
+			media_unescape_db_array ($media);
+			
+			return array (
+				'link'        => UrlTable::medias ($media['id'], true),
+				'image'       => MEDIA_DIR_R.'/'.$media['tb_uri'],
+				'description' => $media['desc']
+			);
+		} else {
+			return array (
+				'link'        => null,
+				'image'       => null,
+				'description' => null
+			);
+		}
+	}
+}
+
+class IndexModuleForum extends IndexModule {
+	protected $view = 'views/index-modules/forum.tpl';
+	
+	public function __construct () {
+		$this->name = 'Last Forum Posts';
+		$this->links = array (BSE_BASE_FLUXBB_PATH => 'Visit the Forum');
+		$this->feed = FluxBB::get_recent_feed ();
+	}
+	
+	protected function get_tpl_vars ()
+	{
+		return array ('items' => FluxBB::get_recent_list (20));
+	}
+}
+
+class IndexModuleNews extends IndexModule {
+	protected $view = 'views/index-modules/news.tpl';
+	
+	public function __construct () {
+		$this->name = 'Last News';
+		$this->links = array (UrlTable::news () => 'Browse News');
+		$this->feed = NEWS_ATOM_FEED_FILE;
+	}
+	
+	protected function get_tpl_vars ()
+	{
+		$news = News::get (0, 1);
+		$news = $news[0];
+		
+		$permalink = UrlTable::news ($news['id'], $news['title']);
+		
+		return array (
+			'title' => $news['title'],
+			'content' => xmlstr_shortcut ($news['content'], NEWS_PREVIEW_SIZE,
+			                              '… <a href="'.$permalink.'" class="more">lire la suite</a>')
+		);
+	}
+}
+
+class IndexModuleCommits extends IndexModule {
+	protected $view = 'views/index-modules/commits.tpl';
+	
+	public function __construct ($feed, $links, $title = 'Last Commits')
+	{
+		$this->name = $title;
+		$this->feed = $feed;
+		if (is_array ($links)) {
+			$this->links = $links;
+		} else {
+			$this->links = array ($links => 'Browse Code');
 		}
 	}
 	
-	if ($has_next)
-		echo ' <a href="',UrlTable::news_page ($current + 1 + 1),'">&gt;</a>';
-}
-
-function print_one_news ($id)
-{
-	$news = News::get_by_id ($id);
-?>
-	<div id="content" class="nopresentation">
-		<?php
+	protected function get_tpl_vars ()
+	{
+		$reader = new FeedReaderAtom ($this->feed);
+		$items = $reader->get_items ();
 		
-		if ($news !== false)
-			print_new ($news);
-		else
-		{
-			echo '
-			<h2>Erreur&nbsp;!</h2>
-			<p>
-				La news que vous cherchez n\'existe pas, a été supprimée ou déplacée.
-			</p>
-			<p><a href="',UrlTable::news (),'">Retour à la liste des news</a></p>';
+		foreach ($items as &$item) {
+			/* provide formatted date */
+			$item['date'] = date ('Y-m-d H:i', $item[FEED_KEY_PUBLISHED]);
 		}
 		
-		?>
-	</div>
-<?php
+		return array (
+			'items' => $items
+		);
+	}
 }
 
-function print_home ()
-{
-	$start_news = (isset ($_GET['page'])) ? (int)($_GET['page'] - 1) : 0;
-	if ($start_news < 0)
-		$start_news = 0;
+class IndexModuleVersion extends IndexModule {
+	public $name = 'Latest Version';
+	protected $view = 'views/index-modules/version.tpl';
 	
+	protected function get_tpl_vars ()
+	{
+		global $MDI;
+		
+		return array (
+			'version' => $MDI->get_version (),
+			'url'     => UrlTable::downloads ()
+		);
+	}
+}
+
+class IndexModuleMainImage extends IndexModule {
+	private $image_url;
+	protected $view = 'views/index-modules/main-image.tpl';
+	public $extra_classes = array ('image');
+	
+	public function __construct ($url)
+	{
+		$this->image_url = $url;
+	}
+	
+	protected function get_tpl_vars ()
+	{
+		return array ('url' => $this->image_url);
+	}
+}
+
+
+
+/* Page body */
+
+require_once ('include/top.minc');
+
 ?>
 	<div id="presentation">
 		<h2>Bienvenue sur le site officiel du SCEngine</h2>
@@ -206,36 +221,55 @@ function print_home ()
 		</p>
 	</div>
 	
-	<div id="content"><!--
-		<h2>Dernières news</h2>-->
+	<div id="content">
 		
-		<?php
+		<div class="main-modules">
+			<?php
+				$modules = array (
+					new IndexModuleMainImage (MEDIA_DIR_R.'/screens/sce009a_011_02-03-09.jpg'
+					                          /*MEDIA_DIR_R.'/screens/sce-0.1.0-deferredshadows.png'*/),
+					new IndexModuleNews ()
+				);
+				
+				foreach ($modules as &$module) {
+					$module->display ();
+				}
+			?>
+		</div>
 		
-		print_news ($start_news * NEWS_BY_PAGE);
+		<div class="modules">
+			<?php
+			
+			$columns = array (
+				array (
+					new IndexModuleCommits (BSE_BASE_URL . UrlTable::feed ('commits.atom'),
+					                        array (
+					                          'http://git.tuxfamily.org/?p=gitroot/scengine/utils.git' => 'Utils',
+					                          'http://git.tuxfamily.org/?p=gitroot/scengine/core.git' => 'Core',
+					                          'http://git.tuxfamily.org/?p=gitroot/scengine/renderergl.git' => 'Renderer-GL',
+					                          'http://git.tuxfamily.org/?p=gitroot/scengine/interface.git' => 'Interface'
+					                        ),
+					                        'Last Commits')
+				),
+				array (
+					new IndexModuleVersion (),
+					new IndexModuleForum ()
+				)
+			);
+			
+			foreach ($columns as &$column) {
+				echo '<div class="column">';
+				foreach ($column as &$module) {
+					$module->display ();
+				}
+				echo '</div>';
+			}
+			
+			?>
+			<div class="modules-end"></div>
+		</div>
 		
-		/* buttons for other pages */
-		echo '<div class="newslinks">';
-		print_page_browser ($start_news, 2);
-		echo '</div>';
-		
-		?>
-	
 	</div>
 <?php
-}
-
-/***********/
-
-
-require_once ('include/top.minc');
-
-if (isset ($_GET['shownews']) && settype ($_GET['shownews'], 'int'))
-{
-	print_one_news ($_GET['shownews']);
-}
-else
-{
-	print_home ();
-}
 
 require_once ('include/bottom.minc');

@@ -21,176 +21,79 @@
 
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
-require_once ('lib/engine_news.php');
-require_once ('lib/random_screenshot.php');
 require_once ('lib/User.php');
 require_once ('lib/CounterIP.php');
-require_once ('lib/FluxBB.php');
-require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 
 ?>
-		</div>
-		
-		<div id="lmenu">
-			
-			<div class="lsmenu">
-				<h3>Image aléatoire</h3>
-				<?php random_screenshot_print (); ?>
+		</div> <!-- body -->
+
+		<div id="footer">
+			<div class="module">
+				<h3>Support</h3>
+				<ul>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>/forums/">Forum</a></li>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>/doc/">Documentation</a></li>
+						<li><a href="<?php echo BSE_BASE_PATH, UrlTable::tuto (); ?>">Tutorial</a></li>
+				</ul>
 			</div>
 			
-			<!-- derniers posts du forum -->
-			<?php
-			$latest_posts = FluxBB::get_recent_list (8);
-			if ($latest_posts !== false) {
-				echo '
-				<div class="lsmenu">
-					<h3>Posts récents</h3>
-					<ul>',
-						$latest_posts,
-					'</ul>
-				</div>';
-			}
-			?>
-			
-			<!-- liste de moteurs 3D libres -->
-			<!--div class="lsmenu">
-				<h3>Moteurs 3D libres</h3>
+			<!--div class="module">
+				<h3>Contributing</h3>
 				<ul>
-					<li><span class="b"><a href="http://www.ogre3d.org">Ogre</a></span>&nbsp;: moteur en C++ mature compatible OpenGL et DirectX.</li>
-					<li><span class="b"><a href="http://irrlicht.sourceforge.net/">Irrlicht</a></span>&nbsp;: codé en C++, ce moteur est également compatible avec OpenGL et DirectX.</li>
-					<li><span class="b"><a href="http://www.crystalspace3d.org/">Crystal Space</a></span>&nbsp;: ce moteur 3D, sous licence LGPL, fonctionne uniquement avec OpenGL.</li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>/tracker">Bug tracker</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>/docs/contributing">How to help?</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>/about/donation">Make a donation</a></li>
 				</ul>
 			</div-->
 			
-			<!-- partenaires -->
-			<div class="lsmenu">
-				<h3><?php echo $MDI->get_name (); ?> avec...</h3>
-				<ul class="nolist">
-					<li><img src="images/icons/gnu.png" alt="-" title="GNU"/>
-						&nbsp;<a href="http://www.gnu.org/">GNU</a></li>
-					<li><img src="images/icons/debian.png" alt="-" title="Debian"/>
-						&nbsp;<a href="http://www.debian.org">Debian GNU/Linux</a></li>
-					<li><img src="images/icons/tf.png" alt="-" title="TuxFamily"/>
-						&nbsp;<a href="http://www.tuxfamily.org">TuxFamily</a></li>
-					<li><img src="images/icons/ogl.png" alt="-" title="OpenGL"/>
-						&nbsp;<a href="http://opengl.org">OpenGL</a></li>
-					<li><img src="images/icons/devil.png" alt="-" title="DevIL"/>
-						&nbsp;<a href="http://openil.sourceforge.net/">DevIL</a></li>
-					<li><img src="images/icons/blender.png" alt="-" title="Blender"/>
-						&nbsp;<a href="http://www.blender.org/">Blender</a></li>
-					<li><img src="images/icons/php.png" alt="-" title="PHP"/>
-						&nbsp;<a href="http://www.php.net/">PHP</a></li>
-					<!-- <li><img src="images/icons/gimp.png" alt="-" title="Gimp"/>
-						&nbsp;<a href="http://www.gimp.org/">Gimp</a></li> -->
-				</ul>
-				<p class="center">
-					<a href="http://wikimediafoundation.org/wiki/Donate/fr" class="noicon">
-						<img alt="Wikipedia Affiliate Button"
-							src="http://upload.wikimedia.org/wikipedia/foundation/c/ca/2008_fundraiser_micro_button-fr.png" />
-					</a>
-				</p>
-				<p class="center">
-					<a href="http://stopsoftwarepatents.eu/481000979610/" class="noicon"
-					   title="Non aux brevets logiciel">
-						<img src="http://stopsoftwarepatents.eu/banner/481000979610/ssp-66-15.gif"
-						     alt="StopSoftwarePatents.eu Petition Banner" />
-					</a> 
-				</p>
-			</div>
-			
-			<!-- login/logout -->
-			<?php
-				if (User::get_logged ()) {
-			?>
-			<div class="lsmenu">
-				<h3>Administration</h3>
-				<p>
-					Bienvenue <span class="b"><?php echo User::get_name ();?></span>&nbsp;!
-				</p>
+			<div class="module">
+				<h3>Miscellaneous</h3>
 				<ul>
-					<li><a href="<?php echo UrlTable::admin (); ?>">Administration</a></li>
-					<li><a href="<?php echo UrlTable::admin ('actualités'); ?>">Gérer les news</a></li>
-					<li><a href="<?php echo UrlTable::admin ('medias'); ?>">Gérer les médias</a></li>
-					<li><a href="<?php echo UrlTable::admin ('administrateurs'); ?>">Gérer les admins</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH, UrlTable::license (); ?>">License</a></li>
 				</ul>
-				<p>
-					<a href="<?php echo UrlTable::logout (); ?>"
-						onclick="window.location.replace(this.href)">
-						<input type="button" value="Déconnexion" />
-					</a>
-				</p>
 			</div>
-			<?php
-				} // fin de vérification admin
-				else {
-			?>
-			<div class="lsmenu">
-				<h3>Connexion</h3>
-				<form method="post" action="<?php echo UrlTable::login (); ?>">
-					<p>
-						<label>Nom d'utilisateur&nbsp;: <input type="text" name="username" /></label><br />
-						<label>Mot de passe&nbsp;: <input type="password" name="password" /></label><br />
-						<label><input type="checkbox" name="remember" />Se souvenir de moi</label><br />
-						<input type="submit" value="Valider" />
-					</p>
-				</form>
+			
+			<div class="module">
+				<h3>Administration</h3>
+				<ul>
+				<?php if (User::get_logged ()) { ?>
+					<li><a href="<?php echo UrlTable::admin (); ?>">Administration</a></li>
+					<li><a href="<?php echo UrlTable::admin ('actualités'); ?>">Manage news</a></li>
+					<li><a href="<?php echo UrlTable::admin ('medias'); ?>">Manage medias</a></li>
+					<li><a href="<?php echo UrlTable::admin ('administrateurs'); ?>">Manage users</a></li>
+					<li><a href="<?php echo UrlTable::logout (); ?>">Log out</a></li>
+				<?php } else { ?>
+					<li><a href="<?php echo UrlTable::login (); ?>">Log in</a></li>
+				<?php } ?>
+				</ul>
 			</div>
+			
+			<div class="clearer"/>
+			
+			<!--p><a href="http://validator.w3.org/check?uri=referer">xHTML 1.0</a></p-->
+			<p>
+				<a href="<?php echo BSE_TAR_FILE; ?>">BanSE</a>,
+				Copyright &copy; 2007-2012 Colomban Wendling &lt;<?php echo obfuscate_email ('ban@herbesfolles.org'); ?>&gt;
+				This whole site is licensed under the GNU GPL v3 or later.
+				See <a href="<?php echo LICENSE_URL; ?>" accesskey="8">license</a> for more details.
+				&mdash;
+				Kindly hosted by <a href="http://www.tuxfamily.org">TuxFamily</a>.
+			</p>
+			
 			<?php
-				}
-				
-				$compteur = new CounterIP (false);
+			/* visitor counter */
+				$counter = new CounterIP (false);
 				if (User::get_logged ()) {
-			?>
-			<div class="lsmenu">
-				<h3>Compteur</h3>
-				<p>
-				<?php
-					$n = $compteur->get_n_total ();
-					$nv = $compteur->get_n_ip ();
+					$n = $counter->get_n_total ();
+					$nv = $counter->get_n_ip ();
 					
-					echo 'Il y a eu ', $n, ' visite', ($n > 1) ? 's' : '',
-					     ' par ', $nv, ' visiteur', ($nv > 1) ? 's' : '', ' sur le site.';
-				?>
-				</p>
-			</div>
-			<?php
-				} // fin du compteur si connecté
-				else {
-					$compteur->count ();
+					echo '<p>There was ',$n,' visits from ',$nv,' visitors</p>';
+				} else {
+					$counter->count ();
 				}
-				unset ($compteur);
+				unset ($counter);
 			?>
-			
-		</div>
-
-		<div id="rmenu">
-			<!-- dernières versions du moteur -->
-			<div class="rsmenu">
-				<h3>Dernière version</h3>
-				<p>
-					 La version <span class="b"><a href="<?php echo UrlTable::downloads (); ?>"><?php echo $MDI->get_version (); ?></a></span> est disponible !
-				</p>
-			</div>
-			
-			<div class="rsmenu">
-				<h3>Développement</h3>
-				<?php
-					print_engine_news ();
-				?>
-			</div>
-		</div>
-
-		<div id="footerbox">
-			<div id="footer">
-				<p><a href="http://validator.w3.org/check?uri=referer">xHTML 1.0</a></p>
-				<p>
-					<a href="<?php echo BSE_TAR_FILE; ?>">BanSE</a>,
-					Copyright © 2007-2012 Colomban Wendling &lt;<span>ban</span>[at]<span>herbesfolles</span>[dot]<span>org</span>&gt;<br />
-					This whole site is licensed under the GNU GPL v3 or later.
-					See <a href="<?php echo LICENSE_URL; ?>" accesskey="8">license</a> for more details.
-				</p>
-			</div>
 		</div>
 
 	</body>

@@ -1,0 +1,98 @@
+/* LICENSE
+ * 
+ * BanSE - a site base (designed to be the SCEngine website)
+ * Copyright (C) 2007-2009 Colomban "Ban" Wendling <ban@herbesfolles.org>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+body {
+	background-color: #fcfcff;
+	color: #525252;
+	font-family: Georgia, Verdana, serif;
+}
+* {
+	margin: 0;
+	padding: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-family: Georgia, Verdana, serif;
+	padding: 0.5em;
+text-align: center;
+}
+a {
+	text-decoration: none;
+	color: #0081BF;
+}
+p {
+	padding: 5px 0;
+	text-align: justify;
+}
+
+
+.message {
+	margin: 15% auto 0 auto;
+	background-color: #E3E3E6;
+	border: 2px solid #C7C7C7;
+	padding: 0 10px 10px 10px;
+	width: 33%;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+
+	text-align: justify;
+}
+.message>h2 {
+	padding: 0 10px;
+	margin: 0.5em -10px 0.5em -10px;
+	background-color: #525252;
+	color: #FCFCFF;
+}
+.message>h2:first-child {
+	margin-top: 0;
+	border-bottom: none;
+	border-radius: 8px 8px 0 0;
+	-moz-border-radius: 8px 8px 0 0;
+	-webkit-border-radius: 8px 8px 0 0;
+}
+
+.small { font-size: 70%; }
+.center { text-align: center; }
+
+label {
+	font-weight: bold;
+}
+.login input[type=text],
+.login input[type=password] {
+  width: 95%;
+}
+.login input {
+	padding: 0.2em 0.5em;
+	border: 2px solid #C7C7C7;
+	border-radius: 5px;
+	background-color: #fcfcff;
+	color: #525252;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.login input:hover,
+.login input:focus {
+	border-color: #0081BF;
+}
+.login input[type=submit] {
+	background-color: #0081BF;
+	color: #FCFCFF;
+	font-weight: bold;
+}

@@ -29,10 +29,26 @@ require_once ('lib/TypedDialog.php');
 // adresse de redirection par défaut, utilisée si aucune autre n'est trouvée
 $refresh = UrlTable::home ();
 
+function is_local_uri ($uri)
+{
+	/* skip scheme */
+	$server = strstr ($uri, "://");
+	if ($server === false) {
+		/* not a valid URI */
+		return false;
+	} else {
+		$server = substr ($server, 3);
+		return str_has_prefix ($uri, $_SERVER['SERVER_NAME']);
+	}
+}
+
+if (isset ($_POST['redirect']) && is_local_uri ($_POST['redirect'])) {
+	$refresh = $_POST['redirect'];
+}
 // on vérifie que le client a donné une adresse de page précédante
-if ($_SERVER['HTTP_REFERER']) {
+else if (isset ($_SERVER['HTTP_REFERER'])) {
 	// on vérifie que la page pérécdante correspond à une page du site
-	if (str_has_prefix ($_SERVER['HTTP_REFERER'], 'http://'.$_SERVER['SERVER_NAME'])) {
+	if (is_local_uri ($_SERVER['HTTP_REFERER'])) {
 		$refresh = '';
 		
 		// si l'utilisateur viens d'une page d'admin, il serait redirigé vers un 404
@@ -64,20 +80,43 @@ if (isset ($_GET['act']) && $_GET['act'] == 'logout') {
 	else {
 		$dialog->add_error_message ('Erreur lors de la désconnexion.');
 	}
+} else if (User::get_logged ()) {
+	$dialog->add_info_message ('You are already connected.');
 }
 // login
 else {
-	// 2592000 : 60 * 60 * 24 * 30 = 1 month of login
-	// 0 : session time
-	if (! User::login (($_POST['remember']) ? time () + 2592000 : 0)) {
-		/* tring to find what's the error */
-		if($_POST['username'] || $_POST['password'])
-			$dialog->add_error_message ('Mot de passe ou login faux.');
-		else
-			$dialog->add_error_message ('Pas de login ou mot de passe.');
+	$show_form = true;
+	
+	if (isset ($_POST['username'], $_POST['password'])) {
+		// 2592000 : 60 * 60 * 24 * 30 = 1 month of login
+		// 0 : session time
+		if (! User::login (isset ($_POST['remember']) ? time () + 2592000 : 0)) {
+			$dialog->add_error_message ('Invalid username or password.');
+		}
+		else {
+			$dialog->add_info_message ('Login successful');
+			$show_form = false;
+		}
 	}
-	else
-		$dialog->add_info_message ('Login réussi');
+	
+	if ($show_form) {
+		$form = '
+			<h2>Log in</h2>
+			<form method="post" action="' . UrlTable::login () . '" class="login">
+				<p>
+					<label>Username: <input type="text" name="username" /></label><br />
+					<label>Password: <input type="password" name="password" /></label><br />
+					<label><input type="checkbox" name="remember" />Remember me</label><br />
+					<input type="submit" value="Log in" />
+					<input type="hidden" name="redirect" value="'.$refresh.'" />
+				</p>
+			</form>
+		';
+		
+		$dialog->set_title ('Log in');
+		$dialog->set_redirect (false);
+		$dialog->add_custom_data ($form);
+	}
 }
 
 

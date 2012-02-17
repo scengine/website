@@ -100,17 +100,17 @@ function print_backbutton ($label, $url, $title=null, $back=1)
 	print_button_full ($label, $url, $title, 'window.history.back ('.$back.'); return false;');
 }
 
-function print_button_js ($label, $js, $title=null)
+function print_button_js ($label, $js, $title=null, $accesskey=null)
 {
 	/* the double click handler is to fix a Konqueror bug/problem:
 	 * it submits on click unless JS returns false; but even if there's an onclick
 	 * handler and no ondblclick one, it use return value of ondblclick on double
 	 * click.
 	 */
-	echo '
-	<button onclick="',$js,'; return false;" ondblclick="return false;"
+	echo '<button onclick="',$js,'; return false;" ondblclick="return false;"
 		', $title !== null ? 'title="'.htmlspecialchars ($title, ENT_COMPAT, 'UTF-8').'"' : '','
-	  >',
+		', $accesskey !== null ? 'accesskey="'.$accesskey.'"' : '','
+		>',
 		$label,
 	'</button>';
 	//print_button_full ($label, '#', $title, $js);

@@ -29,6 +29,7 @@ define ('DIALOG_REDIRECT_TIME', 1);
 class Dialog {
 	protected $title = 'Title';
 	protected $messages = array ();
+	protected $custom_data = array ();
 	private $redirect_time = DIALOG_REDIRECT_TIME;
 	private $redirect_url = null;
 	private $redirect = true;
@@ -60,6 +61,13 @@ class Dialog {
 		$this->messages[] = array ($msg, $title);
 	}
 	
+	public function set_custom_data ($data) {
+		$this->custom_data = array ($data);
+	}
+	public function add_custom_data ($data) {
+		$this->custom_data[] = $data;
+	}
+	
 	public function flush () {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -89,8 +97,7 @@ class Dialog {
 	
 	/* print message(s) */
 	foreach ($this->messages as $message) {
-		if ($message[1] !== null)
-		{
+		if (isset ($message[1])) {
 			echo '
 			<h2>',$message[1],'</h2>';
 		}
@@ -100,17 +107,22 @@ class Dialog {
 			</p>';
 	}
 	
+	/* print custom data */
+	foreach ($this->custom_data as $data) {
+		echo $data;
+	}
+	
 	/* print return link */
 	if ($this->redirect) {
 		echo '
-			<p class="center small">
+			<p class="center small links">
 				<a href="',$this->redirect_url,'">Cliquez ici</a> si vous n\'êtes pas
 				redirigé automatiquement.
 			</p>';
 	}
 	else {
 		echo '
-			<p class="center small">
+			<p class="center small links">
 				<a href="',$this->redirect_url,'">Retour</a>
 			</p>';
 	}

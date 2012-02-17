@@ -179,11 +179,11 @@ function print_engine_news ()
 	<div class="links right">
 		Flux
 			<a href="',DEVEL_ATOM_FEED_FILE,'" title="S\'abonner au flux Atom">',
-				'Atom&nbsp;<img src="styles/',STYLE,'/feed-atom.png" alt="Flux Atom" />',
+				'Atom&nbsp;<img src="styles/',STYLE,'/feed.png" alt="Flux Atom" />',
 			'</a>
 		/
 		<a href="',DEVEL_RSS_FEED_FILE,'" title="S\'abonner au flux RSS">',
-			'RSS&nbsp;<img src="styles/',STYLE,'/feed-rss.png" alt="Flux RSS" />',
+			'RSS&nbsp;<img src="styles/',STYLE,'/feed.png" alt="Flux RSS" />',
 		'</a>
 	</div>';
 	

@@ -321,4 +321,14 @@ abstract class UrlTable
 		else
 			return 'logout.html';
 	}
+	
+	public static function feed ($feed)
+	{
+		if (! BSE_ENABLE_URL_REWRITING && ($feed == 'commits.atom' ||
+		                                   $feed == 'commits.rss')) {
+			return 'commits-feed.php?format=' . filename_getext ($feed);
+		}
+		
+		return 'feeds/' . $feed;
+	}
 }
