@@ -20,18 +20,26 @@
 
 // toggle edition of a news (on news page)
 function news_edit (id, el) {
-	var f_e = document.getElementById ("f"+id);
-	var m_e = document.getElementById ("m"+id);
+	var f_id = 'f' + id;
+	var m_id = 'm' + id;
+	var f_e = document.getElementById (f_id);
+	var m_e = document.getElementById (m_id);
+	var hash = null;
 	if (f_e.style.display == "none") {
 		f_e.style.display = "block";
 		m_e.style.display = "none";
 		el.innerHTML = "Annuler";
+		hash = f_id;
 	} else {
 		f_e.style.display = "none";
 		m_e.style.display = "block";
 		el.innerHTML = "Éditer";
+		hash = m_id;
 	}
 	
+	if (hash) {
+		window.location.hash = '#' + hash;
+	}
 	// return false to ease use on oncklick links
 	return false;
 }
