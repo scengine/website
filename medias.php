@@ -223,7 +223,6 @@ function print_medias_internal (&$medias, $bytags=false)
 		
 		foreach ($tagmedias as $media)
 		{
-			$name = basename ($media['uri']);
 			$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
 			$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
 			
@@ -235,8 +234,6 @@ function print_medias_internal (&$medias, $bytags=false)
 					</a>
 				</div>
 				<div class="links">
-					[<a class="noicon" href="',UrlTable::medias ($media['id'], false, $media['desc']),'#watch" title="Voir « ',$name,' »">Voir</a>]
-					[<a class="noicon" href="',$media['uri'],'" title="Lien direct vers « ',$name,' »">Lien direct</a>]
 					<div class="tags">
 						Tags: ';
 			/* tags */
