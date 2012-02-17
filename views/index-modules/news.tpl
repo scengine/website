@@ -1,2 +1,2 @@
-<h4>{title}</h4>
+<h4><a href="{permalink}">{title}</a></h4>
 {content}

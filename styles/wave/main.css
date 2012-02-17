@@ -527,14 +527,17 @@ img.bordered {
 #content .news {
 	margin: 1em 0;
 }
+#content .main-modules .module h4 a,
 #content .news .data h3 a {
 	color: inherit;
 }
+#content .main-modules .module h4 a:after,
 #content .news .data h3 a:after {
 	content: ' ¶';
 	color: #aaa;
 	visibility: hidden;
 }
+#content .main-modules .module h4 a:hover:after,
 #content .news .data h3 a:hover:after {
 	visibility:visible;
 }
