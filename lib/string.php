@@ -74,18 +74,21 @@ function file_getname ($filename)
 
 /* truncate (or not) string to obtain a strin of length up to $maxlen */
 #string strshortcut (string str, int maxlen)
-function strshortcut ($str, $maxlen)
+function strshortcut ($str, $maxlen, $pos=0)
 {
 	if (($len = strlen ($str)) > $maxlen)
 	{
 		$maxlen -= 3; /* substract length of '...' */
-		$part = $maxlen/2;
+		$sep = '...';
 		
-		$nstr = substr ($str, 0, $part);
-		$nstr .= '...';
-		$nstr .= substr ($str, $len - $part);
-		
-		$str = $nstr;
+		if ($pos < 0) {
+			$str = $sep . substr ($str, $len - $maxlen);
+		} else if ($pos > 0) {
+			$str = substr ($str, 0, $maxlen) . $sep;
+		} else {
+			$part = $maxlen/2;
+			$str = substr ($str, 0, $part) . '...' . substr ($str, $len - $part);
+		}
 	}
 	
 	return $str;
