@@ -30,3 +30,6 @@ RewriteRule ^admin-(actualités|medias)-([^-]+)(?:-([0-9]+))?\.html$ admin.php?p
 RewriteRule ^admin-(administrateurs)-([^-]+)(?:-(.+))?\.html$ admin.php?page=$1&action=$2&pseudo=$3 [L]
 # admin-PAGE.html
 RewriteRule ^admin-(.+)\.html$ admin.php?page=$1 [L]
+
+# commits feed
+RewriteRule ^feeds/commits\.(atom|rss)$ commits-feed.php?format=$1
