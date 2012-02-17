@@ -33,7 +33,7 @@ static $D = '[ \t\r\n\v]';
 static $N = '[+-]?[0-9]+';
 $COND = "(?:(${N})|(${V})(?:${D}*\[${D}*(${V}|${N}|'[^']+'|\"[^\"]+\")${D}*\])*)";
 define ('TPL_FOREACH_PATTERN', "/^foreach${D}+(?:(${V})${D}*,${D}*)?(${V})${D}+in${D}+(${COND})$/");
-define ('TPL_IF_PATTERN', "/^if${D}+(${COND})$/");
+define ('TPL_IF_PATTERN', "/^if${D}+(!)?${D}*(${COND})$/");
 define ('TPL_VAR_PATTERN', "/^${COND}$/");
 
 
@@ -135,7 +135,8 @@ abstract class Template
 				array_unshift ($levels, array ());
 				$levels[1][] = array (
 					'if',
-					$matches[1],  /* condition */
+					$matches[1],  /* condition negation */
+					$matches[2],  /* condition */
 					&$levels[0],  /* if branch */
 					array ()      /* else branch */
 				);
@@ -149,7 +150,7 @@ abstract class Template
 				}
 				array_shift ($levels);
 				array_unshift ($levels, array ());
-				$levels[1][$k][3] = &$levels[0];
+				$levels[1][$k][4] = &$levels[0];
 			} else if ($token == '{end}') {
 				array_shift ($levels);
 				if (count ($levels) < 1) {
@@ -263,12 +264,15 @@ abstract class Template
 						break;
 					
 					case 'if':
-						$cond = self::parse_var ($token[1], $vars);
+						$cond = self::parse_var ($token[2], $vars);
+						if ($token[1]) {
+							$cond = ! $cond;
+						}
 						
 						if ($cond) {
-							$str .= self::parse ($token[2], $vars);
-						} else {
 							$str .= self::parse ($token[3], $vars);
+						} else {
+							$str .= self::parse ($token[4], $vars);
 						}
 						break;
 					
