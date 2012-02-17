@@ -26,137 +26,6 @@ require_once ('lib/MyDB.php');
 require_once ('lib/Template.php');
 
 
-/** Feed templates for devel news **/
-/* Atom */
-define ('ATOM_FEED_NEWS_TPL',
-'<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-	<generator>BSE</generator>
-	<icon>{icon}</icon>
-	<title>{title}</title>
-	<link rel="self" href="{self_url}" />
-	<link rel="alternate" href="{alternate_url}" />
-	<updated>{date}</updated>
-	<id>{id}</id>
-	
-{items}
-</feed>
-');
-define ('ATOM_FEED_NEWS_ITEM_TPL',
-'	<entry>
-		<title xml:lang="{lang}">{title}</title>
-		<content type="html" xml:lang="{lang}">
-			{content}
-		</content>
-		<updated>{date}</updated>
-		<link rel="alternate" href="{alternate_url}" />
-		<id>{id}</id>
-		<author>
-			<name>{author}</name>
-		</author>
-	</entry>
-');
-/* RSS */
-define ('RSS_FEED_NEWS_TPL',
-'<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-	<channel>
-		<generator>BSE</generator>
-		<title>{title}</title>
-		<description>{description}</description>
-		<atom:link rel="self" type="application/rss+xml" href="{self_url}" />
-		<link>{site_url}</link>
-		<language>{language}</language>
-		<pubDate>{date}</pubDate>
-		<lastBuildDate>{date}</lastBuildDate>
-		<image>
-			<title>{title}</title>
-			<url>{icon}</url>
-			<link>{site_url}</link>
-		</image>
-		
-{items}
-	</channel>
-</rss>
-');
-define ('RSS_FEED_NEWS_ITEM_TPL',
-'		<item>
-			<title>{title}</title>
-			<link>{alternate_url}</link>
-			<description>
-				{content}
-			</description>
-			<pubDate>{date}</pubDate>
-			<guid isPermaLink="false">{id}</guid>
-		</item>
-');
-
-/** Feed templates for devel news **/
-/* Atom */
-define ('ATOM_FEED_DEVEL_TPL',
-'<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-	<generator>BSE</generator>
-	<icon>{icon}</icon>
-	<title>{title}</title>
-	<link rel="self" href="{self_url}" />
-	<link rel="alternate" href="{alternate_url}" />
-	<updated>{date}</updated>
-	<id>{id}</id>
-	<author>
-		<name>{author}</name>
-	</author>
-	
-{items}
-</feed>
-');
-define ('ATOM_FEED_DEVEL_ITEM_TPL',
-'	<entry>
-		<title xml:lang="{lang}">{title}</title>
-		<content type="html" xml:lang="{lang}">
-			{content}
-		</content>
-		<updated>{date}</updated>
-		<link rel="alternate" href="{alternate_url}" />
-		<id>{id}</id>
-	</entry>
-');
-/* RSS */
-define ('RSS_FEED_DEVEL_TPL',
-'<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-	<channel>
-		<generator>BSE</generator>
-		<title>{title}</title>
-		<description>{description}</description>
-		<atom:link rel="self" type="application/rss+xml" href="{self_url}" />
-		<link>{site_url}</link>
-		<language>{language}</language>
-		<pubDate>{date}</pubDate>
-		<lastBuildDate>{date}</lastBuildDate>
-		<image>
-			<title>{title}</title>
-			<url>{icon}</url>
-			<link>{site_url}</link>
-		</image>
-		
-{items}
-	</channel>
-</rss>
-');
-define ('RSS_FEED_DEVEL_ITEM_TPL',
-'		<item>
-			<title>{title}</title>
-			<link>{alternate_url}</link>
-			<description>
-				{content}
-			</description>
-			<pubDate>{date}</pubDate>
-			<guid isPermaLink="false">{id}</guid>
-		</item>
-');
-
-
 
 /*
  * \brief small wrapper for locked file_put_contents()
@@ -184,36 +53,30 @@ function feed_update_news ()
 		$alternate_url = BSE_BASE_URL.UrlTable::news ($news['id']);
 		$id = /*sha1 (*/$alternate_url/*)*/;
 		
-		$atom_items[] = new StringTemplate (
-			ATOM_FEED_NEWS_ITEM_TPL,
-			array (
-				'lang'          => 'fr',
-				'title'         => $news['title'],
-				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
-				 * the use HTML, even if it is not good as XHTML */
-				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
-				'date'          => date ('c', $news['mdate']),
-				'alternate_url' => $alternate_url,
-				'id'            => $id,
-				'author'        => $news['author']
-			)
+		$atom_items[] = array (
+			'lang'          => 'fr',
+			'title'         => $news['title'],
+			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
+			 * the use HTML, even if it is not good as XHTML */
+			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'date'          => date ('c', $news['mdate']),
+			'alternate_url' => $alternate_url,
+			'id'            => $id,
+			'author'        => $news['author']
 		);
-		$rss_items[] = new StringTemplate (
-			RSS_FEED_NEWS_ITEM_TPL,
-			array (
-				'title'         => $news['title'],
-				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
-				'date'          => date ('r', $news['mdate']),
-				'alternate_url' => $alternate_url,
-				'id'            => $id,
-				'author'        => $news['author']
-			)
+		$rss_items[] = array (
+			'title'         => $news['title'],
+			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'date'          => date ('r', $news['mdate']),
+			'alternate_url' => $alternate_url,
+			'id'            => $id,
+			'author'        => $news['author']
 		);
 	}
 	unset ($db);
 	
-	$atom_data = new StringTemplate (
-		ATOM_FEED_NEWS_TPL,
+	$atom_data = new FileTemplate (
+		'views/feeds/news.atom.tpl',
 		array (
 			'title'         => 'News du SCEngine',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
@@ -224,8 +87,8 @@ function feed_update_news ()
 			'items'         => &$atom_items
 		)
 	);
-	$rss_data = new StringTemplate (
-		RSS_FEED_NEWS_TPL,
+	$rss_data = new FileTemplate (
+		'views/feeds/news.rss.tpl',
 		array (
 			'title'         => 'News du SCEngine',
 			'description'   => 'Site officiel du SCEngine',
@@ -251,34 +114,28 @@ function feed_update_devel ()
 	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', '`id`', 'DESC', 0, 16);
 	while (($news = $db->fetch_response ()) !== false) {
-		$atom_items[] = new StringTemplate (
-			ATOM_FEED_DEVEL_ITEM_TPL,
-			array (
-				'lang'          => 'fr',
-				'title'         => date ('d/m/Y à H\hi', $news['date']),
-				/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
-				 * the use HTML, even if it is not good as XHTML */
-				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
-				'date'          => date ('c', $news['date']),
-				'alternate_url' => BSE_BASE_URL.'index.php#m'.$news['id'],
-				'id'            => BSE_BASE_URL.'index.php#m'.$news['id']
-			)
+		$atom_items[] = array (
+			'lang'          => 'fr',
+			'title'         => date ('d/m/Y à H\hi', $news['date']),
+			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
+			 * the use HTML, even if it is not good as XHTML */
+			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'date'          => date ('c', $news['date']),
+			'alternate_url' => BSE_BASE_URL.'index.php#m'.$news['id'],
+			'id'            => BSE_BASE_URL.'index.php#m'.$news['id']
 		);
-		$rss_items[] = new StringTemplate (
-			RSS_FEED_DEVEL_ITEM_TPL,
-			array (
-				'title'         => date ('d/m/Y à H\hi', $news['date']),
-				'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
-				'date'          => date ('r', $news['date']),
-				'alternate_url' => BSE_BASE_URL.'index.php#m'.$news['id'],
-				'id'            => BSE_BASE_URL.'index.php#m'.$news['id']
-			)
+		$rss_items[] = array (
+			'title'         => date ('d/m/Y à H\hi', $news['date']),
+			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'date'          => date ('r', $news['date']),
+			'alternate_url' => BSE_BASE_URL.'index.php#m'.$news['id'],
+			'id'            => BSE_BASE_URL.'index.php#m'.$news['id']
 		);
 	}
 	unset ($db);
 	
-	$atom_data = new StringTemplate (
-		ATOM_FEED_DEVEL_TPL,
+	$atom_data = new FileTemplate (
+		'views/feeds/devel.atom.tpl',
 		array (
 			'title'         => 'News du développement du SCEngine',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
@@ -290,8 +147,8 @@ function feed_update_devel ()
 			'author'        => 'Yno'
 		)
 	);
-	$rss_data = new StringTemplate (
-		RSS_FEED_DEVEL_TPL,
+	$rss_data = new FileTemplate (
+		'views/feeds/devel.rss.tpl',
 		array (
 			'title'         => 'News du développement du SCEngine',
 			'description'   => 'Site officiel du SCEngine',
