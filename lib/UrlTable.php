@@ -39,6 +39,45 @@ abstract class UrlTable
 		return $link;
 	}
 	
+	public static function get_script ($uri)
+	{
+		$name = basename ($uri);
+		/* strip anchors */
+		if (($pos = strpos ($name, '#')) !== false) {
+			$name = substr ($name, 0, $pos);
+		}
+		
+		if (! BSE_ENABLE_URL_REWRITING) {
+			/* strip GET args */
+			if (($pos = strpos ($name, '?')) !== false) {
+				$name = substr ($name, 0, $pos);
+			}
+			return $name;
+		} else {
+			$map = array (
+				'index'       => 'index.php',
+				'devel-page'  => 'index.php',
+				'news'        => 'news.php',
+				'media'       => 'medias.php',
+				'downloads'   => 'downloads.php',
+				'tuto'        => 'tuto.php',
+				'license'     => 'license.php',
+				'about'       => 'about.php',
+				'admin'       => 'admin.php',
+				'login'       => 'connexion.php',
+				'logout'      => 'connexion.php'
+			);
+			
+			foreach ($map as $match => $page) {
+				if (str_has_prefix ($name, $match)) {
+					return $page;
+				}
+			}
+			
+			return $name; // and just hope
+		}
+	}
+	
 	public static function home ()
 	{
 		return self::basic_php_html ('index');
