@@ -248,7 +248,7 @@ abstract class UrlTable
 		$link;
 		
 		if (! BSE_ENABLE_URL_REWRITING)
-			$link = 'index.php?page='.$page;
+			$link = 'news.php?page='.$page;
 		else
 			$link = 'news-page'.$page.'.html';
 		
