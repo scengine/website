@@ -70,7 +70,7 @@ abstract class User
 	public static function logout() {
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table(USERS_TABLE);
-		$db->update('`logged`=0', '`username`=\''.$_SESSION['username'].'\'');
+		$db->update('`logged`=0', '`username`=\''.$_COOKIE['username'].'\'');
 		unset ($db);
 		
 		setcookie ('username', false, time () - 3600);

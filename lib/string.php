@@ -98,6 +98,7 @@ function strshortcut ($str, $maxlen, $pos=0)
  * If needed, ellipsis is added at the end of the XML data
  * This function only truncates data in tags and keeps all tags and their
  * attributes unchanged unless they don't appear in first characters. */
+/* FIXME: handle entities too */
 function xmlstr_shortcut ($xml, $maxlen, $ellipsis='…')
 {
 	$stack = array ();

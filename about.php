@@ -20,7 +20,7 @@
  */
 
 
-define (TITLE, 'À propos');
+define ('TITLE', 'À propos');
 require_once ('include/top.minc');
 require_once ('lib/Metadata.php'); /* gave MDI instance */
 
