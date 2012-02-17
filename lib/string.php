@@ -280,3 +280,30 @@ function normalize_string_for_url ($str, $repl_char='-')
 	
 	return rtrim ($final_str, $repl_char);
 }
+
+/* naive and maybe stupid email obfuscation */
+function obfuscate_email ($email)
+{
+	$parts = explode ('@', $email);
+	$first = true;
+	$obf = '';
+	
+	$obf .= '<a class="email" href="#" onclick="return unobfuscate_email (this);">';
+	foreach ($parts as &$part) {
+		if (! $first) {
+			$obf .= '<span class="at"></span>';
+		}
+		$first = true;
+		foreach (explode ('.', $part) as $sub_part) {
+			if (! $first) {
+				$obf .= '<span class="dot"></span>';
+			}
+			$obf .= '<span>'.$sub_part.'</span>';
+			$first = false;
+		}
+		$first = false;
+	}
+	$obf .= '</a>';
+	
+	return $obf;
+}

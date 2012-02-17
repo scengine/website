@@ -111,3 +111,23 @@ function textarea_insert (area_id, before_sel, after_sel) {
 function textarea_insert_around (area_id, around_sel) {
   return textarea_insert (area_id, around_sel, around_sel);
 }
+
+/* emails to the obfuscated email starting in @root
+ * see string.php:obfuscate_email() */
+function unobfuscate_email (root) {
+	var url = 'mailto:';
+	for (i in root.childNodes) {
+		var node = root.childNodes[i];
+		if (node.nodeName == 'SPAN') {
+			if (node.classList.contains('dot')) {
+				url += '.';
+			} else if (node.classList.contains('at')) {
+				url += '@';
+			} else {
+				url += node.textContent;
+			}
+		}
+	}
+	document.location = url;
+	return false;
+}
