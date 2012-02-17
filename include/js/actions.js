@@ -28,12 +28,12 @@ function news_edit (id, el) {
 	if (f_e.style.display == "none") {
 		f_e.style.display = "block";
 		m_e.style.display = "none";
-		el.innerHTML = "Annuler";
+		el.innerHTML = "Cancel";
 		hash = f_id;
 	} else {
 		f_e.style.display = "none";
 		m_e.style.display = "block";
-		el.innerHTML = "Éditer";
+		el.innerHTML = "Edit";
 		hash = m_id;
 	}
 	
@@ -45,7 +45,7 @@ function news_edit (id, el) {
 }
 // ask for deleting a news
 function news_delete (news_id) {
-	if (confirm ('Voulez-vous vraiment supprimer cette news ?')) {
+	if (confirm ('Do you really want to delete this news?')) {
 		window.location.replace ('post.php?sec=news&id='+news_id+'&act=rm');
 	}
 	// return false to ease use on oncklick links
