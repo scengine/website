@@ -118,6 +118,7 @@ abstract class Template
 	{
 		$expanded_tokens = array ();
 		$levels = array (&$expanded_tokens);
+		$cond = null;
 		
 		foreach ($tokens as &$token) {
 			$cmd = substr ($token, 1, -1);
@@ -129,12 +130,24 @@ abstract class Template
 			} else if (preg_match (TPL_IF_PATTERN, $cmd, $matches)) {
 				$cond = serialize (array ('if', $matches[1]));
 				array_unshift ($levels, array ());
-				$levels[1][$cond] = &$levels[0];
+				$levels[1][$cond][0] = &$levels[0];
+				$levels[1][$cond][1] = array ();
+			} else if ($token == '{else}') {
+				if ($cond == null) {
+					die ('ERROR: else without an if before');
+					return null;
+				}
+				array_shift ($levels);
+				array_unshift ($levels, array ());
+				$levels[1][$cond][1] = &$levels[0];
+				$cond = null;
 			} else if ($token == '{end}') {
 				array_shift ($levels);
 				if (count ($levels) < 1) {
+					die ('ERROR: end with no open block');
 					return null;
 				}
+				$cond = null;
 			} else {
 				$levels[0][] = $token;
 			}
@@ -246,7 +259,9 @@ abstract class Template
 						$cond = self::parse_var ($data[1], $vars);
 						
 						if ($cond) {
-							$str .= self::parse ($token, $vars);
+							$str .= self::parse ($token[0], $vars);
+						} else {
+							$str .= self::parse ($token[1], $vars);
 						}
 						break;
 					
@@ -353,6 +368,21 @@ $tpl = new StringTemplate (
 			'foo' => 'Foo',
 			'bar' => 'Bar'
 		)
+	)
+);
+
+echo $tpl;
+
+// conditions example
+
+$tpl = new StringTemplate (
+	'{if foo}
+		foo is true
+	{else}
+		foo is false
+	{end}',
+	array (
+		'foo' => 'lala'
 	)
 );
 
