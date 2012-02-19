@@ -211,7 +211,7 @@ class MyDB
 		return $this->response ? true : false;
 	}
 	
-	public function insert (array $values)
+	public function insert (array $values, $on_dup_key_update = '')
 	{
 		if (!$this->table || ! is_array ($values) || empty ($values)) {
 			return false;
@@ -222,10 +222,22 @@ class MyDB
 			$value = $this->escape ($value);
 		}
 		
-		return $this->query (sprintf ('INSERT INTO `%s` (%s) VALUES (%s)',
+		/* support for ON DUPLICATE KEY UPDATE */
+		if (empty ($on_dup_key_update)) {
+			$on_dup_key_update = '';
+		} else {
+			if (is_array ($on_dup_key_update)) {
+				$args = implode (',', $this->quote_column_value ($on_dup_key_update));
+				$on_dup_key_update = implode (',', $args);
+			}
+			$on_dup_key_update = 'ON DUPLICATE KEY UPDATE '.$on_dup_key_update;
+		}
+		
+		return $this->query (sprintf ('INSERT INTO `%s` (%s) VALUES (%s) %s',
 		                              $this->table,
 		                              implode_quoted ('`', ',', $columns),
-		                              implode_quoted ('\'', ',', $values)));
+		                              implode_quoted ('\'', ',', $values),
+		                              $on_dup_key_update));
 	}
 	
 	public function update (array $values, $where='')
