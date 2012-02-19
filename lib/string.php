@@ -308,3 +308,17 @@ function obfuscate_email ($email)
 	
 	return $obf;
 }
+
+/*
+ * \brief Like implode() but adds \param $quote around each array element
+ * \param $quote the quoting to add before and after each element
+ * \param $sep the separator to place between elements
+ * \param $array the array
+ * \returns
+ * 
+ * 
+ */
+function implode_quoted ($quote, $sep, array $array)
+{
+	return $quote.implode ($quote.$sep.$quote, $array).$quote;
+}

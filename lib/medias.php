@@ -30,6 +30,19 @@ define ('MEDIA_THUMBNAIL_HEIGHT', 120.0);
 define ('MEDIA_UNKNOWN_THUMBNAIL_URI',    'default/media_unknown.png');
 define ('MEDIA_COMPRESSED_THUMBNAIL_URI', 'default/media_compressed.png');
 
+/*
+ * Table shape
+ *  - id      INT(10) UNSIGNED AUTO_INCREMENT
+ *  - uri     VARCHAR(1024)
+ *  - tb_uri  VARCHAR(1024)
+ *  - size    INT(10) UNSIGNED
+ *  - mdate   BIGINT(20)
+ *  - type    INT(11)
+ *  - uid     INT(10) UNSIGNED
+ *  - tags    VARCHAR(256)
+ *  - desc    VARCHAR(512)
+ *  - comment TEXT
+ */
 
 abstract class MediaType
 {
@@ -106,11 +119,8 @@ abstract class MediaType
  */
 function media_unescape_db_array (array &$arr)
 {
-	$arr['uri']     = stripslashes (rawurldecode ($arr['uri']));
-	$arr['tb_uri']  = stripslashes (rawurldecode ($arr['tb_uri']));
-	$arr['tags']    = stripslashes ($arr['tags']);
-	$arr['desc']    = stripslashes ($arr['desc']);
-	$arr['comment'] = stripslashes ($arr['comment']);
+	$arr['uri']     = rawurldecode ($arr['uri']);
+	$arr['tb_uri']  = rawurldecode ($arr['tb_uri']);
 	
 	return $arr;
 }
@@ -123,11 +133,8 @@ function media_unescape_db_array (array &$arr)
  */
 function media_escape_db_array (array &$arr)
 {
-	$arr['uri']     = rawurlencode (addslashes ($arr['uri']));
-	$arr['tb_uri']  = rawurlencode (addslashes ($arr['tb_uri']));
-	$arr['tags']    = addslashes ($arr['tags']);
-	$arr['desc']    = addslashes ($arr['desc']);
-	$arr['comment'] = addslashes ($arr['comment']);
+	$arr['uri']     = rawurlencode ($arr['uri']);
+	$arr['tb_uri']  = rawurlencode ($arr['tb_uri']);
 	settype ($arr['id'],    'int') or die ('Bad ID');
 	settype ($arr['size'],  'int') or die ('Bad size');
 	settype ($arr['mdate'], 'int') or die ('Bad mdate');
@@ -145,7 +152,7 @@ function media_get_by_id ($media_id)
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	
-	$db->select ('*', '`id`=\''.$media_id.'\'');
+	$db->select ('*', array ('id' => $media_id));
 	$media = $db->fetch_response ();
 	if ($media !== false)
 	{
@@ -213,25 +220,16 @@ function media_set_from_values ($id,
 
 function media_set ($id, array $values)
 {
-	$valid_keys = array ('uri', 'tb_uri', 'size', 'mdate', 'type', 'uid',
-	                     'tags', 'desc', 'comment');
+	/*$valid_keys = array ('uri', 'tb_uri', 'size', 'mdate', 'type', 'uid',
+	                     'tags', 'desc', 'comment');*/
 	media_escape_db_array ($values);
 	
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
-	if ($id < 0)
-	{
-		$query = "'','${values['uri']}','${values['tb_uri']}','${values['size']}',".
-		         "'${values['mdate']}','${values['type']}','${values['uid']}',".
-		         "'${values['tags']}','${values['desc']}','${values['comment']}'";
-		return $db->insert ($query);
-	}
-	else
-	{
-		$query = "`uri`='${values['uri']}', `tb_uri`='${values['tb_uri']}', `size`='${values['size']}', ".
-		         "`mdate`='${values['mdate']}', `type`='${values['type']}', `uid`='${values['uid']}', ".
-		         "`tags`='${values['tags']}', `desc`='${values['desc']}', `comment`='${values['comment']}'";
-		return $db->update ($query, "`id`='$id'");
+	if ($id < 0) {
+		return $db->insert ($values);
+	} else {
+		return $db->update ($values, array ('id' => $id));
 	}
 }
 
@@ -265,25 +263,23 @@ function media_remove ($id, $rm_files=true)
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	
-	$db->select ('`uri`,`tb_uri`', "`id`='$id'");
+	$db->select (array ('uri', 'tb_uri'), array ('id' => $id));
 	$media = $db->fetch_response ();
 	if ($media)
 	{
-		$uri_n = $db->count ("`uri`='${media['uri']}'");
-		$tb_uri_n = $db->count ("`tb_uri`='${media['tb_uri']}'");
+		$uri_n = $db->count (array ('uri' => $media['uri']));
+		$tb_uri_n = $db->count (array ('tb_uri' => $media['tb_uri']));
 		
 		media_unescape_db_array ($media);
-		if ($media['uri'] && $uri_n <= 1)
-		{
+		if ($media['uri'] && $uri_n <= 1) {
 			unlink (MEDIA_DIR_W.'/'.$media['uri']);
 		}
 		if ($media['tb_uri'] && $tb_uri_n <= 1 &&
-		    ! __media_is_default_thumbnail ($media['tb_uri']))
-		{
+		    ! __media_is_default_thumbnail ($media['tb_uri'])) {
 			unlink (MEDIA_DIR_W.'/'.$media['tb_uri']);
 		}
 	}
-	return $db->delete ("`id`='$id'");
+	return $db->delete (array ('id' => $id));
 }
 
 /*
@@ -312,7 +308,7 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
-	$db->select ('*', '`type`=\''.$type.'\'');
+	$db->select ('*', array ('type' => $type));
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
@@ -344,14 +340,11 @@ function media_get_all_tags ()
 	
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
-	$db->select ('*');
-	while (($resp = $db->fetch_response ()) !== false)
-	{
-		media_unescape_db_array ($resp);
+	$db->select (array ('tags'));
+	while (($resp = $db->fetch_response ()) !== false) {
 		$tags = explode (' ', $resp['tags']);
-		foreach ($tags as $tag)
-		{
-			$list_tags[$tag] = ($tag === '') ? 'Non taggé' : $tag;
+		foreach ($tags as $tag) {
+			$list_tags[$tag] = empty ($tag) ? 'Non taggé' : $tag;
 		}
 	}
 	

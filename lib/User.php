@@ -43,20 +43,17 @@ abstract class User
 		{
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			
-			$username = mysql_real_escape_string ($_POST['username'], $db->get_link ());
-			
 			$db->select_table (USERS_TABLE);
-			$db->select ('*', '`username`=\''.$username.'\'');
+			$db->select ('*', array ('username' => $_POST['username']));
 			$response = $db->fetch_response();
-			if ($response['password'] == md5($_POST['password']))
-			{
+			if ($response['password'] == md5($_POST['password'])) {
 				setcookie ('username', $response['username'], self::$time);
 				setcookie ('password', $response['password'], self::$time);
 				setcookie ('level', $response['level'], self::$time);
 				setcookie ('logged', 1, self::$time);
 				
 				
-				$db->update('`logged`=1', '`username`=\''.$username.'\'');
+				$db->update(array ('logged' => 1), array ('username' => $_POST['username']));
 				
 				self::$logged = true;
 			}
@@ -70,7 +67,7 @@ abstract class User
 	public static function logout() {
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table(USERS_TABLE);
-		$db->update('`logged`=0', '`username`=\''.$_COOKIE['username'].'\'');
+		$db->update(array ('logged' => 0), array ('username' => $_COOKIE['username']));
 		unset ($db);
 		
 		setcookie ('username', false, time () - 3600);
@@ -96,8 +93,7 @@ abstract class User
 				$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 				$db->select_table (USERS_TABLE);
 				
-				$username = mysql_real_escape_string (self::get_name (), $db->get_link ());
-				$db->select ('`level`', '`username`=\''.$username.'\'');
+				$db->select (array ('level'), array ('username' => self::get_name ()));
 				$response = $db->fetch_response ();
 				self::$level = $response['level'];
 			}
@@ -123,7 +119,7 @@ abstract class User
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			
 			$db->select_table (USERS_TABLE);
-			$db->select ('*', '`username`=\''.mysql_real_escape_string ($_COOKIE['username'], $db->get_link ()).'\'');
+			$db->select ('*', array ('username' => $_COOKIE['username']));
 			$response = $db->fetch_response ();
 			if ($response['password'] == $_COOKIE['password'])
 				$return = true;

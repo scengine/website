@@ -116,14 +116,21 @@ class CounterIP_ {
 
 
 class CounterIP {
+	/*
+	 * Table shape:
+	 *  - ip     VARCHAR(32) UNIQUE KEY
+	 *  - count  INT(10) UNSIGNED DEFAULT=0
+	 */
+	
 	protected $db;
 	
 	public function __construct ($count=false, $counter=COUNTER_TABLE) {
 		$this->db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME);
 		$this->db->select_table ($counter);
 		
-		if ($count)
+		if ($count) {
 			$this->count ();
+		}
 	}
 	
 	public function __destruct () {
@@ -131,7 +138,7 @@ class CounterIP {
 	}
 	
 	protected function ip_is_known ($ip) {
-		if ($this->db->select ('`ip`', '`ip`=\''.$ip.'\'')) {
+		if ($this->db->select (array ('ip'), array ('ip' => $ip))) {
 			return $this->db->fetch_response () ? true : false;
 		}
 		return false;
@@ -139,11 +146,10 @@ class CounterIP {
 	
 	protected function increment_ip ($ip) {
 		if ($this->ip_is_known ($ip)) {
-			$n = $this->get_n_for_ip ($ip) + 1;
-			return $this->db->update ('`count`=\''.$n.'\'', '`ip`=\''.$ip.'\'');
+			return $this->db->increment ('count', array ('ip' => $ip));
+		} else {
+			return $this->db->insert (array ('ip' => $ip, 'count' => '1'));
 		}
-		else
-			return $this->db->insert ('\''.$ip.'\', \'1\'');
 	}
 	
 	public function get_ip () {
@@ -151,12 +157,12 @@ class CounterIP {
 	}
 	
 	public function get_n_for_ip ($ip) {
-		$this->db->select ('*', '`ip`=\''.$ip.'\'');
-		$response = $this->db->fetch_response ();
-		if ($response !== false)
+		if ($this->db->select (array ('count'), array ('ip' => $ip)) &&
+		    ($response = $this->db->fetch_response ()) !== false) {
 			return $response['count'];
-		else
+		} else {
 			return 0;
+		}
 	}
 	
 	public function get_n_ip () {
@@ -164,12 +170,12 @@ class CounterIP {
 	}
 	
 	public function get_n_total () {
-		$n = 0;
-		$this->db->select ('*');
-		while (($response = $this->db->fetch_response ()) !== false) {
-			$n += $response['count'];
+		if ($this->db->select ('SUM(`count`) AS n') &&
+		    ($response = $this->db->fetch_response ()) !== false) {
+			return $response['n'];
+		} else {
+			return 0;
 		}
-		return $n;
 	}
 	
 	public function count () {

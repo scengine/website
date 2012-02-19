@@ -82,7 +82,7 @@ class IndexModuleScreenshot extends IndexModule {
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (MEDIA_TABLE);
 		
-		$db->random_row ('`id`', '`type`=\''.$type.'\'');
+		$db->random_row ('*', array ('type' => $type));
 		$media = $db->fetch_response ();
 		
 		if ($media) {

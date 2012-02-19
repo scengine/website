@@ -77,6 +77,12 @@ $dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 /* abstract class to update devel news */
 abstract class PostDevel {
+	/*
+	 * Table shape:
+	 *  - id       INT(11) PRIMARY AUTO_INCREMENT
+	 *  - date     BIGINT(20)
+	 *  - content  TEXT
+	 */
 	const SECTION = 'devel';
 	private static $table = DEVEL_TABLE;
 	
@@ -97,13 +103,13 @@ abstract class PostDevel {
 		global $dialog;
 		
 		$date = time ();
-		$content = addslashes (self::parse ($content));
+		$content = self::parse ($content);
 		
 		if (! empty ($content)) {
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->insert ("'', '$date', '$content'")) {
+			if ($db->insert (array ('date' => $date, 'content' => $content))) {
 				$dialog->add_info_message ('Message posté avec succès.');
 				
 				self::update_feed ();
@@ -128,7 +134,7 @@ abstract class PostDevel {
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->delete ("`id`='$id'")) {
+			if ($db->delete (array ('id' => $id))) {
 				$dialog->add_info_message ('Message supprimé avec succès.');
 				
 				self::update_feed ();
@@ -148,17 +154,16 @@ abstract class PostDevel {
 		global $dialog;
 		
 		if (! empty ($id) && ! empty ($content)) {
-			$content = addslashes (self::parse ($content));
+			$content = self::parse ($content);
 			
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			
-			if ($db->update ("`content`='$content'", "`id`=$id")) {
+			if ($db->update (array ('content' => $content), array ('id' => $id))) {
 				$dialog->add_info_message ('Message édité avec succès.');
 				
 				self::update_feed ();
-			}
-			else {
+			} else {
 				$dialog->add_error_message ('Erreur lors de l\'édition du message.');
 			}
 			
@@ -176,6 +181,17 @@ abstract class PostDevel {
 
 /* abstract class to update news */
 abstract class PostNews {
+	/*
+	 * Table shape:
+	 *  - id       INT(11) PRIMARY AUTO_INCREMENT
+	 *  - date     BIGINT(20)
+	 *  - mdate    BIGINT(20)
+	 *  - titre    VARCHAR(256)
+	 *  - contenu  TEXT
+	 *  - source   TEXT
+	 *  - auteur   VARCHAR(256)
+	 *  - mauthor  VARCHAR(256)
+	 */
 	const SECTION = 'news';
 	private static $table = NEWS_TABLE;
 	
@@ -187,16 +203,18 @@ abstract class PostNews {
 		global $dialog;
 		
 		//$content = parse ($content);
-		$source = addslashes ($content);
-		$content = addslashes (BCode::parse (($content)));
-		$title = addslashes ($title);
-		$author = addslashes (User::get_name ());
+		$source = $content;
+		$content = BCode::parse ($source);
+		$author = User::get_name ();
 		$date = time ();
 		
 		if (! empty ($title) && ! empty ($content) && ! empty ($source) && ! empty ($author)) {
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			if ($db->insert ("'', '$date', '$date', '$title', '$content', '$source', '$author', '$author'")) {
+			if ($db->insert (array ('date' => $date, 'mdate' => $date,
+				                      'titre' => $title, 'contenu' => $content,
+				                      'source' => $source, 'auteur' => $author,
+				                      'mauthor' => $author))) {
 				$dialog->add_info_message ('News postée avec succès.');
 				
 				self::update_feed ();
@@ -219,7 +237,7 @@ abstract class PostNews {
 		if (!empty ($id)) {
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			if ($db->delete ("`id`='$id'")) {
+			if ($db->delete (array ('id' => $id))) {
 				$dialog->add_info_message ('News supprimée avec succès.');
 				
 				self::update_feed ();
@@ -238,17 +256,20 @@ abstract class PostNews {
 	public static function edit ($id, $title, $content) {
 		global $dialog;
 		
-		$source = addslashes ($content);
-		$content = addslashes (BCode::parse (stripslashes ($content)));
-		$title = addslashes ($title);
+		$source = $content;
+		$content = BCode::parse ($source);
+		$title = $title;
 		
 		if (! empty ($id) && ! empty ($title) && ! empty ($content)) {
 			$mdate = time ();
-			$mauthor = addslashes (User::get_name ());
+			$mauthor = User::get_name ();
 			
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			if ($db->update ("`mdate`='$mdate', `titre`='$title', `contenu`='$content', `source`='$source', `mauthor`='$mauthor'", "`id`=$id")) {
+			if ($db->update (array ('mdate' => $mdate, 'titre' => $title,
+			                        'contenu' => $content, 'source' => $source,
+			                        'mauthor' => $mauthor),
+			                 array ('id' => $id))) {
 				$dialog->add_info_message  ('News éditée avec succès.');
 				
 				self::update_feed ();

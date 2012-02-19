@@ -143,7 +143,7 @@ function print_one_engine_news (array &$new)
 	
 	echo '
 	<p id="mm',$new['id'],'">',
-		stripslashes ($new['content']),
+		$new['content'],
 	'</p>';
 	
 	if ($user_can_post)
@@ -155,7 +155,7 @@ function print_one_engine_news (array &$new)
 			<form method="post" action="post.php?sec=devel&amp;act=edit&amp;id=',$new['id'],'">
 				<p>
 					<textarea name="content" cols="24" rows="8" id="tm',$new['id'],'">',
-						br2nl (stripslashes ($new['content'])),
+						br2nl ($new['content']),
 					'</textarea>
 					<input type="submit" value="Poster" />
 					<!--input type="reset" value="Reset" /-->

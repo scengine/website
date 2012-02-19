@@ -87,11 +87,11 @@ abstract class News
 			'id'      => $resp['id'],
 			'date'    => $resp['date'],
 			'mdate'   => $resp['mdate'],
-			'title'   => stripslashes ($resp['titre']),
-			'content' => stripslashes ($resp['contenu']),
-			'source'  => stripslashes ($resp['source']),
-			'author'  => stripslashes ($resp['auteur']),
-			'mauthor' => stripslashes ($resp['mauthor']),
+			'title'   => $resp['titre'],
+			'content' => $resp['contenu'],
+			'source'  => $resp['source'],
+			'author'  => $resp['auteur'],
+			'mauthor' => $resp['mauthor'],
 		);
 	}
 	
@@ -106,11 +106,9 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', '', '`id`', 'DESC', intval ($start_offset), intval ($n)))
-		{
+		if ($db->select ('*', '', 'id', 'DESC', $start_offset, $n)) {
 			$news = array ();
-			while (false !== ($resp = $db->fetch_response ()))
-			{
+			while (false !== ($resp = $db->fetch_response ())) {
 				$news[] = self::convert_db_response ($resp);
 			}
 		}
@@ -129,7 +127,7 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', "`id`=$id") && ($resp = $db->fetch_response ()) !== false)
+		if ($db->select ('*', array ('id' => $id)) && ($resp = $db->fetch_response ()) !== false)
 			return self::convert_db_response ($resp);
 		else
 			return false;

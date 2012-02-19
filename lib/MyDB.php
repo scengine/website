@@ -50,6 +50,9 @@
  */
 
 
+require_once ('lib/string.php');
+
+
 /* internal count of queries */
 $__MyDB_internal__n_queries = 0;
 /* internal count of instances */
@@ -143,50 +146,97 @@ class MyDB
 		$this->table = $table;
 	}
 	
+	public function escape ($string)
+	{
+		return mysql_real_escape_string ($string, $this->link);
+	}
+	
+	/* converts an array of the form
+	 *   array (column1 => value1,
+	 *          column2 => value2)
+	 * to the form:
+	 *   array (`column1`='escaped value1',
+	 *          `column2`='escaped value2')
+	 * so it can be given to MySQL */
+	private function quote_column_value (array $args)
+	{
+		$result = array ();
+		
+		foreach ($args as $column => $value) {
+			$result[] = sprintf ('`%s`=\'%s\'', $column, $this->escape ($value));
+		}
+		
+		return $result;
+	}
+	
+	private function parse_where ($where)
+	{
+		if (empty ($where)) {
+			return '';
+		} else {
+			if (is_array ($where)) {
+				$where = implode (' AND ', $this->quote_column_value ($where));
+			}
+			
+			return 'WHERE '.$where;
+		}
+	}
+	
 	public function select ($what='*', $where='', $orderby='', $order='DESC', $limits=0, $limite=0)
 	{
 		if (!$this->table)
 			return false;
 		
-		if ($where != '')
-			$where = 'WHERE '.$where;
-		
-		if ($orderby != '')
-		{
-			if ($order == 'DESC' || $order == 'ASC')
-				$orderby = 'ORDER BY '.$orderby.' '.$order;
+		if (is_array ($what)) {
+			$what = implode_quoted ('`', ',', $what);
 		}
 		
-		if ($limite != 0)
-			$limit = 'LIMIT '.$limits.','.$limite;
-		else
+		$where = $this->parse_where ($where);
+		
+		/* FIXME: this isn't really nice nor flexible */
+		if ($orderby != '') {
+			if ($order == 'DESC' || $order == 'ASC')
+				$orderby = 'ORDER BY `'.$orderby.'` '.$order;
+		}
+		
+		if ($limite != 0) {
+			$limit = 'LIMIT '.intval ($limits).','.intval ($limite);
+		} else {
 			$limit = '';
+		}
 		
-		$this->query ('SELECT '.$what.' FROM '.$this->table.' '.$where.' '.$orderby.' '.$limit);
+		$this->query (sprintf ('SELECT %s FROM `%s` %s %s %s',
+		                       $what, $this->table, $where, $orderby, $limit));
 		
-		if (!$this->response)
-			return false;
-		else
-			return true;
+		return $this->response ? true : false;
 	}
 	
-	public function insert ($values)
+	public function insert (array $values)
 	{
-		if (!$this->table || !$values)
+		if (!$this->table || ! is_array ($values) || empty ($values)) {
 			return false;
+		}
 		
-		return $this->query ('INSERT INTO '.$this->table.' VALUES('.$values.')');
+		$columns = array_keys ($values);
+		foreach ($values as &$value) {
+			$value = $this->escape ($value);
+		}
+		
+		return $this->query (sprintf ('INSERT INTO `%s` (%s) VALUES (%s)',
+		                              $this->table,
+		                              implode_quoted ('`', ',', $columns),
+		                              implode_quoted ('\'', ',', $values)));
 	}
 	
-	public function update ($query, $where='')
+	public function update (array $values, $where='')
 	{
-		if (!$this->table || !$query)
+		if (! $this->table || ! is_array ($values) || empty ($values))
 			return false;
 		
-		if ($where != '')
-			$where = 'WHERE '.$where;
-		
-		return $this->query ('UPDATE '.$this->table.' SET '.$query.' '.$where);
+		return $this->query (sprintf ('UPDATE `%s` SET %s %s',
+		                              $this->table,
+		                              implode (',', $this->quote_column_value ($values)),
+		                              $this->parse_where ($where)));
 	}
 	
 	public function delete ($where='')
@@ -194,10 +244,9 @@ class MyDB
 		if (!$this->table)
 			return false;
 		
-		if ($where != '')
-			$where = 'WHERE '.$where;
+		$where = $this->parse_where ($where);
 		
-		return $this->query ('DELETE FROM '.$this->table.' '.$where);
+		return $this->query (sprintf ('DELETE FROM `%s` %s', $this->table, $where));
 	}
 	
 	public function count ($where='')
@@ -207,11 +256,9 @@ class MyDB
 		if (!$this->table)
 			return 0;
 		
-		if ($where != '')
-			$where = 'WHERE '.$where;
+		$where = $this->parse_where ($where);
 		
-		if ($this->query ('SELECT COUNT(*) AS n FROM '.$this->table.' '.$where) !== false)
-		{
+		if ($this->select ('COUNT(*) AS n', $where) !== false) {
 			$data = $this->fetch_response ();
 			$n = $data['n'];
 		}
@@ -219,33 +266,24 @@ class MyDB
 		return $n;
 	}
 	
-	public function random_row ($column, $where='')
+	public function increment ($column, $where='')
 	{
-		/* implementation found in the internet, supposed to be fatser than the
-		 * naive one on large tables.
-		 * But it has a bad alea if values in \p $column are not equally separated,
-		 * e.g. if values are [1,2,5,7,42,43], 42 has the better chance to be
-		 * selected (with (42-7) / 43 ~= 81.4% of chances), then 5 (~6.98%),
-		 * then 7 (~4.66%) and finally 1, 2 and 43 (~2.33%).
-		 */
-		/*
-		$this->select ('max('.$column.') AS max_id', $where);
-		$max_row = $this->fetch_response ();
-		$random = mt_rand (0, $max_row['max_id']);
+		$where = $this->parse_where ($where);
 		
-		if ($where != '')
-			$where = ' AND '.$where;
+		return $this->query (sprintf ('UPDATE `%s` SET `%s`=`%s`+1 %s',
+		                              $this->table, $column, $column, $where));
+	}
+	
+	public function random_row ($what='*', $where='')
+	{
+		if (is_array ($what)) {
+			$what = implode_quoted ('`', ',', $what);
+		}
 		
-		if ($this->select ('*', $column.' >= '.$random.$where, $column, 'ASC', 1) == false)
-			return $this->select ('*', $column.' < '.$random.$where, $column, 'DESC', 1);
-		else
-			return true;
-		*/
-		/* naive method */
-		if ($where != '')
-			$where = 'WHERE '.$where;
+		$where = $this->parse_where ($where);
 		
-		return $this->query ('SELECT * FROM '.$this->table.' '.$where.' ORDER BY rand() LIMIT 1');
+		return $this->query (sprintf ('SELECT %s FROM `%s` %s ORDER BY rand() LIMIT 1',
+		                              $what, $this->table, $where));
 	}
 	
 	public function get_link ()
@@ -260,12 +298,11 @@ class MyDB
 	
 	public function fetch_response ()
 	{
-		$response = $this->get_response ();
-		
-		if ($response)
-			return mysql_fetch_array ($response);
-		else
-			return false;
+		if (is_bool ($this->response)) {
+			return $this->response;
+		} else {
+			return mysql_fetch_assoc ($this->response);
+		}
 	}
 	
 	public function set_charset ($csname) {
