@@ -93,6 +93,14 @@ require_once ('lib/CounterIP.php');
 					$counter->count ();
 				}
 				unset ($counter);
+				
+				if (User::get_logged ()) {
+					echo '<table><caption>SQL queries:</caption>';
+					foreach (MyDB::get_query_log () as $query) {
+						echo '<tr><td>',$query,'</td></tr>';
+					}
+					echo '</table>';
+				}
 			?>
 		</div>
 
