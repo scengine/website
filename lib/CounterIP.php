@@ -137,19 +137,8 @@ class CounterIP {
 		unset ($this->db);
 	}
 	
-	protected function ip_is_known ($ip) {
-		if ($this->db->select (array ('ip'), array ('ip' => $ip))) {
-			return $this->db->fetch_response () ? true : false;
-		}
-		return false;
-	}
-	
 	protected function increment_ip ($ip) {
-		if ($this->ip_is_known ($ip)) {
-			return $this->db->increment ('count', array ('ip' => $ip));
-		} else {
-			return $this->db->insert (array ('ip' => $ip, 'count' => '1'));
-		}
+		$this->db->insert (array ('ip' => $ip, 'count' => '1'), '`count`=`count`+1');
 	}
 	
 	public function get_ip () {
