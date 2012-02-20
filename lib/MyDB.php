@@ -211,6 +211,35 @@ class MyDB
 		return $this->response ? true : false;
 	}
 	
+	/**
+	 * \brief Inserts a new row
+	 * \param $values an array of column-value pairs, like
+	 *                array('col1' => 'value1')
+	 * \param $on_dup_key_update an array of column-value pairs or a custom values
+	 *                           update snippet to apply if the row to insert
+	 *                           already exists according to the database's key
+	 *                           uniqueness rules (see MySQL docs about
+	 *                           "ON DUPLICATE KEY UPDATE" for details)
+	 * \returns true on success, false otherwise
+	 * 
+	 * Inserts a new row in the currently selected table of the current database.
+	 * 
+	 * If \param $on_dup_key_update is given and the row to insert conflicts with
+	 * an existing one, it will be used for updating the existing row.  This
+	 * parameter can either be a column-value paired array like
+	 * \code array('column1' => 'value1') \endcode or a custom query string.
+	 * 
+	 * When using the array-based variant, you don't have to deal with any
+	 * escaping of either the value or the column name;  but if you provide custom
+	 * query code you need to take care to properly escape everything.  You should
+	 * use MyDB::escape() to escape any value.
+	 * 
+	 * Example of inserting a new row:
+	 * \code $db->insert(array('title' => 'Hello', 'content' => 'Some stuff')) \endcode
+	 * 
+	 * Example of inserting a new row or updating an existing one with custom code:
+	 * \code $db->insert(array('ip' => $ip, 'count' => 1), '`count`=`count`+1') \endcode
+	 */
 	public function insert (array $values, $on_dup_key_update = '')
 	{
 		if (!$this->table || ! is_array ($values) || empty ($values)) {
@@ -240,6 +269,20 @@ class MyDB
 		                              $on_dup_key_update));
 	}
 	
+	/**
+	 * \brief Updates an existing row
+	 * \param $values an array of column-value pairs, like
+	 *                array('col1' => 'value1')
+	 * \param $where an optional match for the rows to update, see
+	 *               MyDB::parse_where()
+	 * \returns true on success, false otherwise
+	 * 
+	 * Updates a existing row in the currently selected table of the current
+	 * database.
+	 * 
+	 * Example:
+	 * \code $db->update(array('title' => 'New Title'), array('id' => 42)); \endcode
+	 */
 	public function update (array $values, $where='')
 	{
 		if (! $this->table || ! is_array ($values) || empty ($values))
