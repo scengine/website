@@ -53,10 +53,10 @@
 require_once ('lib/string.php');
 
 
-/* internal count of queries */
-$__MyDB_internal__n_queries = 0;
 /* internal count of instances */
 $__MyDB_internal__n_instances = 0;
+/* internal log of queries */
+$__MyDB_internal__query_log = array ();
 
 # Une classe non-abstraide de gestion de la DB
 
@@ -133,10 +133,9 @@ class MyDB
 	
 	public function query ($query)
 	{
-		global $__MyDB_internal__n_queries;
-		$__MyDB_internal__n_queries++;
+		global $__MyDB_internal__query_log;
 		
-		//echo '<pre>MyDB: q is: ',$query,'</pre>';
+		$__MyDB_internal__query_log[] = $query;
 		$this->response = mysql_query ($query, $this->link) or die ($this->error ());
 		return $this->response;
 	}
@@ -373,13 +372,18 @@ class MyDB
 	
 	/* Returns number of queries. This count is kept between instances and this
 	 * function can be called without a class instance. */
-	public function get_n_queries () {
-		global $__MyDB_internal__n_queries;
-		return $__MyDB_internal__n_queries;
+	public static function get_n_queries () {
+		global $__MyDB_internal__query_log;
+		return count ($__MyDB_internal__query_log);
 	}
 	
-	public function get_n_instances () {
+	public static function get_n_instances () {
 		global $__MyDB_internal__n_instances;
 		return $__MyDB_internal__n_instances;
+	}
+	
+	public static function get_query_log () {
+		global $__MyDB_internal__query_log;
+		return $__MyDB_internal__query_log;
 	}
 }
