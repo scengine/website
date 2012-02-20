@@ -19,100 +19,8 @@
  * 
  */
 
-/*
- * Compteur::
- */
-
 require_once ('include/defines.php');
 require_once ('lib/MyDB.php');
-
-/*
-class CounterIP_ {
-	protected $file = COUNTER_FILE;
-	protected $ips = array();
-	
-	public function __construct ($count=false, $counter=COUNTER_FILE) {
-		$this->file = $counter;
-		
-		$this->data_load ();
-		// echo 'I know ',$this->get_n_ip (), ' IPs.',"\n";
-		// echo 'Total count is ',$this->get_n_total (), '.',"\n";
-		// 
-		// $ip = $this->get_ip ();
-		// echo 'I have seen this IP (', $ip, ') ',$this->get_n_for_ip ($ip),' times.',"\n";
-		if ($count)
-			$this->count ();
-	}
-	
-	public function __destruct () {
-		$this->data_write ();
-	}
-	
-	private function data_load () {
-		$fp = @fopen ($this->file, 'r');
-		
-		if ($fp) {
-			while ($line = fgets ($fp)) {
-				$line = split (' ', $line);
-				settype ($line[1], 'int');
-				$this->ips[$line[0]] = $line[1];
-			}
-			
-			fclose ($fp);
-		}
-	}
-	
-	// FIXME: use a lockfile or file_put_contents() with LOCK_EX flag
-	private function data_write () {
-		$fp = @fopen ($this->file, 'w');
-		
-		if ($fp) {
-			foreach ($this->ips as $ip => $count) {
-				fputs ($fp, $ip.' '.$count."\n");
-			}
-			
-			fclose ($fp);
-			return true;
-		}
-		return false;
-	}
-	
-	protected function ip_is_known ($ip) {
-		return (array_key_exists ($ip, $this->ips));
-	}
-	
-	protected function increment_ip ($ip) {
-		if (!$this->ip_is_known ($ip))
-			$this->ips[$ip] = 0;
-		
-		return $this->ips[$ip] += 1;
-	}
-	
-	public function get_ip () {
-		return $_SERVER['REMOTE_ADDR'];
-	}
-	
-	public function get_n_for_ip ($ip) {
-		if ($this->ip_is_known ($ip))
-			return $this->ips[$ip];
-		else
-			return 0;
-	}
-	
-	public function get_n_ip () {
-		return count ($this->ips);
-	}
-	
-	public function get_n_total () {
-		return array_sum ($this->ips);
-	}
-	
-	public function count () {
-		$this->increment_ip ($this->get_ip ());
-	}
-}
-*/
-
 
 
 class CounterIP {
@@ -171,9 +79,3 @@ class CounterIP {
 		$this->increment_ip ($this->get_ip ());
 	}
 }
-
-/*
-$c = new CounterIP_ (false, '/tmp/counter');
-$_SERVER['REMOTE_ADDR'] = $c->get_n_ip ();
-$c->count ();
-*/
