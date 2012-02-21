@@ -22,14 +22,18 @@
 /* Interacts with FluxBB */
 
 require_once ('include/defines.php');
+require_once ('lib/FileCache.php');
 
 abstract class FluxBB {
 	/*
 	 * \param $query The query from which fetch the data
 	 * \returns The result of the query or FALSE on failure.
 	 */
-	protected static function _fluxbb_extern_query ($query) {
-		$data = @file_get_contents (BSE_BASE_FLUXBB_URL.'extern.php?'.$query);
+	protected static function _fluxbb_extern_query ($query, $cache_time = 3600) {
+		$query_url = BSE_BASE_FLUXBB_URL.'extern.php?'.$query;
+		$cache = new FileCache ($query_url, BSE_CACHE_DIR.urlencode ($query_url), $cache_time);
+		
+		$data = $cache->load ();
 		/* Hum, what is the encoding FluxBB returns for external requests? */
 		return $data !== false ? utf8_encode ($data)/*$data*/ : false;
 	}
@@ -74,11 +78,11 @@ abstract class FluxBB {
 	}
 	
 	public static function get_online_users_infos () {
-		return self::_fluxbb_extern_query ('action=online');
+		return self::_fluxbb_extern_query ('action=online', 180 /* 3min cache */);
 	}
 	
 	public static function get_online_users_full_infos () {
-		return self::_fluxbb_extern_query ('action=online_full');
+		return self::_fluxbb_extern_query ('action=online_full', 180 /* 3min cache */);
 	}
 }
 
