@@ -80,21 +80,6 @@ abstract class News
 	
 	/*** Retriving of data from the DB ***/
 	
-	/* Converts DB response to news's array */
-	protected static function convert_db_response (array &$resp)
-	{
-		return array (
-			'id'      => $resp['id'],
-			'date'    => $resp['date'],
-			'mdate'   => $resp['mdate'],
-			'title'   => $resp['title'],
-			'content' => $resp['content'],
-			'source'  => $resp['source'],
-			'author'  => $resp['author'],
-			'mauthor' => $resp['mauthor'],
-		);
-	}
-	
 	/* Gets a list of news
 	 * \param $start_offset number of news (from the last one) to skip
 	 * \param $n            number of news to get from $start_offset
@@ -107,10 +92,7 @@ abstract class News
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
 		if ($db->select ('*', '', 'id', 'DESC', $start_offset, $n)) {
-			$news = array ();
-			while (false !== ($resp = $db->fetch_response ())) {
-				$news[] = self::convert_db_response ($resp);
-			}
+			$news = $db->fetch_all_responses ();
 		}
 		
 		unset ($db);
@@ -127,10 +109,11 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', array ('id' => $id)) && ($resp = $db->fetch_response ()) !== false)
-			return self::convert_db_response ($resp);
-		else
+		if ($db->select ('*', array ('id' => $id))) {
+			return $db->fetch_response ();
+		} else {
 			return false;
+		}
 	}
 	
 	/* Gets the total number of news */
