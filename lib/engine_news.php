@@ -33,18 +33,14 @@ define ('ENGINE_NEWS_GET_PREFIX', 'devel_page');
 //$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
 
 function get_engine_news ($start=0, $end=ENGINE_NEWS_BY_PAGE) {
-	$rv = Array ();
-
-	if ($end < 0)
+	if ($end < 0) {
 		$end = $start + ENGINE_NEWS_BY_PAGE;
+	}
 
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (DEVEL_TABLE);
 	$db->select ('*', '', 'id', 'DESC', $start, $end);
-
-	for ($i = 0; False !== ($content = $db->fetch_response ()); $i++) {
-		$rv[$i] = $content;
-	}
+	$rv = $db->fetch_all_responses ();
 
 	unset ($db);
 

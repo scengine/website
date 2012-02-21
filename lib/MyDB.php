@@ -350,12 +350,47 @@ class MyDB
 		return $this->response;
 	}
 	
+	/**
+	 * \brief Fetches the new row resulting from the last query
+	 * \returns The next row, false if there is no more results
+	 * 
+	 * Fetches the next row resulting from the last query.  Repeated calls to
+	 * this function will fetches a new row each time.
+	 * 
+	 * If you want to fetch all rows in the response at once, consider using
+	 * fetch_all_responses ().
+	 */
 	public function fetch_response ()
 	{
 		if (is_bool ($this->response)) {
 			return $this->response;
 		} else {
 			return mysql_fetch_assoc ($this->response);
+		}
+	}
+	
+	/**
+	 * \brief Fetches all remaining rows resulting from the last query
+	 * \returns an array of all the remaining rows
+	 * 
+	 * Like fetch_response(), but fetches all response in a single call,
+	 * returning an array of them.
+	 * 
+	 * Note that this will return the *remaining* rows, so if you called
+	 * fetch_response() it will return all the result but the ones to fetched
+	 * with that function.  Similarly, calling this function twice will return
+	 * an empty set on the second call.
+	 */
+	public function fetch_all_responses ()
+	{
+		if (is_bool ($this->response)) {
+			return array ();
+		} else {
+			$rows = array ();
+			while (($row = mysql_fetch_assoc ($this->response)) !== false) {
+				$rows[] = $row;
+			}
+			return $rows;
 		}
 	}
 	
