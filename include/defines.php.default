@@ -83,6 +83,11 @@ define ('BSE_ENABLE_URL_REWRITING', true);
 define ('BSE_BASE_PATH', '/');
 define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
 
+/* The local path to the directory where save various cache files.
+ * Must have a trailing slash or be empty; and PHP must have write permissions
+ * on it. */
+define ('BSE_CACHE_DIR', './cache/');
+
 /* Base forum URL for communicating with FluxBB.
  * It is only needed if you want to use the FluxBB integration.
  * This path must be a complete prefix, with trailing slash, or be empty.

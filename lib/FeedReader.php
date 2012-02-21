@@ -22,7 +22,7 @@
 require_once ('lib/FileCache.php');
 
 /* feed cache settings */
-define ('FEED_READER_CACHE_DIR', 'feeds/cache/');
+define ('FEED_READER_CACHE_DIR', BSE_CACHE_DIR.'feeds/');
 define ('FEED_READER_CACHE_TIME', 3600); /* cache time, in seconds */
 
 define ('FEED_KEY_ID',        'id');
