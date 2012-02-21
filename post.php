@@ -183,14 +183,14 @@ abstract class PostDevel {
 abstract class PostNews {
 	/*
 	 * Table shape:
-	 *  - id       INT(11) PRIMARY AUTO_INCREMENT
-	 *  - date     BIGINT(20)
-	 *  - mdate    BIGINT(20)
-	 *  - titre    VARCHAR(256)
-	 *  - contenu  TEXT
-	 *  - source   TEXT
-	 *  - auteur   VARCHAR(256)
-	 *  - mauthor  VARCHAR(256)
+	 *  - id       INT(11) PRIMARY KEY AUTO_INCREMENT
+	 *  - date     BIGINT(20) NOT NULL
+	 *  - mdate    BIGINT(20) NOT NULL
+	 *  - title    VARCHAR(256) NOT NULL
+	 *  - content  TEXT NOT NULL
+	 *  - source   TEXT NOT NULL
+	 *  - author   VARCHAR(256) NOT NULL
+	 *  - mauthor  VARCHAR(256) NOT NULL
 	 */
 	const SECTION = 'news';
 	private static $table = NEWS_TABLE;
@@ -212,8 +212,8 @@ abstract class PostNews {
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
 			if ($db->insert (array ('date' => $date, 'mdate' => $date,
-				                      'titre' => $title, 'contenu' => $content,
-				                      'source' => $source, 'auteur' => $author,
+				                      'title' => $title, 'content' => $content,
+				                      'source' => $source, 'author' => $author,
 				                      'mauthor' => $author))) {
 				$dialog->add_info_message ('News postée avec succès.');
 				
@@ -266,8 +266,8 @@ abstract class PostNews {
 			
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			if ($db->update (array ('mdate' => $mdate, 'titre' => $title,
-			                        'contenu' => $content, 'source' => $source,
+			if ($db->update (array ('mdate' => $mdate, 'title' => $title,
+			                        'content' => $content, 'source' => $source,
 			                        'mauthor' => $mauthor),
 			                 array ('id' => $id))) {
 				$dialog->add_info_message  ('News éditée avec succès.');

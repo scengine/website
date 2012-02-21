@@ -81,7 +81,7 @@ function print_all_messages ()
 			</td>
 			<td>
 				<a href="',UrlTable::admin_admins ('show', $author),'"
-				  title="Voir la fiche de ',$auteur,'">
+				  title="Voir la fiche de ',$author,'">
 					',$author,'
 				</a>
 			</td>

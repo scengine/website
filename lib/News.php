@@ -87,10 +87,10 @@ abstract class News
 			'id'      => $resp['id'],
 			'date'    => $resp['date'],
 			'mdate'   => $resp['mdate'],
-			'title'   => $resp['titre'],
-			'content' => $resp['contenu'],
+			'title'   => $resp['title'],
+			'content' => $resp['content'],
 			'source'  => $resp['source'],
-			'author'  => $resp['auteur'],
+			'author'  => $resp['author'],
 			'mauthor' => $resp['mauthor'],
 		);
 	}
