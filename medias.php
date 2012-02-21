@@ -244,32 +244,32 @@ function print_medias ($types, $showtag=null)
 	//	$types = explode (',', $types);
 	$bytags = $showtag !== null;
 	
-	if (! is_array ($showtag) && $showtag !== null)
+	if (! is_array ($showtag) && $bytags) {
 		$tags = explode (' ', $showtag);
-	else
+	} else {
 		$tags = $showtag;
+	}
 	
-	for ($type = 1; $type < MediaType::N_TYPES; $type++)
-	//foreach ($types as $type)
-	{
+	for ($type = 1; $type < MediaType::N_TYPES; $type++) {
+		if ($types !== null && ! in_array ($type, $types)) {
+			/* filtering by type and not matching, skip */
+			continue;
+		}
+		
 		$medias = media_get_array ($type, $bytags, $tags);
-		if (($types !== null || ($showtag === null || ! empty ($medias))) &&
-		    ($types === null || in_array ($type, $types)))
-		{
+		if ($types !== null || $showtag === null || ! empty ($medias)) {
 			echo '
 			<h2 id="',MediaType::to_id ($type),'">
 				',ucfirst (MediaType::to_string ($type, true)),'
 			</h2>
 			<div>';
-			if (! empty ($medias))
+			if (! empty ($medias)) {
 				print_medias_internal ($medias, $bytags);
-			else
-			{
+			} else {
 				echo '<p>';
-				if ($tags === null)
+				if ($tags === null) {
 					echo 'Aucun média dans cette section.';
-				else
-				{
+				} else {
 					$s = (count ($tags) == 1) ? '' : 's';
 					
 					echo 'Aucun média pour ce',$s,' tag',$s,' dans cette section.';
