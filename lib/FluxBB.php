@@ -33,9 +33,7 @@ abstract class FluxBB {
 		$query_url = BSE_BASE_FLUXBB_URL.'extern.php?'.$query;
 		$cache = new FileCache ($query_url, BSE_CACHE_DIR.urlencode ($query_url), $cache_time);
 		
-		$data = $cache->load ();
-		/* Hum, what is the encoding FluxBB returns for external requests? */
-		return $data !== false ? utf8_encode ($data)/*$data*/ : false;
+		return $cache->load ();
 	}
 	
 	/*

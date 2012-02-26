@@ -90,7 +90,7 @@ function print_head_adds (&$adds) {
 						UrlTable::news ()       => 'News',
 						UrlTable::medias ()     => 'Medias',
 						UrlTable::downloads ()  => 'Downloads',
-						'forums/'               => 'Forum',
+						'forums/'               => 'Forums',
 						'doc/'                  => 'Documentation',
 						/*UrlTable::tuto ()       => 'Tutorial',
 						UrlTable::license ()    => 'License',*/
