@@ -75,10 +75,10 @@ $dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 // logout
 if (isset ($_GET['act']) && $_GET['act'] == 'logout') {
 	if (User::logout ()) {
-		$dialog->add_info_message ('Déconnexion réussie');
+		$dialog->add_info_message ('Log out successful');
 	}
 	else {
-		$dialog->add_error_message ('Erreur lors de la désconnexion.');
+		$dialog->add_error_message ('Error while logging out.');
 	}
 } else if (User::get_logged ()) {
 	$dialog->add_info_message ('You are already connected.');
@@ -94,7 +94,7 @@ else {
 			$dialog->add_error_message ('Invalid username or password.');
 		}
 		else {
-			$dialog->add_info_message ('Login successful');
+			$dialog->add_info_message ('Log in successful');
 			$show_form = false;
 		}
 	}

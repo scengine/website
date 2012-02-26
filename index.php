@@ -212,13 +212,16 @@ require_once ('include/top.minc');
 
 ?>
 	<div id="presentation">
-		<h2>Bienvenue sur le site officiel du SCEngine</h2>
+		<h2>Welcome to the SCEngine website!</h2>
 		<p>
-			Le <acronym title="Simple C Engine">SCEngine</acronym> est un
-			<a href="http://fr.wikipedia.org/wiki/Moteur_3D">moteur 3D</a> programmé,
-			comme son nom l'indique, en langage C. Il est libre, open-source, et distribué sous
-			<a href="<?php echo UrlTable::license (); ?>">licence GNU GPL</a>. Il utilise exclusivement
-			l'<acronym title="Application Programming Interface">API</acronym> OpenGL pour le rendu.
+			The <acronym title="Simple C Engine">SCEngine</acronym> is a free
+                        and open source
+			<a href="http://en.wikipedia.org/wiki/3D_engine">3D rendering
+                        engine</a>
+                        using OpenGL.
+                        It is distributed under the
+			<a href="<?php echo UrlTable::license (); ?>">GNU GPL license</a>.
+                        
 		</p>
 	</div>
 	

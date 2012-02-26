@@ -34,28 +34,20 @@ function print_gpl () {
 	else
 	{
 		echo '
-		Le <a href="http://www.gnu.org/">site du projet
-		<acronym title="GNU is Not Unix">GNU</acronym></a> est actuellement en
-		dérangement. Nous vous prions de bien vouloir réessayer ultérieurement ou de
-		consulter la licence GPL
-		<a href="http://www.fsf.org/licensing/licenses/gpl.html">sur le site de la
-		<abbr title="Free Software Foundation">FSF</abbr></a>.';
+		The <a href="http://www.gnu.org/">GNU website</a> is currently down.
+                Please try later or check the license on the
+                <a href="http://www.fsf.org/licensing/licenses/gpl.html">
+                Free Software Foundation website</a>.';
 	}
 }
 
 ?>
 			<div id="presentation">
-				<h2>Licence du SCEngine</h2>
-				<p>
-					Voici la licence GPL sous laquelle est distribué ce moteur de rendu 3D.
-				</p>
-				<p>
-					La licence GPL est ci-dessous telle que disponible sur <a href="http://www.gnu.org/licenses/licenses.html#GPL">le site de <acronym title="GNU is Not Unix">GNU</acronym></a>.
-				</p>
+				<h2>License of the SCEngine</h2>
 			</div>
 
 			<div id="content">
-				<h2>Licence GNU <abbr title="General Public License">GPL</abbr></h2>
+				<h2>GNU license<abbr title="General Public License">GPL</abbr></h2>
 				<p>
 					<?php print_gpl (); ?>
 				</p>

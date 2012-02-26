@@ -23,7 +23,7 @@
  * Media gesture (screenshots & movies)
  */
 
-define ('TITLE', 'Médias');
+define ('TITLE', 'Media');
 
 require_once ('include/defines.php');
 require_once ('lib/medias.php');
@@ -110,8 +110,8 @@ function print_media ($media_id)
 		{
 			echo '
 			<div class="admin">
-				[<a href="',UrlTable::admin_medias ('edit', $media['id']),'">Éditer</a>]
-				[<a href="',UrlTable::admin_medias ('rm', $media['id']),'">Supprimer</a>]
+				[<a href="',UrlTable::admin_medias ('edit', $media['id']),'">Edit</a>]
+				[<a href="',UrlTable::admin_medias ('rm', $media['id']),'">Delete</a>]
 			</div>';
 		}
 		echo '
@@ -132,10 +132,10 @@ function print_media ($media_id)
 		echo '
 		</div>
 		<div class="links">
-			[<a href="',$uri,'">Lien direct</a>]
+			[<a href="',$uri,'">Direct link</a>]
 		</div>';
 		/* tags if any */
-		echo '<div class="links tags">Tags&nbsp;: ';
+		echo '<div class="links tags">Tags: ';
 		print_tag_links ($media['type'], $media['tags']);
 		echo '</div>';
 		/* comment if any */
@@ -156,9 +156,9 @@ function print_media ($media_id)
 	else
 	{
 		echo '
-		<h3>Média invalide</h3>
+		<h3>Invalid media</h3>
 		<p>
-			Le média que vous avez demandé n\'existe pas.
+		 The media you are looking for does not exist.
 		</p>';
 	}
 	
@@ -167,11 +167,11 @@ function print_media ($media_id)
 	/* wether we want to return to the media page and not the previous one */
 	if ($_GET['noreturn'])
 	{
-		print_button ('Retour', UrlTable::medias ());
+		print_button ('Back', UrlTable::medias ());
 	}
 	else
 	{
-		print_backbutton ('Retour', UrlTable::medias ());
+		print_backbutton ('Back', UrlTable::medias ());
 	}
 	echo '
 	</p>';
@@ -203,7 +203,7 @@ function print_medias_internal (&$medias, $bytags=false)
 		if ($bytags)
 		{
 			if ($tag == '')
-				$tag = 'Non taggés';
+				$tag = 'Not tagged';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 		}
 		
@@ -268,11 +268,14 @@ function print_medias ($types, $showtag=null)
 			} else {
 				echo '<p>';
 				if ($tags === null) {
-					echo 'Aucun média dans cette section.';
+					echo 'This section has no media.';
 				} else {
-					$s = (count ($tags) == 1) ? '' : 's';
-					
-					echo 'Aucun média pour ce',$s,' tag',$s,' dans cette section.';
+                                    echo 'No media was found in this section for th';
+                                    if (count ($tags) == 1) {
+                                        echo 'is tag.';
+                                    } else {
+                                        echo 'ese tags.';
+                                    }
 				}
 				echo '</p>';
 			}
@@ -330,21 +333,19 @@ else if (isset ($_GET['showtag']))
 	<div id="presentation">
 		<h2><?php echo TITLE ?></h2>
 		<p>
-			Ici sont répertoriés les divers médias du moteur. Voici la liste des catégories disponibles :
+                   Direct access to sub-sections:
 		</p>
 			<ul>
 				<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
-				<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Vidéos</a></li>
+				<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Videos</a></li>
 			</ul>
 		<p>
-			Chaque catégorie classe ses médias en fonction de la version du moteur,
-			en allant de la plus récente à la plus ancienne. Bon visionnage :o)
 		</p>
 		<div class="foldable" id="fld_mtt0">
 			<form method="post" action="<?php echo UrlTable::medias (); ?>">
 				<fieldset>
 					<legend>
-						Filtrage des médias…
+						Tag matching
 						<a href="#" id="fld_mtt0_btn"
 							 onclick="toggle_folding ('fld_mtt0_btn', 'fld_mtt0'); return false;">
 							[-]
@@ -353,9 +354,9 @@ else if (isset ($_GET['showtag']))
 					<input type="hidden" name="post" value="true" />
 					<div>
 						<fieldset class="noframe">
-						<legend>Types&nbsp;:
+						<legend>Types:
 							<span class="small">
-								(Tout <a href="javascript:set_checked_by_name ('type[]', true);">cocher</a>/<a href="javascript:set_checked_by_name ('type[]', false);">décocher</a>)
+								(Tout <a href="javascript:set_checked_by_name ('type[]', true);">check</a>/<a href="javascript:set_checked_by_name ('type[]', false);">uncheck</a>)
 							</span>
 						</legend>
 						<?php
@@ -373,9 +374,9 @@ else if (isset ($_GET['showtag']))
 						?>
 						</fieldset>
 						<fieldset class="noframe">
-						<legend>Tags&nbsp;:
+						<legend>Tags:
 							<span class="small">
-								(Tout <a href="javascript:set_checked_by_name ('showtag[]', true);">cocher</a>/<a href="javascript:set_checked_by_name ('showtag[]', false);">décocher</a>)
+								(<a href="javascript:set_checked_by_name ('showtag[]', true);">Check</a>/<a href="javascript:set_checked_by_name ('showtag[]', false);">uncheck</a> all)
 							</span>
 						</legend>
 						<?php
@@ -396,7 +397,7 @@ else if (isset ($_GET['showtag']))
 						</fieldset>
 					</div>
 					<div class="form_buttons">
-						<input type="submit" value="Filtrer" />
+						<input type="submit" value="Match" />
 					</div>
 				</fieldset>
 				<script type="text/javascript">
@@ -414,7 +415,7 @@ else if (isset ($_GET['showtag']))
 		{
 			echo '
 			<div class="admin">
-				<a href="',UrlTable::admin_medias ('new'),'"><input type="button" value="Add a Media"/></a>
+				<a href="',UrlTable::admin_medias ('new'),'"><input type="button" value="Add a media"/></a>
 			</div>';
 		}
 		

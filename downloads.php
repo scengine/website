@@ -19,7 +19,7 @@
  * 
  */
 
-define ('TITLE', 'Téléchargements');
+define ('TITLE', 'Downloads');
 
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
@@ -35,7 +35,7 @@ function print_downloads ()
 		foreach ($medias as $tag => $tagmedias)
 		{
 			if ($tag == '')
-				$tag = 'Non taggés';
+				$tag = 'Not tagged';
 			echo '<h4 class="mediatitle">',$tag,'</h4>';
 			
 			array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
@@ -45,7 +45,7 @@ function print_downloads ()
 				<tr>
 					<th>URI</th>
 					<th>Description</th>
-					<th>Taille</th>
+					<th>Size</th>
 					<th>Date</th>';
 			if (User::has_rights (ADMIN_LEVEL_MEDIA))
 			{
@@ -82,14 +82,14 @@ function print_downloads ()
 					echo '
 					<td>
 						<a href="',UrlTable::admin_medias ('edit', $media['id']),'"
-						   title="Éditer">
-							<img src="styles/',STYLE,'/edit.png" alt="Éditer" />
+						   title="Edit">
+							<img src="styles/',STYLE,'/edit.png" alt="Edit" />
 						</a>
 					</td>
 					<td>
 						<a href="',UrlTable::admin_medias ('rm', $media['id']),'"
-						   title="Supprimer">
-							<img src="styles/',STYLE,'/delete.png" alt="Supprimer" />
+						   title="Delete">
+							<img src="styles/',STYLE,'/delete.png" alt="Delete" />
 						</a>
 					</td>';
 				}
@@ -104,7 +104,7 @@ function print_downloads ()
 	/* no media selected */
 	else
 	{
-		echo '<p>Aucun média dans cette section</p>';
+		echo '<p>This section has no media.</p>';
 	}
 }
 
@@ -116,43 +116,40 @@ require_once ('include/top.minc');
 <div id="presentation">
 	<h2><?php echo TITLE; ?></h2>
 	<p>
-		<span class="u">Avertissement :</span> dans la mesure où le moteur est en constant
-		développement et que son interface est modifiée chaque jour, il n'est pas conseillé
-		de s'inspirer des sources disponibles en téléchargement pour le moment,
-		et encore moins de se familiariser avec les versions actuelles en vue d'utiliser
-		le moteur par la suite.<br />
-		En revanche je vous conseille vivement de préférer le dépôt SVN aux archives disponibles
-		sur cette page, elle est très souvent moins buggée.
+		<span class="u">Note:</span> the sources are no longer released
+    as versionned archives. Instead, you can get the latest sources through our
+    git repositories.
 	</p>
 </div>
 
 <div id="content">
-	<h3>Version de développement</h3>
+	<h3>Development version</h3>
 	<p>
-		Un dépôt GIT contient la version de développement :
+	  The latest version of the engine can be retrieved using these
+    repositories:
 	</p>
 	<pre>git clone git://gitorious.org/scengine/utils.git
 git clone git://gitorious.org/scengine/core.git
 git clone git://gitorious.org/scengine/renderer-gl.git
 git clone git://gitorious.org/scengine/interface.git</pre>
-	<p>Miroir&nbsp;:</p>
+    <p>Mirror (not as much up-to-date as the previous one):</p>
 	<pre>git clone git://git.tuxfamily.org/gitroot/scengine/utils.git
 git clone git://git.tuxfamily.org/gitroot/scengine/core.git
 git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
 git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre>
 	<p>
-		Informations sur le Wiki de Gitorious :
+		Gitorious wiki may give you additional information:
 		<a title="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home">
 https://gitorious.org/scengine/pages/Home</a>
 	</p>
 
-	<h3>Versions publiées</h3>
+	<h3>Released versions</h3>
 	<?php
 		if (User::has_rights (ADMIN_LEVEL_MEDIA))
 		{
 			echo '
 			<div>
-				',print_button ('Ajouter un téléchargement', UrlTable::admin_medias ('new')),'
+				',print_button ('Add a file', UrlTable::admin_medias ('new')),'
 			</div>';
 		}
 		

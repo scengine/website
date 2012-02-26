@@ -20,32 +20,32 @@
  */
 
 
-define ('TITLE', 'À propos');
+define ('TITLE', 'About');
 require_once ('include/top.minc');
 require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 ?>
 	<div id="presentation">
-		<h2>À propos du SCEngine</h2>
+		<h2>About the SCEngine</h2>
 		<p>
-			Informations sur le moteur ; auteur(s), description du moteur...
+    Authors, miscellaneous information.
 		</p>
 	</div>
 
 	<div id="content">
 		<dl>
-			<dt>Version actuelle&nbsp;:</dt>
+                    <dt>Current version:</dt>
 			<dd><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></dd>
 		</dl>
 		
-		<h3>Auteurs</h3>
+		<h3>Authors</h3>
 		<?php 
 			$items = array (
-				array ('Développeurs',  'get_authors'),
+				array ('Engine development',  'get_authors'),
 				array ('Documentation', 'get_documenters'),
-				array ('Traducteurs',   'get_translators'),
-				array ('Graphistes',    'get_graphists'),
-				array ('Contributeurs', 'get_contributors'),
+				array ('Translation',   'get_translators'),
+				array ('Graphists',    'get_graphists'),
+				array ('Contributors', 'get_contributors'),
 			);
 			
 			foreach ($items as &$item) {

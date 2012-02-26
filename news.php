@@ -175,9 +175,9 @@ function print_one_news ($id)
 			echo '
 			<h2>Erreur&nbsp;!</h2>
 			<p>
-				La news que vous cherchez n\'existe pas, a été supprimée ou déplacée.
+                        The news you are looking for does not exist or has been removed.
 			</p>
-			<p><a href="',UrlTable::news (),'">Retour à la liste des news</a></p>';
+			<p><a href="',UrlTable::news (),'">Go back to the news index.</a></p>';
 		}
 		
 		?>
@@ -201,12 +201,12 @@ function print_home ()
 			</span>
 		</h2>
 		<p>
-			What's up in the SCEngine's world?  Here you'll find out!
+             News index. Browse and read old stuff; you may rapidly find french posts.
 		</p>
 	</div>
 	
 	<div id="content"><!--
-		<h2>Dernières news</h2>-->
+		<h2>Last news</h2>-->
 		
 		<?php
 		
