@@ -29,7 +29,7 @@ abstract class FluxBB {
 	 * \param $query The query from which fetch the data
 	 * \returns The result of the query or FALSE on failure.
 	 */
-	protected static function _fluxbb_extern_query ($query, $cache_time = 3600) {
+	protected static function _fluxbb_extern_query ($query, $cache_time = 300 /* 5min cache */) {
 		$query_url = BSE_BASE_FLUXBB_URL.'extern.php?'.$query;
 		$cache = new FileCache ($query_url, BSE_CACHE_DIR.urlencode ($query_url), $cache_time);
 		
