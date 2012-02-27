@@ -35,9 +35,9 @@ function print_gpl () {
 	{
 		echo '
 		The <a href="http://www.gnu.org/">GNU website</a> is currently down.
-                Please try later or check the license on the
-                <a href="http://www.fsf.org/licensing/licenses/gpl.html">
-                Free Software Foundation website</a>.';
+		Please try later or check the license on the
+		<a href="http://www.fsf.org/licensing/licenses/gpl.html">
+		Free Software Foundation website</a>.';
 	}
 }
 
@@ -47,7 +47,7 @@ function print_gpl () {
 			</div>
 
 			<div id="content">
-				<h2>GNU license<abbr title="General Public License">GPL</abbr></h2>
+				<h2>GNU <abbr title="General Public License">GPL</abbr> License</h2>
 				<p>
 					<?php print_gpl (); ?>
 				</p>
