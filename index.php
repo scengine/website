@@ -38,6 +38,21 @@ require_once ('lib/Metadata.php');
 require_once ('lib/Template.php');
 
 
+class IndexFeedReaderAtom extends FeedReaderAtom  {
+	protected function fill ()
+	{
+		/* force flushing the already generated output since the next operation
+		 * might take a long time.  this prevents the user from waiting too long to
+		 * see anything simply because we're downloading a feed;  she will at least
+		 * see the page we output until now, waiting only for upcoming data */
+		ob_flush ();
+		flush ();
+		
+		return parent::fill ();
+	}
+}
+
+
 abstract class IndexModule {
 	public $name = null;
 	public $links = array ();
@@ -159,7 +174,7 @@ class IndexModuleCommits extends IndexModule {
 	
 	protected function get_tpl_vars ()
 	{
-		$reader = new FeedReaderAtom ($this->feed);
+		$reader = new IndexFeedReaderAtom ($this->feed);
 		$items = $reader->get_items ();
 		
 		foreach ($items as &$item) {
