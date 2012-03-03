@@ -310,8 +310,6 @@ class MyDB
 		if (!$this->table)
 			return 0;
 		
-		$where = $this->parse_where ($where);
-		
 		if ($this->select ('COUNT(*) AS n', $where) !== false) {
 			$data = $this->fetch_response ();
 			$n = $data['n'];
