@@ -32,8 +32,8 @@ require_once ('lib/CounterIP.php');
 			<div class="module">
 				<h3>Support</h3>
 				<ul>
-						<li><a href="<?php echo BSE_BASE_PATH; ?>/forums/">Forum</a></li>
-						<li><a href="<?php echo BSE_BASE_PATH; ?>/doc/">Documentation</a></li>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>forums/">Forum</a></li>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>doc/">Documentation</a></li>
 						<li><a href="<?php echo BSE_BASE_PATH, UrlTable::tuto (); ?>">Tutorial</a></li>
 				</ul>
 			</div>
@@ -41,9 +41,9 @@ require_once ('lib/CounterIP.php');
 			<!--div class="module">
 				<h3>Contributing</h3>
 				<ul>
-					<li><a href="<?php echo BSE_BASE_PATH; ?>/tracker">Bug tracker</a></li>
-					<li><a href="<?php echo BSE_BASE_PATH; ?>/docs/contributing">How to help?</a></li>
-					<li><a href="<?php echo BSE_BASE_PATH; ?>/about/donation">Make a donation</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>tracker">Bug tracker</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>docs/contributing">How to help?</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>about/donation">Make a donation</a></li>
 				</ul>
 			</div-->
 			
