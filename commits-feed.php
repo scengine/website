@@ -23,7 +23,7 @@ require_once ('include/defines.php');
 require_once ('lib/Cache.php');
 require_once ('lib/FeedReader.php');
 require_once ('lib/FeedReaderAtom.php');
-require_once ('lib/Template.php');
+require_once ('lib/PHPTemplate.php');
 
 
 define ('N_COMMITS', 20);
@@ -63,7 +63,7 @@ abstract class CommitsCache extends Cache
 			$feed_items[] = $this->get_item_tpl_vars ($item);
 		}
 		
-		$tpl = new FileTemplate ($this->view, $this->get_feed_tpl_vars ($feed_items));
+		$tpl = new PHPTemplate ($this->view, $this->get_feed_tpl_vars ($feed_items));
 		
 		return (string) $tpl;
 	}
@@ -72,7 +72,7 @@ abstract class CommitsCache extends Cache
 /* Atom */
 class AtomCommitsCache extends CommitsCache
 {
-	protected $view = 'views/feeds/commits.atom.tpl';
+	protected $view = 'views/feeds/commits.atom.phtml';
 	
 	protected function get_item_tpl_vars (array &$item)
 	{
@@ -104,7 +104,7 @@ class AtomCommitsCache extends CommitsCache
 /* RSS */
 class RSSCommitsCache extends CommitsCache
 {
-	protected $view = 'views/feeds/commits.rss.tpl';
+	protected $view = 'views/feeds/commits.rss.phtml';
 	
 	protected function get_item_tpl_vars (array &$item)
 	{

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<generator>BSE</generator>
+		<title><?php echo $title ?></title>
+		<description><?php echo $description ?></description>
+		<atom:link rel="self" type="application/rss+xml" href="<?php echo $self_url ?>" />
+		<link><?php echo $site_url ?></link>
+		<language><?php echo $language ?></language>
+		<pubDate><?php echo $date ?></pubDate>
+		<lastBuildDate><?php echo $date ?></lastBuildDate>
+		<image>
+			<title><?php echo $title ?></title>
+			<url><?php echo $icon ?></url>
+			<link><?php echo $site_url ?></link>
+		</image>
+<?php foreach ($items as $item): ?>
+		<item>
+			<title><?php echo $item['title'] ?></title>
+			<link><?php echo $item['alternate_url'] ?></link>
+			<description>
+				<?php echo $item['content'] ?>
+			</description>
+			<pubDate><?php echo $item['date'] ?></pubDate>
+			<guid isPermaLink="false"><?php echo $item['id'] ?></guid>
+		</item>
+<?php endforeach ?>
+	</channel>
+</rss>

@@ -35,7 +35,7 @@ require_once ('lib/FluxBB.php');
 require_once ('lib/FeedReader.php');
 require_once ('lib/FeedReaderAtom.php');
 require_once ('lib/Metadata.php');
-require_once ('lib/Template.php');
+require_once ('lib/PHPTemplate.php');
 
 
 class IndexFeedReaderAtom extends FeedReaderAtom  {
@@ -63,17 +63,16 @@ abstract class IndexModule {
 	
 	protected abstract function get_tpl_vars ();
 	
-	public function display ()
+	public function __toString ()
 	{
 		$extra_classes = '';
 		foreach ($this->extra_classes as $class) {
 			$extra_classes .= ' '.$class;
 		}
 		
-		$data_tpl = new FileTemplate ($this->view, $this->get_tpl_vars ());
-		$tpl = new FileTemplate ('views/index-modules/module.tpl',
+		$data_tpl = new PHPTemplate ($this->view, $this->get_tpl_vars ());
+		$tpl = new PHPTemplate ('views/index-modules/module.phtml',
 			array (
-				'STYLE'         => STYLE,
 				'extra_classes' => $extra_classes,
 				'title'         => $this->name,
 				'feed'          => $this->feed,
@@ -82,13 +81,13 @@ abstract class IndexModule {
 			)
 		);
 		
-		echo $tpl;
+		return (string) $tpl;
 	}
 }
 
 class IndexModuleScreenshot extends IndexModule {
 	public $name = 'Random Screenshot';
-	protected $view = 'views/index-modules/screenshot.tpl';
+	protected $view = 'views/index-modules/screenshot.phtml';
 	
 	protected function get_tpl_vars ()
 	{
@@ -119,7 +118,7 @@ class IndexModuleScreenshot extends IndexModule {
 }
 
 class IndexModuleForum extends IndexModule {
-	protected $view = 'views/index-modules/forum.tpl';
+	protected $view = 'views/index-modules/forum.phtml';
 	
 	public function __construct () {
 		$this->name = 'Last Forum Posts';
@@ -134,7 +133,7 @@ class IndexModuleForum extends IndexModule {
 }
 
 class IndexModuleNews extends IndexModule {
-	protected $view = 'views/index-modules/news.tpl';
+	protected $view = 'views/index-modules/news.phtml';
 	
 	public function __construct () {
 		$this->name = 'Last News';
@@ -159,7 +158,7 @@ class IndexModuleNews extends IndexModule {
 }
 
 class IndexModuleCommits extends IndexModule {
-	protected $view = 'views/index-modules/commits.tpl';
+	protected $view = 'views/index-modules/commits.phtml';
 	
 	public function __construct ($feed, $links, $title = 'Last Commits')
 	{
@@ -190,7 +189,7 @@ class IndexModuleCommits extends IndexModule {
 
 class IndexModuleVersion extends IndexModule {
 	public $name = 'Latest Version';
-	protected $view = 'views/index-modules/version.tpl';
+	protected $view = 'views/index-modules/version.phtml';
 	
 	protected function get_tpl_vars ()
 	{
@@ -205,7 +204,7 @@ class IndexModuleVersion extends IndexModule {
 
 class IndexModuleMainImage extends IndexModule {
 	private $image_url;
-	protected $view = 'views/index-modules/main-image.tpl';
+	protected $view = 'views/index-modules/main-image.phtml';
 	public $extra_classes = array ('image');
 	
 	public function __construct ($url)
@@ -251,7 +250,7 @@ require_once ('include/top.minc');
 				);
 				
 				foreach ($modules as &$module) {
-					$module->display ();
+					echo (string) $module;
 				}
 			?>
 		</div>
@@ -279,7 +278,7 @@ require_once ('include/top.minc');
 			foreach ($columns as &$column) {
 				echo '<div class="column">';
 				foreach ($column as &$module) {
-					$module->display ();
+					echo (string) $module;
 				}
 				echo '</div>';
 			}

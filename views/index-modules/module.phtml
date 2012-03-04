@@ -1,0 +1,25 @@
+<div class="module <?php echo $extra_classes ?>">
+	<?php if ($title): ?>
+		<h3><?php echo $title ?>
+			<?php if ($feed): ?>
+				<span class="fright">
+					<a href="<?php echo $feed ?>" title="Subscribe to the Feed">
+						<img alt="Atom Feed" src="styles/<?php echo STYLE ?>/feed.png"/>
+					</a>
+				</span>
+			<?php endif ?>
+		</h3>
+	<?php endif ?>
+	<div class="data">
+		<?php echo $data ?>
+		<?php if ($links): ?>
+			<div class="links">
+				<ul>
+				<?php foreach ($links as $href => $title): ?>
+					<li><a href="<?php echo $href ?>"><?php echo $title ?></a></li>
+				<?php endforeach ?>
+				</ul>
+			</div>
+		<?php endif ?>
+	</div>
+</div>

@@ -1,0 +1,9 @@
+<ul>
+	<?php foreach ($items as $item): ?>
+		<li>
+			<a href="<?php echo $item['link'] ?>"
+			   title="By <?php echo $item['author'] ?> on <?php echo $item['date'] ?>"
+			><?php echo $item['title'] ?></a>
+		</li>
+	<?php endforeach ?>
+</ul>

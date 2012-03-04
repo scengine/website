@@ -1,0 +1,11 @@
+<?php if (! $image): ?>
+	<p>No screenshot to display</p>
+<?php else: ?>
+	<div class="media center">
+		<a href="<?php echo $link ?>">
+			<img src="<?php echo $image ?>"
+			     alt="<?php echo $description ?>"
+			     style="max-width: 100%;" />
+		</a>
+	</div>
+<?php endif ?>

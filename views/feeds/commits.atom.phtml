@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<generator>BSE</generator>
+	<icon><?php echo $icon ?></icon>
+	<title><?php echo $title ?></title>
+	<link rel="self" href="<?php echo $self_url ?>" />
+	<link rel="alternate" href="<?php echo $alternate_url ?>" />
+	<updated><?php echo $date ?></updated>
+	<id><?php echo $id ?></id>
+<?php foreach ($entries as $entry): ?>
+	<entry>
+		<title xml:lang="<?php echo $entry['lang'] ?>"><?php echo $entry['title'] ?></title>
+		<content type="html" xml:lang="<?php echo $entry['lang'] ?>">
+			<?php echo $entry['content'] ?>
+		</content>
+		<updated><?php echo $entry['date'] ?></updated>
+		<link rel="alternate" href="<?php echo $entry['alternate_url'] ?>" />
+		<id><?php echo $entry['id'] ?></id>
+		<author>
+			<name><?php echo $entry['author'] ?></name>
+		</author>
+	</entry>
+<?php endforeach ?>
+</feed>

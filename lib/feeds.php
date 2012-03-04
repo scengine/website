@@ -23,7 +23,7 @@ require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
-require_once ('lib/Template.php');
+require_once ('lib/PHPTemplate.php');
 
 
 
@@ -75,8 +75,8 @@ function feed_update_news ()
 	}
 	unset ($db);
 	
-	$atom_data = new FileTemplate (
-		'views/feeds/news.atom.tpl',
+	$atom_data = new PHPTemplate (
+		'views/feeds/news.atom.phtml',
 		array (
 			'title'         => 'News du SCEngine',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
@@ -87,8 +87,8 @@ function feed_update_news ()
 			'items'         => &$atom_items
 		)
 	);
-	$rss_data = new FileTemplate (
-		'views/feeds/news.rss.tpl',
+	$rss_data = new PHPTemplate (
+		'views/feeds/news.rss.phtml',
 		array (
 			'title'         => 'News du SCEngine',
 			'description'   => 'Site officiel du SCEngine',
