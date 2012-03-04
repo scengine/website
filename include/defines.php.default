@@ -35,8 +35,6 @@ define ('DB_TRANSFERT_ENCODING', 'utf8_bin');
 /* Administration level needed at least to post/edit/remove news.
  * Higher administration level is 0 */
 define ('ADMIN_LEVEL_NEWS', 2);
-/* same but for development news */
-define ('ADMIN_LEVEL_NEWSDEVEL', 0);
 /* admin level for medias */
 define ('ADMIN_LEVEL_MEDIA', 1);
 /* admin level for metadatas */
@@ -54,7 +52,6 @@ define ('STYLE', 'default');
 
 /* Tables names */
 define ('USERS_TABLE', 'bse_admins');
-define ('DEVEL_TABLE', 'bse_devel');
 define ('NEWS_TABLE', 'bse_news');
 define ('MEDIA_TABLE', 'bse_medias');
 define ('COUNTER_TABLE', 'bse_counter');
@@ -109,5 +106,3 @@ define ('LICENSE_URL', 'COPYING');
 /* Feeds locations for both R & W */
 define ('NEWS_ATOM_FEED_FILE',  'feeds/news.atom');
 define ('NEWS_RSS_FEED_FILE',   'feeds/news.rss');
-define ('DEVEL_ATOM_FEED_FILE', 'feeds/devel.atom');
-define ('DEVEL_RSS_FEED_FILE',  'feeds/devel.rss');

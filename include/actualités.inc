@@ -187,7 +187,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 	}
 	else if (isset ($_GET['action']) && $_GET['action'] == 'update_feeds')
 	{
-		if (feed_update_news () && feed_update_devel ())
+		if (feed_update_news ())
 		{
 			echo '
 			<p>Flux mis à jour avec succès</p>

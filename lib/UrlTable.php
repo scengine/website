@@ -56,7 +56,6 @@ abstract class UrlTable
 		} else {
 			$map = array (
 				'index'       => 'index.php',
-				'devel-page'  => 'index.php',
 				'news'        => 'news.php',
 				'media'       => 'medias.php',
 				'downloads'   => 'downloads.php',
@@ -290,18 +289,6 @@ abstract class UrlTable
 			$link = 'news.php?page='.$page;
 		else
 			$link = 'news-page'.$page.'.html';
-		
-		return $link;
-	}
-	
-	public static function devel_news_page ($page)
-	{
-		$link;
-		
-		if (! BSE_ENABLE_URL_REWRITING)
-			$link = 'index.php?devel_page='.$page;
-		else
-			$link = 'devel-page'.$page.'.html';
 		
 		return $link;
 	}

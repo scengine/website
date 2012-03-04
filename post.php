@@ -21,8 +21,7 @@
 
 /*
  * This file is used to interact with the database
- * Actions are writing, updating or deleting data from the "news"-like tables, 
- * like news & engine's actuality
+ * Actions are writing, updating or deleting data from the "news"-like tables
  */
 
 
@@ -54,18 +53,11 @@ else {
 			
 			if (isset ($_GET['id']) && ctype_digit ($_GET['id']))
 			{
-				if (PostDevel::SECTION == $_GET['sec'])
-				{
-					$refresh .= '#m'.$_GET['id'];
-				}
+				/* don't redirect to a removed page */
+				if ($_GET['act'] == 'rm')
+					$refresh = UrlTable::news ();
 				else
-				{
-					/* don't redirect to a removed page */
-					if ($_GET['act'] == 'rm')
-						$refresh = UrlTable::news ();
-					else
-						$refresh = UrlTable::news ($_GET['id']);
-				}
+					$refresh = UrlTable::news ($_GET['id']);
 			}
 		}
 	}
@@ -75,109 +67,6 @@ else {
 $dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 
 
-/* abstract class to update devel news */
-abstract class PostDevel {
-	/*
-	 * Table shape:
-	 *  - id       INT(11) PRIMARY AUTO_INCREMENT
-	 *  - date     BIGINT(20)
-	 *  - content  TEXT
-	 */
-	const SECTION = 'devel';
-	private static $table = DEVEL_TABLE;
-	
-	protected static function update_feed () {
-		feed_update_devel ();
-	}
-	
-	protected static function parse ($str) {
-		$str = htmlspecialchars ($str, ENT_COMPAT, 'UTF-8');
-		$str = nl2br ($str);
-		$str = preg_replace ('# ([!?:;])#', '&nbsp;$1', $str);
-		//$str = addslashes ($str); // secure SQL request
-		
-		return $str;
-	}
-	
-	public static function save ($content) {
-		global $dialog;
-		
-		$date = time ();
-		$content = self::parse ($content);
-		
-		if (! empty ($content)) {
-			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-			$db->select_table (self::$table);
-			
-			if ($db->insert (array ('date' => $date, 'content' => $content))) {
-				$dialog->add_info_message ('Message posté avec succès.');
-				
-				self::update_feed ();
-			}
-			else {
-				$dialog->add_error_message ('Une erreur est survenue lors de l\'insertion des '.
-				                            'données dans la base de données. Veuillez contacter '.
-				                            'votre administrateur pour qu\'il corrige l\'erreur.');
-			}
-			
-			unset ($db);
-		}
-		else {
-			$dialog->add_error_message ('Aucune information n\'a été trouvée pour poster le message&nbsp;!');
-		}
-	}
-	
-	public static function remove ($id) {
-		global $dialog;
-		
-		if (! empty ($id)) {
-			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-			$db->select_table (self::$table);
-			
-			if ($db->delete (array ('id' => $id))) {
-				$dialog->add_info_message ('Message supprimé avec succès.');
-				
-				self::update_feed ();
-			}
-			else {
-				$dialog->add_error_message ('Erreur lors de la suppression du message.');
-			}
-			
-			unset ($db);
-		}
-		else{
-			$dialog->add_error_message ('Pas d\'ID spécifiée.');
-		}
-	}
-	
-	public static function edit ($id, $content) {
-		global $dialog;
-		
-		if (! empty ($id) && ! empty ($content)) {
-			$content = self::parse ($content);
-			
-			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-			$db->select_table (self::$table);
-			
-			if ($db->update (array ('content' => $content), array ('id' => $id))) {
-				$dialog->add_info_message ('Message édité avec succès.');
-				
-				self::update_feed ();
-			} else {
-				$dialog->add_error_message ('Erreur lors de l\'édition du message.');
-			}
-			
-			unset ($db);
-		}
-		else {
-			$dialog->add_error_message ('Données erronées.');
-		}
-	}
-	
-	public static function get_table() {
-		return self::$table;
-	}
-}
 
 /* abstract class to update news */
 abstract class PostNews {
@@ -294,39 +183,7 @@ abstract class PostNews {
 
 if (User::get_logged ())
 {
-	if (PostDevel::SECTION == $_GET['sec'])
-	{
-		if (User::has_rights (ADMIN_LEVEL_NEWSDEVEL))
-		{
-			// new devel post
-			if ($_GET['act'] == 'new')
-				PostDevel::save ($_POST['content']);
-			
-			// edit an existing devel post
-			else if ($_GET['act'] == 'edit')
-			{
-				if (!empty ($_GET['id']))
-					PostDevel::edit ($_GET['id'], $_POST['content']);
-				else
-					$dialog->add_error_message ('Aucun ID spécifié');
-			}
-			
-			// remove an existing devel post
-			else if ($_GET['act'] == 'rm')
-			{
-				if (!empty ($_GET['id']))
-					PostDevel::remove ($_GET['id']);
-				else
-					$dialog->add_error_message ('Aucun ID spécifié');
-			}
-			
-			else // invalid action request
-				$dialog->add_error_message ('Action invalide.');
-		}
-		else // user level for news
-			$dialog->add_error_message ('Vous n\'avez pas le droit d\'effectuer cette action.');
-	}
-	else if (PostNews::SECTION == $_GET['sec'])
+	if (PostNews::SECTION == $_GET['sec'])
 	{
 		if (User::has_rights (ADMIN_LEVEL_NEWS))
 		{

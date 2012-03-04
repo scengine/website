@@ -428,15 +428,6 @@ text-align: center;
 font-size: 85%;
 }
 
-.devel_news_box {
-max-height: 400px;
-overflow: auto;
-border-top: 1px solid #bfbfbf;
-border-bottom: 1px solid #bfbfbf;
-margin: 5px -6px 5px -4px;
-padding: 5px;
-}
-
 
 #footer {
 text-align: justify;
