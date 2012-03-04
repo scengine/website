@@ -262,10 +262,10 @@ require_once ('include/top.minc');
 				array (
 					new IndexModuleCommits (BSE_BASE_URL . UrlTable::feed ('commits.atom'),
 					                        array (
-					                          'http://git.tuxfamily.org/?p=gitroot/scengine/utils.git' => 'Utils',
-					                          'http://git.tuxfamily.org/?p=gitroot/scengine/core.git' => 'Core',
-					                          'http://git.tuxfamily.org/?p=gitroot/scengine/renderergl.git' => 'Renderer-GL',
-					                          'http://git.tuxfamily.org/?p=gitroot/scengine/interface.git' => 'Interface'
+					                          'http://git.tuxfamily.org/scengine/utils.git' => 'Utils',
+					                          'http://git.tuxfamily.org/scengine/core.git' => 'Core',
+					                          'http://git.tuxfamily.org/scengine/renderergl.git' => 'Renderer-GL',
+					                          'http://git.tuxfamily.org/scengine/interface.git' => 'Interface'
 					                        ),
 					                        'Last Commits')
 				),

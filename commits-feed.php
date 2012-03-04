@@ -42,10 +42,10 @@ abstract class CommitsCache extends Cache
 		$feed_items = array ();
 		$items = array ();
 		$feeds = array (
-			'http://git.tuxfamily.org/?p=gitroot/scengine/core.git;a=atom;opt=--no-merges',
-			'http://git.tuxfamily.org/?p=gitroot/scengine/utils.git;a=atom;opt=--no-merges',
-			'http://git.tuxfamily.org/?p=gitroot/scengine/interface.git;a=atom;opt=--no-merges',
-			'http://git.tuxfamily.org/?p=gitroot/scengine/renderergl.git;a=atom;opt=--no-merges'
+			'http://git.tuxfamily.org/scengine/core.git/atom/',
+			'http://git.tuxfamily.org/scengine/utils.git/atom/',
+			'http://git.tuxfamily.org/scengine/interface.git/atom/',
+			'http://git.tuxfamily.org/scengine/renderergl.git/atom/'
 		);
 		
 		/* read upstream feeds */
