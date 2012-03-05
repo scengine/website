@@ -222,7 +222,7 @@ class IndexModuleMainImage extends IndexModule {
 
 /* Page body */
 
-$tpl = new PHPFileTemplate (
+$tpl = new PHPTemplate (
 	'views/index.phtml',
 	array (
 		'modules' => array (
