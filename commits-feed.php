@@ -63,7 +63,7 @@ abstract class CommitsCache extends Cache
 			$feed_items[] = $this->get_item_tpl_vars ($item);
 		}
 		
-		$tpl = new PHPTemplate ($this->view, $this->get_feed_tpl_vars ($feed_items));
+		$tpl = new PHPFileTemplate ($this->view, $this->get_feed_tpl_vars ($feed_items));
 		
 		return (string) $tpl;
 	}

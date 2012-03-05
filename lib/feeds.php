@@ -75,7 +75,7 @@ function feed_update_news ()
 	}
 	unset ($db);
 	
-	$atom_data = new PHPTemplate (
+	$atom_data = new PHPFileTemplate (
 		'views/feeds/news.atom.phtml',
 		array (
 			'title'         => 'News du SCEngine',
@@ -87,7 +87,7 @@ function feed_update_news ()
 			'items'         => &$atom_items
 		)
 	);
-	$rss_data = new PHPTemplate (
+	$rss_data = new PHPFileTemplate (
 		'views/feeds/news.rss.phtml',
 		array (
 			'title'         => 'News du SCEngine',

@@ -70,8 +70,8 @@ abstract class IndexModule {
 			$extra_classes .= ' '.$class;
 		}
 		
-		$data_tpl = new PHPTemplate ($this->view, $this->get_tpl_vars ());
-		$tpl = new PHPTemplate ('views/index-modules/module.phtml',
+		$data_tpl = new PHPFileTemplate ($this->view, $this->get_tpl_vars ());
+		$tpl = new PHPFileTemplate ('views/index-modules/module.phtml',
 			array (
 				'extra_classes' => $extra_classes,
 				'title'         => htmlentities ($this->name),
@@ -222,7 +222,7 @@ class IndexModuleMainImage extends IndexModule {
 
 /* Page body */
 
-$tpl = new PHPTemplate (
+$tpl = new PHPFileTemplate (
 	'views/index.phtml',
 	array (
 		'modules' => array (
