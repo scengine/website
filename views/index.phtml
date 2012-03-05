@@ -1,0 +1,29 @@
+<div id="presentation">
+	<h2>Welcome to the SCEngine website!</h2>
+	<p>
+		The <acronym title="Simple C Engine">SCEngine</acronym> is a free
+		and open source
+		<a href="http://en.wikipedia.org/wiki/3D_engine">3D rendering engine</a>
+		using OpenGL.  It is distributed under the
+		<a href="<?php echo UrlTable::license () ?>">GNU GPL license</a>.
+	</p>
+</div>
+
+<div id="content">
+	<div class="main-modules">
+	<?php foreach ($modules as &$module) {
+		echo $module;
+	} ?>
+	</div>
+	
+	<div class="modules">
+		<?php foreach ($columns as &$column): ?>
+			<div class="column">
+				<?php foreach ($column as &$module) {
+					echo $module;
+				} ?>
+			</div>
+		<?php endforeach ?>
+		<div class="modules-end"></div>
+	</div>
+</div>

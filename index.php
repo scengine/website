@@ -222,72 +222,35 @@ class IndexModuleMainImage extends IndexModule {
 
 /* Page body */
 
-require_once ('include/top.minc');
-
-?>
-	<div id="presentation">
-		<h2>Welcome to the SCEngine website!</h2>
-		<p>
-			The <acronym title="Simple C Engine">SCEngine</acronym> is a free
-                        and open source
-			<a href="http://en.wikipedia.org/wiki/3D_engine">3D rendering
-                        engine</a>
-                        using OpenGL.
-                        It is distributed under the
-			<a href="<?php echo UrlTable::license (); ?>">GNU GPL license</a>.
-                        
-		</p>
-	</div>
-	
-	<div id="content">
-		
-		<div class="main-modules">
-			<?php
-				$modules = array (
-					new IndexModuleMainImage (MEDIA_DIR_R.'/screens/sce009a_011_02-03-09.jpg'
-					                          /*MEDIA_DIR_R.'/screens/sce-0.1.0-deferredshadows.png'*/),
-					new IndexModuleNews ()
-				);
-				
-				foreach ($modules as &$module) {
-					echo (string) $module;
-				}
-			?>
-		</div>
-		
-		<div class="modules">
-			<?php
-			
-			$columns = array (
-				array (
-					new IndexModuleCommits (BSE_BASE_URL . UrlTable::feed ('commits.atom'),
-					                        array (
-					                          'http://git.tuxfamily.org/scengine/utils.git' => 'Utils',
-					                          'http://git.tuxfamily.org/scengine/core.git' => 'Core',
-					                          'http://git.tuxfamily.org/scengine/renderergl.git' => 'Renderer-GL',
-					                          'http://git.tuxfamily.org/scengine/interface.git' => 'Interface'
-					                        ),
-					                        'Last Commits')
-				),
-				array (
-					new IndexModuleVersion (),
-					new IndexModuleForum ()
+$tpl = new PHPFileTemplate (
+	'views/index.phtml',
+	array (
+		'modules' => array (
+			new IndexModuleMainImage (MEDIA_DIR_R.'/screens/sce009a_011_02-03-09.jpg'),
+			new IndexModuleNews ()
+		),
+		'columns' => array (
+			array (
+				new IndexModuleCommits (
+					BSE_BASE_URL.UrlTable::feed ('commits.atom'),
+					array (
+						'http://git.tuxfamily.org/scengine/utils.git' => 'Utils',
+						'http://git.tuxfamily.org/scengine/core.git' => 'Core',
+						'http://git.tuxfamily.org/scengine/renderergl.git' => 'Renderer-GL',
+						'http://git.tuxfamily.org/scengine/interface.git' => 'Interface'
+					),
+					'Last Commits'
 				)
-			);
-			
-			foreach ($columns as &$column) {
-				echo '<div class="column">';
-				foreach ($column as &$module) {
-					echo (string) $module;
-				}
-				echo '</div>';
-			}
-			
-			?>
-			<div class="modules-end"></div>
-		</div>
-		
-	</div>
-<?php
+			),
+			array (
+				new IndexModuleVersion (),
+				new IndexModuleForum ()
+			)
+		)
+	)
+);
 
+
+require_once ('include/top.minc');
+$tpl->render ();
 require_once ('include/bottom.minc');
