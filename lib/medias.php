@@ -121,6 +121,8 @@ function media_unescape_db_array (array &$arr)
 {
 	$arr['uri']     = rawurldecode ($arr['uri']);
 	$arr['tb_uri']  = rawurldecode ($arr['tb_uri']);
+	$arr['tags']    = explode (',', $arr['tags']);
+	sort ($arr['tags']);
 	
 	return $arr;
 }
@@ -141,6 +143,16 @@ function media_escape_db_array (array &$arr)
 	settype ($arr['type'],  'int') or die ('Bad type');
 	settype ($arr['uid'],   'int') or die ('Bad UID');
 	
+	/* sanitize tags */
+	$tags = $arr['tags'];
+	if (! is_array ($tags)) {
+		$tags = explode (',', $tags);
+		foreach ($tags as &$tag) {
+			$tag = trim ($tag);
+		}
+	}
+	$arr['tags'] = implode (',', $tags);
+	
 	return $arr;
 }
 
@@ -154,13 +166,7 @@ function media_get_by_id ($media_id)
 	
 	$db->select ('*', array ('id' => $media_id));
 	$media = $db->fetch_response ();
-	if ($media !== false)
-	{
-		/* FIXME: would be cool in a certain way but needs some work to compatibilize callers */
-		/*
-		$media['tags'] = split (' ', $media['tags']);
-		sort ($media['tags']);
-		*/
+	if ($media !== false) {
 		media_unescape_db_array ($media);
 	}
 	unset ($db);
@@ -312,8 +318,6 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	while (($resp = $db->fetch_response ()) !== false)
 	{
 		media_unescape_db_array ($resp);
-		$resp['tags'] = explode (' ', $resp['tags']);
-		sort ($resp['tags']);
 		if ($bytags)
 		{
 			foreach ($resp['tags'] as $tag)
@@ -342,7 +346,8 @@ function media_get_all_tags ()
 	$db->select_table (MEDIA_TABLE);
 	$db->select (array ('tags'));
 	while (($resp = $db->fetch_response ()) !== false) {
-		$tags = explode (' ', $resp['tags']);
+		/* FIXME: don't duplicate exploding with media_unescape_db_array() */
+		$tags = explode (',', $resp['tags']);
 		foreach ($tags as $tag) {
 			$list_tags[$tag] = empty ($tag) ? 'Non taggé' : $tag;
 		}

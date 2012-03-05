@@ -179,12 +179,6 @@ function print_media ($media_id)
 
 function print_tag_links ($type, $tags)
 {
-	if (! is_array ($tags))
-	{
-		$tags = explode (' ', $tags);
-		sort ($tags);
-	}
-	
 	echo '<ul>';
 	if (! empty ($tags[0])) {
 		foreach ($tags as $tag) {
@@ -245,7 +239,7 @@ function print_medias ($types, $showtag=null)
 	$bytags = $showtag !== null;
 	
 	if (! is_array ($showtag) && $bytags) {
-		$tags = explode (' ', $showtag);
+		$tags = explode (',', $showtag);
 	} else {
 		$tags = $showtag;
 	}
@@ -324,7 +318,7 @@ if (isset ($_POST['showtag']))
 }
 else if (isset ($_GET['showtag']))
 {
-	$tags = explode (' ', $_GET['showtag']);
+	$tags = explode (',', $_GET['showtag']);
 }
 
 

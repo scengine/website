@@ -121,7 +121,7 @@ abstract class UrlTable
 		if ($type !== null)
 			$type = implode (',', $type);
 		if ($tags !== null)
-			$tags = implode (' ', $tags);
+			$tags = implode (',', $tags);
 		
 		if (! BSE_ENABLE_URL_REWRITING)
 		{
