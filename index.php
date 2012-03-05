@@ -74,8 +74,8 @@ abstract class IndexModule {
 		$tpl = new PHPTemplate ('views/index-modules/module.phtml',
 			array (
 				'extra_classes' => $extra_classes,
-				'title'         => $this->name,
-				'feed'          => $this->feed,
+				'title'         => htmlentities ($this->name),
+				'feed'          => htmlentities ($this->feed),
 				'data'          => (string) $data_tpl,
 				'links'         => $this->links
 			)
