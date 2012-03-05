@@ -19,68 +19,103 @@
  * 
  */
 
-/* Interacts with FluxBB */
+/* Interacts with FluxBB 1.4 */
 
 require_once ('include/defines.php');
 require_once ('lib/FileCache.php');
 
-abstract class FluxBB {
+
+abstract class FluxBB
+{
+	protected static function _url ($query)
+	{
+		$args = '';
+		foreach ($query as $k => $v) {
+			if ($args) {
+				$args .= '&';
+			}
+			$args .= urlencode ($k).'='.urlencode ($v);
+		}
+		
+		return BSE_BASE_FLUXBB_URL.'extern.php?'.$args;
+	}
+	
 	/*
 	 * \param $query The query from which fetch the data
 	 * \returns The result of the query or FALSE on failure.
 	 */
-	protected static function _fluxbb_extern_query ($query, $cache_time = 300 /* 5min cache */) {
-		$query_url = BSE_BASE_FLUXBB_URL.'extern.php?'.$query;
+	protected static function _query (array $query, $cache_time = 300 /* 5min cache */)
+	{
+		$query_url = self::_url ($query);
 		$cache = new FileCache ($query_url, BSE_CACHE_DIR.urlencode ($query_url), $cache_time);
 		
 		return $cache->load ();
 	}
 	
-	/*
-	 * \returns Some HTML list items of the results or FALSE on failure. As the
-	 *          result is a block of list items, you should surround it by a list
-	 *          tag (ul, ol, etc.).
-	 */
-	protected static function _get_fluxbb_list ($action, $n=15, $fid='') {
-		settype ($n, 'int') or die ('Invalid type for argument 2 of '.__FUNCTION__);
-		$query = 'action='.$action.'&show='.$n;
-		if ($fid) $query .= '&fid='.$fid;
-		$data = self::_fluxbb_extern_query ($query);
-		if ($data) {
-			if (! $data)
-				$data = '<li>Aucun post</li>';
-		}
-		return $data;
+	public static function get_recent_list (array $options = array ())
+	{
+		return self::_query (
+			array_merge (
+				array (
+					'type' => 'html',
+					'action' => 'feed',
+					'order' => 'last_post'
+				),
+				$options
+			)
+		);
 	}
 	
-	protected static function _get_fluxbb_feed ($action, $fid='') {
-		$feed_url = BSE_BASE_FLUXBB_URL.'extern.php?action='.$action;
-		if ($fid) $feed_url .= '&fid='.$fid;
-		return $feed_url;
+	public static function get_recent_feed (array $options = array ())
+	{
+		return self::_url (
+			array_merge (
+				array (
+					'type' => 'atom',
+					'action' => 'feed',
+					'order' => 'last_post'
+				),
+				$options
+			)
+		);
 	}
 	
-	public static function get_recent_list ($n, $fid='') {
-		return self::_get_fluxbb_list ('active', $n, $fid);
+	public static function get_newest_list (array $options = array ())
+	{
+		return self::_query (
+			array_merge (
+				array (
+					'type' => 'html',
+					'action' => 'feed',
+					'order' => 'posted'
+				),
+				$options
+			)
+		);
 	}
 	
-	public static function get_recent_feed ($fid='') {
-		return self::_get_fluxbb_feed ('active', $fid);
+	public static function get_newest_feed (array $options = array ())
+	{
+		return self::_url (
+			array_merge (
+				array (
+					'type' => 'atom',
+					'action' => 'feed',
+					'order' => 'posted'
+				),
+				$options
+			)
+		);
 	}
 	
-	public static function get_newest_list ($n, $fid='') {
-		return self::_get_fluxbb_list ('new', $n, $fid);
+	public static function get_online_users_infos ()
+	{
+		return self::_query (array ('action' => 'online'), 180 /* 3min cache */);
 	}
 	
-	public static function get_newest_feed ($fid='') {
-		return self::_get_fluxbb_feed ('new', $fid);
-	}
-	
-	public static function get_online_users_infos () {
-		return self::_fluxbb_extern_query ('action=online', 180 /* 3min cache */);
-	}
-	
-	public static function get_online_users_full_infos () {
-		return self::_fluxbb_extern_query ('action=online_full', 180 /* 3min cache */);
+	public static function get_online_users_full_infos ()
+	{
+		return self::_query (array ('action' => 'online_full'), 180 /* 3min cache */);
 	}
 }
 

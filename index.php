@@ -128,7 +128,7 @@ class IndexModuleForum extends IndexModule {
 	
 	protected function get_tpl_vars ()
 	{
-		return array ('items' => FluxBB::get_recent_list (20));
+		return array ('items' => FluxBB::get_recent_list (array ('show' => 20)));
 	}
 }
 
