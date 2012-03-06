@@ -91,7 +91,7 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', '', 'id', 'DESC', $start_offset, $n)) {
+		if ($db->select ('*', '', array ('id' => 'DESC'), $start_offset, $n)) {
 			$news = $db->fetch_all_responses ();
 		}
 		

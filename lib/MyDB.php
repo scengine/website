@@ -181,7 +181,7 @@ class MyDB
 		}
 	}
 	
-	public function select ($what='*', $where='', $orderby='', $order='DESC', $limits=0, $limite=0)
+	public function select ($what='*', $where='', $orderby='', $limits=0, $limite=0)
 	{
 		if (!$this->table)
 			return false;
@@ -192,10 +192,17 @@ class MyDB
 		
 		$where = $this->parse_where ($where);
 		
-		/* FIXME: this isn't really nice nor flexible */
-		if ($orderby != '') {
-			if ($order == 'DESC' || $order == 'ASC')
-				$orderby = 'ORDER BY `'.$orderby.'` '.$order;
+		/* orderby can either be a raw SQL query chunk following "ORDER BY" or an
+		 * array of row=>order to sort by */
+		if (! empty ($orderby)) {
+			if (is_array ($orderby)) {
+				$sorts = array ();
+				foreach ($orderby as $row => $dir) {
+					$sorts[] = '`'.$row.'` '.((strtolower ($dir) == 'desc') ? 'DESC' : 'ASC');
+				}
+				$orderby = implode (',', $sorts);
+			}
+			$orderby = 'ORDER BY '.$orderby;
 		}
 		
 		if ($limite != 0) {
