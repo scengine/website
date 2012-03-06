@@ -127,6 +127,24 @@ function media_unescape_db_array (array &$arr)
 	return $arr;
 }
 
+/* sets an array's element type with settype() if that element exists
+ * returns true on success, false otherwise */
+function array_value_settype (array &$arr, $key, $type, $required = false)
+{
+	if (array_key_exists ($key, $arr)) {
+		return settype ($arr[$key], $type);
+	}
+	return ! $required;
+}
+
+/* escapes an array element with rawurlencode() if the elements exists */
+function array_value_rawurlencode (array &$arr, $key)
+{
+	if (array_key_exists ($key, $arr)) {
+		$arr[$key] = rawurlencode ($arr[$key]);
+	}
+}
+
 /**
  * Given a array of database reponse, escape fields that needs it.
  * it is uset to ensure it is safe to put value into the DB
@@ -135,23 +153,25 @@ function media_unescape_db_array (array &$arr)
  */
 function media_escape_db_array (array &$arr)
 {
-	$arr['uri']     = rawurlencode ($arr['uri']);
-	$arr['tb_uri']  = rawurlencode ($arr['tb_uri']);
-	settype ($arr['id'],    'int') or die ('Bad ID');
-	settype ($arr['size'],  'int') or die ('Bad size');
-	settype ($arr['mdate'], 'int') or die ('Bad mdate');
-	settype ($arr['type'],  'int') or die ('Bad type');
-	settype ($arr['uid'],   'int') or die ('Bad UID');
+	array_value_rawurlencode ($arr, 'uri');
+	array_value_rawurlencode ($arr, 'tb_uri');
+	array_value_settype ($arr, 'id',    'int') or die ('Bad ID');
+	array_value_settype ($arr, 'size',  'int') or die ('Bad size');
+	array_value_settype ($arr, 'mdate', 'int') or die ('Bad mdate');
+	array_value_settype ($arr, 'type',  'int') or die ('Bad type');
+	array_value_settype ($arr, 'uid',   'int') or die ('Bad UID');
 	
 	/* sanitize tags */
-	$tags = $arr['tags'];
-	if (! is_array ($tags)) {
-		$tags = explode (',', $tags);
-		foreach ($tags as &$tag) {
-			$tag = trim ($tag);
+	if (array_key_exists ('tags', $arr)) {
+		$tags = $arr['tags'];
+		if (! is_array ($tags)) {
+			$tags = explode (',', $tags);
+			foreach ($tags as &$tag) {
+				$tag = trim ($tag);
+			}
 		}
+		$arr['tags'] = implode (',', $tags);
 	}
-	$arr['tags'] = implode (',', $tags);
 	
 	return $arr;
 }
