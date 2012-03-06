@@ -64,22 +64,22 @@ abstract class MediaType
 		MediaType::N_TYPES    => 'medias_invalids'
 	);
 	protected static $names = array (
-		MediaType::UNKNOWN    => 'inconnu',
+		MediaType::UNKNOWN    => 'unknown',
 		MediaType::SCREENSHOT => 'screenshot',
-		MediaType::MOVIE      => 'vidéo',
+		MediaType::MOVIE      => 'video',
 		MediaType::RELEASE    => 'release',
 		MediaType::NEWS       => 'news',
-		MediaType::OTHER      => 'autre',
-		MediaType::N_TYPES    => 'type invalide'
+		MediaType::OTHER      => 'other',
+		MediaType::N_TYPES    => 'invalid type'
 	);
 	protected static $names_plurials = array (
-		MediaType::UNKNOWN    => 'inconnus',
+		MediaType::UNKNOWN    => 'unknowns',
 		MediaType::SCREENSHOT => 'screenshots',
-		MediaType::MOVIE      => 'vidéos',
+		MediaType::MOVIE      => 'videos',
 		MediaType::RELEASE    => 'releases',
 		MediaType::NEWS       => 'news',
-		MediaType::OTHER      => 'autres',
-		MediaType::N_TYPES    => 'type invalides'
+		MediaType::OTHER      => 'others',
+		MediaType::N_TYPES    => 'invalid types'
 	);
 	
 	private static function calibrate_media_type (&$media_type)
