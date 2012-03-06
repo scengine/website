@@ -680,20 +680,18 @@ table.leftheads th {
 table.rightheads th {
 	text-align: left;
 }
-td {
-	border-top: 1px solid #C7C7C7;
-	border-bottom: 1px solid #C7C7C7;
-	border-right: 1px dotted #C7C7C7;
-	border-left: 1px dotted #C7C7C7;
-	
-	/*background-color: #fafafa;*/
+td, th {
 	padding: 2px 4px;
 }
-td:first-child {
-	border-left: none;
+tr:nth-child(odd) {
+	border-style: solid none;
+	border-width: 1px;
+	border-color: #eee;
+	background-color: #f8f8f8;
 }
-td:last-child {
-	border-right: none;
+thead tr, thead tr:nth-child(odd) {
+	border: none;
+	background: none;
 }
 caption {
 	text-align: left;
