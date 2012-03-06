@@ -56,6 +56,12 @@ define ('NEWS_TABLE', 'bse_news');
 define ('MEDIA_TABLE', 'bse_medias');
 define ('COUNTER_TABLE', 'bse_counter');
 
+/* Base site URL for getting absolute links to site pages right.
+ * It is not really needed but provides nice features.
+ * This path must be a complete prefix, with trailing slash, or be empty. */
+define ('BSE_BASE_PATH', '/');
+define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
+
 /* File to store metadatas */
 define ('METADATA_FILE', dirname (__FILE__).'/../data/metadatas');
 
@@ -63,8 +69,10 @@ define ('METADATA_FILE', dirname (__FILE__).'/../data/metadatas');
 /* Path/URI where read medias, especially used to provides links to users.
  * This doesn't need any write access possibility.
  * The better choice is an absolute URL to your site if you would make a massive
- * use of link snippets feature */
-define ('MEDIA_DIR_R', './medias');
+ * use of link snippets feature
+ * Also note that some browser and/or embedded video players doesn't handle
+ * paths nicely, so it's definitely better to set this to an absolute URL */
+define ('MEDIA_DIR_R', BSE_BASE_URL.'medias');
 /* Path/URI where write medias. It is used to upload medias and thumbnails.
  * This is quite rarely used, meaning I/O are done not often. Obviously, this
  * needs write access. */
@@ -73,12 +81,6 @@ define ('MEDIA_DIR_W', './medias');
 /* Whether to use URL rewriting. This value should be true unless your host
  * doesn't support rewriting */
 define ('BSE_ENABLE_URL_REWRITING', true);
-
-/* Base site URL for getting absolute links to site pages right.
- * It is not really needed but provides nice features.
- * This path must be a complete prefix, with trailing slash, or be empty. */
-define ('BSE_BASE_PATH', '/');
-define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
 
 /* The local path to the directory where save various cache files.
  * Must have a trailing slash or be empty; and PHP must have write permissions
