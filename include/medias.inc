@@ -165,7 +165,7 @@ function print_media_table_for_type ($type, array &$medias)
 				</td>
 				<!--td>',$media['id'],'</td-->
 				<!--td>',MediaType::to_string ($media['type']),'</td-->
-				<td>',$media['tags'],'</td>
+				<td>',implode (', ', $media['tags']),'</td>
 				<td>',$media['desc'],'</td>
 				<td>',$media['uid'],'</td>
 				<td>
@@ -467,7 +467,7 @@ function print_upload_form ($action, $id=false, &$fillwith=null, $upload=true)
 				</th>
 				<td colspan="2">
 					<input type="text" id="f__4" name="tags"
-					       value="<?php echo $fillwith['tags']; ?>" />
+					       value="<?php echo implode (',', $fillwith['tags']); ?>" />
 				</td>
 			</tr>
 			<tr>
