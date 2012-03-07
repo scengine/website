@@ -1,0 +1,84 @@
+<div id="presentation">
+	<h2><?php echo TITLE; ?></h2>
+	<p>
+		<span class="u">Note:</span> the sources are no longer released
+		as versionned archives. Instead, you can get the latest sources through our
+		git repositories.
+	</p>
+</div>
+
+<div id="content">
+	<h3>Development version</h3>
+	<p>
+		The latest version of the engine can be retrieved using these
+		repositories:
+	</p>
+	<pre>git clone git://gitorious.org/scengine/utils.git
+git clone git://gitorious.org/scengine/core.git
+git clone git://gitorious.org/scengine/renderer-gl.git
+git clone git://gitorious.org/scengine/interface.git</pre>
+	<p>Mirror (not as much up-to-date as the previous one):</p>
+	<pre>git clone git://git.tuxfamily.org/gitroot/scengine/utils.git
+git clone git://git.tuxfamily.org/gitroot/scengine/core.git
+git clone git://git.tuxfamily.org/gitroot/scengine/renderergl.git
+git clone git://git.tuxfamily.org/gitroot/scengine/interface.git</pre>
+	<p>
+		Gitorious wiki may give you additional information:
+		<a title="Gitorious Wiki page" href="https://gitorious.org/scengine/pages/Home">
+https://gitorious.org/scengine/pages/Home</a>
+	</p>
+
+	<h3>Released versions</h3>
+
+	<?php if ($is_admin): ?>
+		<div>
+			<?php print_button ('Add a file', UrlTable::admin_medias ('new')) ?>
+		</div>
+	<?php endif ?>
+
+	<?php if (empty ($medias)): ?>
+		<p>There is no releases yet</p>
+	<?php else: ?>
+		<table>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>URI</th>
+					<th>Tags</th>
+					<th>Size</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ($medias as $media): ?>
+					<tr>
+						<td><?php echo $media['desc'] ?></td>
+						<td>
+							<a href="<?php echo $media['uri'] ?>"
+							   title="<?php echo $media['desc'] ?>"
+							   class="noicon">
+								<?php echo basename ($media['uri']) ?>
+							</a>
+						</td>
+						<td><?php echo implode (', ', $media['tags']) ?></td>
+						<td><?php echo get_size_string ($media['size']) ?></td>
+						<td><?php echo date ('d/m/Y H:i', $media['mdate']) ?></td>
+
+						<?php if ($is_admin): ?>
+							<td>
+								<a href="<?php echo UrlTable::admin_medias ('edit', $media['id']) ?>">
+									Edit
+								</a>
+							</td>
+							<td>
+								<a href="<?php echo UrlTable::admin_medias ('rm', $media['id']) ?>">
+									Delete
+								</a>
+							</td>
+						<?php endif ?>
+					</tr>
+				<?php endforeach ?>
+			</tbody>
+		</table>
+	<?php endif ?>
+</div>
