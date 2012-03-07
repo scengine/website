@@ -648,6 +648,11 @@ textarea {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
+/* fix checkboxes under IE */
+input[type=checkbox] {
+	margin: 0;
+	border: none;
+}
 input:hover,
 input:focus,
 button:hover,

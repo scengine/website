@@ -60,7 +60,7 @@ function entry_lesser (id) {
 }
 
 function toggle_folding (button_id, element_id) {
-	const folded_height = '1.2em';
+	var folded_height = '1.2em';
 	var button = document.getElementById (button_id);
 	var element = document.getElementById (element_id);
 	if (element.style.height == folded_height ||
@@ -76,7 +76,7 @@ function toggle_folding (button_id, element_id) {
 /* toggle visibility of an element
  * This function returns false to ease use of it in onclick links */
 function toggle_display (element_id, display_type) {
-	el = document.getElementById (element_id);
+	var el = document.getElementById (element_id);
 	if (el.style.display == 'none') {
 		el.style.display = display_type;
 	} else {
@@ -127,15 +127,15 @@ function unobfuscate_email (root) {
 	for (i in root.childNodes) {
 		var node = root.childNodes[i];
 		if (node.nodeName == 'SPAN') {
-			if (node.classList.contains('dot')) {
+			if (node.className == 'dot') {
 				url += '.';
-			} else if (node.classList.contains('at')) {
+			} else if (node.className == 'at') {
 				url += '@';
 			} else {
 				url += node.textContent;
 			}
 		}
 	}
-	document.location = url;
+	window.location = url;
 	return false;
 }
