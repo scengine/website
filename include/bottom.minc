@@ -69,7 +69,7 @@ require_once ('lib/CounterIP.php');
 				</ul>
 			</div>
 			
-			<div class="clearer"/>
+			<div class="clearer"></div>
 			
 			<!--p><a href="http://validator.w3.org/check?uri=referer">xHTML 1.0</a></p-->
 			<p>
