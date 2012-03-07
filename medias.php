@@ -29,408 +29,252 @@ require_once ('include/defines.php');
 require_once ('lib/medias.php');
 require_once ('lib/misc.php');
 require_once ('lib/User.php');
+require_once ('lib/PHPTemplate.php');
 
 
-function print_screenshot (array &$media)
+/* Splits an array in chunks according to $callback
+ * 
+ * @array An array to split
+ * @callback a user callback to determine where to cut the array.  The callback
+ *           takes two elements and should return an strcmp()-like value.
+ *           A slit occurs when the callback returns a non-0 value.
+ * 
+ * Like array_chunk() but instead of cutting the array in equally-sized chunks,
+ * cut it according to the result of $callback */
+function array_chunk_callback (array $array, $callback)
 {
-	$uri = MEDIA_DIR_R.'/'.$media['uri'];
+	$chunks	= array ();
 	
-	echo '
-	<a href="',$uri,'" title="',$media['desc'],'">
-		<img src="',$uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
-	</a>';
-}
-
-function print_movie (array &$media)
-{
-	$uri = MEDIA_DIR_R.'/'.$media['uri'];
-	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
-	$type = filename_get_mime_type ($uri);
-	
-	echo '
-	<object type="',$type,'" data="',$uri,'" width="100%" height="400">
-		<param name="src" value="',$uri,'"></param>
-		<a href="',$uri,'">
-			<img src="',$tb_uri,'" alt="',$media['desc'],'" />
-		</a>
-	</object>';
-}
-
-function print_by_thumbnail (array &$media)
-{
-	$uri = MEDIA_DIR_R.'/'.$media['uri'];
-	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
-	
-	echo '
-	<a href="',$uri,'" title="',$media['desc'],'">
-		<img src="',$tb_uri,'" alt="',$media['desc'],'" style="max-width:100%;" />
-	</a>';
-}
-
-/*
- * Fallback function that try to display a media by its extension
- */
-function print_media_from_ext (array &$media)
-{
-	$handlers = array (
-		'image/' => 'print_screenshot',
-		'video/' => 'print_movie'
-	);
-	$handled = false;
-	$mime = filename_get_mime_type ($media['uri']);
-	
-	foreach ($handlers as $mimesec => $hanlder)
-	{
-		if (str_has_prefix ($mime, $mimesec))
-		{
-			$hanlder ($media);
-			$handled = true;
-			break;
-		}
-	}
-	if (! $handled)
-	{
-		//echo 'Not implemented yet';
-		print_by_thumbnail ($media);
-	}
-}
-
-function print_media ($media_id)
-{
-	$media = media_get_by_id ($media_id);
-	if ($media)
-	{
-		$uri = MEDIA_DIR_R.'/'.$media['uri'];
-		$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
+	if (count ($array) > 0) {
+		$chunk	= array ();
+		$first	= true;
+		$prev		= null;
 		
-		echo '
-		<h3 id="watch">',$media['desc'],'</h3>
-		<div class="showmediacontainer">';
-		if (User::has_rights (ADMIN_LEVEL_MEDIA))
-		{
-			echo '
-			<div class="admin">
-				[<a href="',UrlTable::admin_medias ('edit', $media['id']),'">Edit</a>]
-				[<a href="',UrlTable::admin_medias ('rm', $media['id']),'">Delete</a>]
-			</div>';
-		}
-		echo '
-			<div class="media">';
+		$chunks[] = &$chunk;
 		
-		switch ($media['type'])
-		{
-			case MediaType::SCREENSHOT:
-				print_screenshot ($media);
-				break;
-			case MediaType::MOVIE:
-				print_movie ($media);
-				break;
-			default:
-				print_media_from_ext ($media);
-		}
-		
-		echo '
-		</div>
-		<div class="links">
-			[<a href="',$uri,'">Direct link</a>]
-		</div>';
-		/* tags if any */
-		echo '<div class="links tags">Tags: ';
-		print_tag_links ($media['type'], $media['tags']);
-		echo '</div>';
-		/* comment if any */
-		if (! empty ($media['comment']))
-		{
-			echo '<div class="comment"><p>',$media['comment'],'</p></div>';
-		}
-		
-		if (User::has_rights (ADMIN_LEVEL_MEDIA))
-		{
-			media_print_code_snippets ($media);
-		}
-		
-		/* fin du showmediacontainer */
-		echo '
-		</div>';
-	}
-	else
-	{
-		echo '
-		<h3>Invalid media</h3>
-		<p>
-		 The media you are looking for does not exist.
-		</p>';
-	}
-	
-	echo '
-	<p class="links">';
-	/* wether we want to return to the media page and not the previous one */
-	if ($_GET['noreturn'])
-	{
-		print_button ('Back', UrlTable::medias ());
-	}
-	else
-	{
-		print_backbutton ('Back', UrlTable::medias ());
-	}
-	echo '
-	</p>';
-}
-
-function print_tag_links ($type, $tags)
-{
-	echo '<ul>';
-	if (! empty ($tags[0])) {
-		foreach ($tags as $tag) {
-			echo '<li><a href="',UrlTable::medias_tags (array ($type), array ($tag)),'">',$tag,'</a></li>';
-		}
-	} else {
-		echo '<li><a href="',UrlTable::medias_tags (array ($type), array ('')),'">Untagged</a></li>';
-	}
-	echo '</ul>';
-}
-
-function print_medias_internal (&$medias, $bytags=false)
-{
-	foreach ($medias as $tag => $tagmedias)
-	{
-		if ($bytags)
-		{
-			if ($tag == '')
-				$tag = 'Not tagged';
-			echo '<h4 class="mediatitle">',$tag,'</h4>';
-		}
-		
-		array_multisort_2nd ($tagmedias, 'mdate', SORT_DESC);
-		
-		foreach ($tagmedias as $media)
-		{
-			$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
-			$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
-			
-			echo
-			'<div class="mediacontainer">
-				<div class="media">
-					<a href="',UrlTable::medias ($media['id'], false, $media['desc']),'#watch" title="',$media['desc'],'" class="noicon">
-						<img src="',$media['tb_uri'],'" alt="',$media['desc'],'" />
-					</a>
-				</div>
-				<div class="links">
-					<div class="tags">
-						Tags: ';
-			/* tags */
-			print_tag_links ($media['type'], $media['tags']);
-			echo '
-					</div>
-				</div>
-			</div>';
-		}
-	}
-}
-
-/*
- * \param $types mixed: array of types or string of comma-separated types to show
- * \param $tag   tags to filter with
- */
-function print_medias ($types, $showtag=null)
-{
-	//if (! is_array ($types) && $types !== null)
-	//	$types = explode (',', $types);
-	$bytags = $showtag !== null;
-	
-	if (! is_array ($showtag) && $bytags) {
-		$tags = explode (',', $showtag);
-	} else {
-		$tags = $showtag;
-	}
-	
-	for ($type = 1; $type < MediaType::N_TYPES; $type++) {
-		if ($types !== null && ! in_array ($type, $types)) {
-			/* filtering by type and not matching, skip */
-			continue;
-		}
-		
-		$medias = media_get_array ($type, $bytags, $tags);
-		if ($types !== null || $showtag === null || ! empty ($medias)) {
-			echo '
-			<h2 id="',MediaType::to_id ($type),'">
-				',ucfirst (MediaType::to_string ($type, true)),'
-			</h2>
-			<div>';
-			if (! empty ($medias)) {
-				print_medias_internal ($medias, $bytags);
+		foreach ($array as &$element) {
+			if ($first) {
+				$first = false;
 			} else {
-				echo '<p>';
-				if ($tags === null) {
-					echo 'This section has no media.';
-				} else {
-                                    echo 'No media was found in this section for th';
-                                    if (count ($tags) == 1) {
-                                        echo 'is tag.';
-                                    } else {
-                                        echo 'ese tags.';
-                                    }
+				if ($callback ($prev, $element) != 0) {
+					unset ($chunk); /* clear ref */
+					$chunk = array ();
+					$chunks[] = &$chunk;
 				}
-				echo '</p>';
 			}
-			echo '</div>';
+			$chunk[] = $element;
+			$prev = $element;
 		}
+	}
+	
+	return $chunks;
+}
+
+
+/* Base medias template with code shared by all views */
+abstract class MediasTemplate extends PHPFileTemplate
+{
+	protected $view;
+	
+	public function __construct ()
+	{
+		parent::__construct (
+			$this->view,
+			array (
+				'is_admin'			=> User::has_rights (ADMIN_LEVEL_MEDIA),
+				'display_types'	=> $this->get_types_filter (),
+				'display_tags'	=> $this->get_tags_filter (),
+				'all_types'			=> $this->get_all_types (),
+				'all_tags'			=> $this->get_all_tags ()
+			)
+		);
+	}
+	
+	private $_types_filter = null;
+	protected function get_types_filter ()
+	{
+		if ($this->_types_filter === null) {
+			if (isset ($_POST['type']) && is_array ($_POST['type'])) {
+				$this->_types_filter = $_POST['type'];
+			} else if (isset ($_GET['type'])) {
+				$this->_types_filter = explode (',', $_GET['type']);
+			} else {
+				/* Defaults to screenshots & videos */
+				$this->_types_filter = array (MediaType::SCREENSHOT, MediaType::MOVIE);
+			}
+		}
+		
+		return $this->_types_filter;
+	}
+	
+	private $_tags_filter = null;
+	protected function get_tags_filter ()
+	{
+		if ($this->_tags_filter === null) {
+			if (isset ($_POST['showtag']) && is_array ($_POST['showtag'])) {
+				$this->_tags_filter = $_POST['showtag'];
+			} else if (isset ($_GET['showtag'])) {
+				$this->_tags_filter = explode (',', $_GET['showtag']);
+			} else {
+				$this->_tags_filter = array ();
+			}
+		}
+		
+		return $this->_tags_filter;
+	}
+	
+	private $_all_types = null;
+	protected function get_all_types ()
+	{
+		if ($this->_all_types === null) {
+			$this->_all_types = array ();
+			for ($type = 1; $type < MediaType::N_TYPES; $type++) {
+				$this->_all_types[] = array (
+					'id'			=> $type,
+					'name'		=> MediaType::to_string ($type),
+					'checked'	=> in_array ($type, $this->get_types_filter ()),
+				);
+			}
+		}
+		
+		return $this->_all_types;
+	}
+	
+	private $_all_tags = null;
+	protected function get_all_tags ()
+	{
+		if ($this->_all_tags === null) {
+			$this->_all_tags = array ();
+			foreach (media_get_all_tags () as $tag) {
+				$this->_all_tags[] = array (
+					'id'			=> $tag,
+					'name'		=> ($tag == '' ? 'Not tagged' : $tag),
+					'checked'	=> in_array ($tag, $this->get_tags_filter ())
+				);
+			}
+		}
+		
+		return $this->_all_tags;
 	}
 }
 
-function print_all_medias ($tag=null)
+/* Main template displaying the medias index */
+class MediasIndexTemplate extends MediasTemplate
 {
-	print_medias (MediaType::SCREENSHOT, $tag);
-	print_medias (MediaType::MOVIE, $tag);
+	protected $view = 'views/medias/index.phtml';
+	
+	public function __construct ()
+	{
+		parent::__construct ();
+		$this->sections = $this->get_sections ();
+	}
+	
+	private function get_display_medias ()
+	{
+		$medias = media_get_medias (
+			$this->get_types_filter (),
+			$this->get_tags_filter (),
+			array (
+				'type' => 'ASC',
+				'mdate' => 'DESC'
+			)
+		);
+		
+		if ($medias !== false) {
+			/* adjust the medias array */
+			foreach ($medias as &$media) {
+				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
+				$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
+			}
+		}
+		
+		return $medias;
+	}
+	
+	private function get_sections ()
+	{
+		$sections = array ();
+		
+		if (($medias = $this->get_display_medias ()) !== false) {
+			/* expand the medias to blocks of the same type */
+			$medias_by_types = array_chunk_callback (
+				$medias,
+				function ($a, $b) {
+					return $a['type'] - $b['type'];
+				}
+			);
+			
+			/* and build each section details */
+			foreach ($medias_by_types as &$medias) {
+				$sections[] = array (
+					'id'			=> MediaType::to_id ($medias[0]['type']),
+					'name'		=> ucfirst (MediaType::to_string ($medias[0]['type'], true)),
+					'medias'	=> &$medias
+				);
+			}
+		}
+		
+		return $sections;
+	}
 }
+
+/* View template for viewing a particular media */
+class MediasViewTemplate extends MediasTemplate
+{
+	protected $view = 'views/medias/view.phtml';
+	
+	public function __construct ($media_id)
+	{
+		parent::__construct ();
+		$this->media = $this->get_media ($media_id);
+		$this->noreturn = filter_input (INPUT_GET, 'noreturn', FILTER_VALIDATE_BOOLEAN);
+	}
+	
+	private function fix_media_type (array &$media)
+	{
+		if ($media['type'] != MediaType::SCREENSHOT &&
+				$media['type'] != MediaType::MOVIE) {
+			/* try to map to a known type if possible */
+			if (str_has_prefix ($media['mime_type'], 'image/')) {
+				$media['type'] = MediaType::SCREENSHOT;
+			} else if (str_has_prefix ($media['mime_type'], 'video/')) {
+				$media['type'] = MediaType::MOVIE;
+			}
+		}
+	}
+	
+	private function get_media ($id)
+	{
+		$media = media_get_by_id ($id);
+		if ($media) {
+			$media['uri']				= MEDIA_DIR_R.'/'.$media['uri'];
+			$media['tb_uri']		= MEDIA_DIR_R.'/'.$media['tb_uri'];
+			$media['mime_type']	= filename_get_mime_type ($media['uri']);
+			
+			/* make sure media type is useful for us */
+			$this->fix_media_type ($media);
+		}
+		
+		return $media;
+	}
+}
+
 
 
 /******************************************************************************/
 
+/* compatibility with old API */
+if (isset ($_GET['watch']) && settype ($_GET['watch'], 'int')) {
+	$_GET['view'] = $_GET['watch'];
+}
+
+if (isset ($_GET['view']) && settype ($_GET['view'], 'int')) {
+	$tpl = new MediasViewTemplate ($_GET['view']);
+} else {
+	$tpl = new MediasIndexTemplate ();
+}
+
+
 require_once ('include/top.minc');
-
-/* filtering */
-$types = null;
-$tags = null;
-
-/* types */
-if (isset ($_POST['post']))
-{
-	if (isset ($_POST['type']))
-	{
-		$types = $_POST['type'];
-	}
-}
-else if (isset ($_GET['type']))
-{
-	$types = explode (',', $_GET['type']);
-}
-else
-{
-	/* Defaults to screenshots & movies */
-	$types = array (MediaType::SCREENSHOT, MediaType::MOVIE);
-}
-
-/* tags */
-if (isset ($_POST['showtag']))
-{
-	$tags = $_POST['showtag'];
-}
-else if (isset ($_GET['showtag']))
-{
-	$tags = explode (',', $_GET['showtag']);
-}
-
-
-?>
-
-	<div id="presentation">
-		<h2><?php echo TITLE ?></h2>
-		<p>
-                   Direct access to sub-sections:
-		</p>
-			<ul>
-				<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
-				<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Videos</a></li>
-			</ul>
-		<p>
-		</p>
-		<div class="foldable" id="fld_mtt0">
-			<form method="post" action="<?php echo UrlTable::medias (); ?>">
-				<fieldset>
-					<legend>
-						Tag matching
-						<a href="#" id="fld_mtt0_btn"
-							 onclick="toggle_folding ('fld_mtt0_btn', 'fld_mtt0'); return false;">
-							[-]
-						</a>
-					</legend>
-					<input type="hidden" name="post" value="true" />
-					<div>
-						<fieldset class="noframe">
-						<legend>Types:
-							<span class="small">
-								(Tout <a href="javascript:set_checked_by_name ('type[]', true);">check</a>/<a href="javascript:set_checked_by_name ('type[]', false);">uncheck</a>)
-							</span>
-						</legend>
-						<?php
-							for ($type = 1; $type < MediaType::N_TYPES; $type++)
-							{
-								echo '
-								<label>
-									<input type="checkbox" name="type[]" value="',$type,'" ';
-								if ($types !== null && in_array ($type, $types))
-									echo 'checked="checked" ';
-								echo '/>',
-									MediaType::to_string ($type),'
-								</label>';
-							}
-						?>
-						</fieldset>
-						<fieldset class="noframe">
-						<legend>Tags:
-							<span class="small">
-								(<a href="javascript:set_checked_by_name ('showtag[]', true);">Check</a>/<a href="javascript:set_checked_by_name ('showtag[]', false);">uncheck</a> all)
-							</span>
-						</legend>
-						<?php
-							$list_tags = media_get_all_tags ();
-							foreach ($list_tags as $list_tag => $list_tag_name)
-							{
-								echo '
-								<label>
-									<input type="checkbox" name="showtag[]" value="',$list_tag,'" ';
-								if ($tags !== null && in_array ($list_tag, $tags))
-									echo 'checked="checked" ';
-								echo '
-									/>',
-									$list_tag_name,'
-								</label>';
-							}
-						?>
-						</fieldset>
-					</div>
-					<div class="form_buttons">
-						<input type="submit" value="Match" />
-					</div>
-				</fieldset>
-				<script type="text/javascript">
-					<!--
-					toggle_folding ('fld_mtt0_btn', 'fld_mtt0');
-					//-->
-				</script>
-			</form>
-		</div>
-	</div>
-
-	<div id="content">
-		<?php
-		if (User::has_rights (ADMIN_LEVEL_MEDIA))
-		{
-			echo '
-			<div class="admin">
-				<a href="',UrlTable::admin_medias ('new'),'"><input type="button" value="Add a media"/></a>
-			</div>';
-		}
-		
-		/* watch a media if asked */
-		if (isset ($_GET['watch']) && settype ($_GET['watch'], 'int'))
-		{
-			print_media ($_GET['watch']);
-		}
-		/* print media list */
-		else
-		{
-			//if ($types !== null)
-				print_medias ($types, $tags);
-			//else
-			//	print_all_medias ($tags);
-		}
-		
-		?>
-		<div style="clear: left"></div>
-	</div>
-
-<?php
-
+$tpl->render ();
 require_once ('include/bottom.minc');

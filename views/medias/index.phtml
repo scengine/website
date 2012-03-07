@@ -1,0 +1,41 @@
+<?php include ('common-top.phtml') ?>
+
+<?php if (empty ($sections)): ?>
+	<p>There is no medias matching your filter criteria</p>
+<?php else: ?>
+	<?php foreach ($sections as $section): ?>
+	<h2 id="<?php echo $section['id'] ?>"><?php echo $section['name'] ?></h2>
+	<div>
+		<?php if (empty ($section['medias'])): ?>
+			<p>No media in this section</p>
+		<?php else: ?>
+			<?php foreach ($section['medias'] as $media): ?>
+				<div class="mediacontainer">
+					<div class="media">
+						<a href="<?php echo UrlTable::medias ($media['id'], false, $media['desc']) ?>#watch"
+							title="<?php echo $media['desc'] ?>" class="noicon">
+							<img src="<?php echo $media['tb_uri'] ?>" alt="<?php echo $media['desc'] ?>" />
+						</a>
+					</div>
+					<div class="links">
+						<div class="tags">
+							Tags:
+							<ul>
+								<?php if (empty ($media['tags'])): ?>
+									<li><a href="<?php echo UrlTable::medias_tags (array ($media['type'])) ?>">Not tagged</a></li>
+								<?php else: ?>
+									<?php foreach ($media['tags'] as $tag): ?>
+										<li><a href="<?php echo UrlTable::medias_tags (array ($media['type']), array ($tag)) ?>"><?php echo $tag ?></a></li>
+									<?php endforeach ?>
+								<?php endif ?>
+							</ul>
+						</div>
+					</div>
+				</div>
+			<?php endforeach ?>
+		<?php endif ?>
+	</div>
+	<?php endforeach ?>
+<?php endif ?>
+
+<?php include ('common-bottom.phtml') ?>

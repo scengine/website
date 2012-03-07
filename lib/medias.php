@@ -358,6 +358,36 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	return $medias;
 }
 
+function media_get_medias (array $types = array (),
+                           array $tags = array (),
+                           array $sort = array ('type' => 'ASC',
+                                                'mdate' => 'DESC'))
+{
+	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+	$db->select_table (MEDIA_TABLE);
+	
+	/* type filter (inclusive) */
+	$type_match = '0';
+	foreach ($types as $type) {
+		$type_match .= sprintf (' OR `type`=\'%s\'', $db->escape ($type));
+	}
+	/* tags filter (exclusive) */
+	$tags_match = '1';
+	foreach ($tags as $tag) {
+		$tags_match .= sprintf (' AND FIND_IN_SET(\'%s\', `tags`)', $db->escape ($tag));
+	}
+	
+	$db->select ('*', '('.$type_match.') AND ('.$tags_match.')', $sort);
+	
+	if (($rows = $db->fetch_all_responses ()) !== false) {
+		foreach ($rows as &$media) {
+			media_unescape_db_array ($media);
+		}
+	}
+	
+	return $rows;
+}
+
 function media_get_all_tags ()
 {
 	$list_tags = array ();
@@ -368,15 +398,13 @@ function media_get_all_tags ()
 	while (($resp = $db->fetch_response ()) !== false) {
 		/* FIXME: don't duplicate exploding with media_unescape_db_array() */
 		$tags = explode (',', $resp['tags']);
-		foreach ($tags as $tag) {
-			$list_tags[$tag] = empty ($tag) ? 'Non taggé' : $tag;
-		}
+		$list_tags = array_merge ($list_tags, $tags);
 	}
 	
 	unset ($db);
-	krsort ($list_tags);
+	rsort ($list_tags);
 	
-	return $list_tags;
+	return array_unique ($list_tags);
 }
 
 function __media_print_code_snippet_textarea ($content)

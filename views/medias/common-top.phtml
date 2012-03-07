@@ -1,0 +1,69 @@
+<div id="presentation">
+	<h2><?php echo TITLE ?></h2>
+	<p>Direct access to sub-sections:</p>
+		<ul>
+			<li><a href="<?php echo UrlTable::medias (); ?>#medias_screens">Screenshots</a></li>
+			<li><a href="<?php echo UrlTable::medias (); ?>#medias_movies">Videos</a></li>
+		</ul>
+	<p>
+	</p>
+	<div class="foldable" id="fld_mtt0">
+		<form method="post" action="<?php echo UrlTable::medias (); ?>">
+			<fieldset>
+				<legend>
+					Tag matching
+					<a href="#" id="fld_mtt0_btn"
+						 onclick="toggle_folding ('fld_mtt0_btn', 'fld_mtt0'); return false;">
+						[-]
+					</a>
+				</legend>
+				<input type="hidden" name="post" value="true" />
+				<div>
+					<fieldset class="noframe">
+					<legend>Types:
+						<span class="small">
+							(<a href="javascript:set_checked_by_name ('type[]', true);">Select</a>/<a href="javascript:set_checked_by_name ('type[]', false);">Deselect</a> All)
+						</span>
+					</legend>
+					<?php foreach ($all_types as $type): ?>
+						<label>
+							<input type="checkbox" name="type[]" value="<?php echo $type['id'] ?>"
+								<?php if ($type['checked']): ?>checked="checked"<?php endif ?> />
+							<?php echo $type['name'] ?>
+						</label>
+					<?php endforeach ?>
+					</fieldset>
+					<fieldset class="noframe">
+						<legend>Tags:
+							<span class="small">
+								(<a href="javascript:set_checked_by_name ('showtag[]', true);">Select</a>/<a href="javascript:set_checked_by_name ('showtag[]', false);">Deselect</a> All)
+							</span>
+						</legend>
+						<?php foreach ($all_tags as $tag): ?>
+							<label>
+								<input type="checkbox" name="showtag[]" value="<?php echo $tag['id'] ?>"
+									<?php if ($tag['checked']): ?>checked="checked"<?php endif ?>/>
+									<?php echo $tag['name'] ?>
+							</label>
+						<?php endforeach ?>
+					</fieldset>
+				</div>
+				<div class="form_buttons">
+					<input type="submit" value="Match" />
+				</div>
+			</fieldset>
+			<script type="text/javascript">
+				<!--
+				toggle_folding ('fld_mtt0_btn', 'fld_mtt0');
+				//-->
+			</script>
+		</form>
+	</div>
+</div>
+
+<div id="content">
+	<?php if ($is_admin): ?>
+		<div class="admin">
+			<a href="<?php echo UrlTable::admin_medias ('new') ?>"><input type="button" value="Add a media"/></a>
+		</div>
+	<?php endif ?>
