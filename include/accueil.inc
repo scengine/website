@@ -19,8 +19,9 @@
  * 
  */
 
-require_once('lib/misc.php');
-require_once('lib/User.php');
+require_once ('lib/UrlTable.php');
+require_once ('lib/Html.php');
+require_once ('lib/User.php');
 
 
 ?>
@@ -39,7 +40,7 @@ require_once('lib/User.php');
 	{
 ?>
 		<p>
-			<?php print_button ('Déconnexion', UrlTable::logout ()); ?>
+			<?php echo Html::button ('Déconnexion', UrlTable::logout ()); ?>
 		</p>
 		<h3>Pages</h3>
 		<ul>

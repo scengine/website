@@ -22,7 +22,7 @@
 /* page d'administration des admins */
 
 require_once ('include/defines.php');
-require_once ('lib/misc.php');
+require_once ('lib/Html.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
 require_once ('lib/MyDB.php');
@@ -103,7 +103,7 @@ function display_table()
 	{
 		echo '
 		<p>
-			',print_button ('Ajouter un administrateur', UrlTable::admin_admins ('add')),'
+			',Html::button ('Ajouter un administrateur', UrlTable::admin_admins ('add')),'
 		</p>';
 	}
 	
@@ -166,7 +166,7 @@ function display_user($pseudo)
 		</tr>
 	</table>
 	<p>
-		',print_button ('Retour', UrlTable::admin_admins (),
+		',Html::button ('Retour', UrlTable::admin_admins (),
 		                'Retour à la gestion des administrateurs'),'
 	</p>';
 	
@@ -216,7 +216,7 @@ function edit_user ($pseudo)
 			<p>
 				<input type="submit" value="Enregistrer" />
 				<!--input type="reset" value="Réinitialiser"/-->
-				',print_button ('Retour', UrlTable::admin_admins (),
+				',Html::button ('Retour', UrlTable::admin_admins (),
 				                'Retour à la gestion des administrateurs'),'
 			</p>
 		</form>';
@@ -230,7 +230,7 @@ function edit_user ($pseudo)
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 	}
@@ -260,7 +260,7 @@ function save_edit_user ($oldpseudo, $pseudo,
 				__FILE__,'"
 		</fieldset>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -277,7 +277,7 @@ function save_edit_user ($oldpseudo, $pseudo,
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -419,7 +419,7 @@ function save_edit_user ($oldpseudo, $pseudo,
 	
 	echo '
 	<p>
-		',print_button ('Retour', UrlTable::admin_admins (),
+		',Html::button ('Retour', UrlTable::admin_admins (),
 		                'Retour à la gestion des administrateurs'),'
 	</p>';
 	
@@ -438,7 +438,7 @@ function remove_user_query ($pseudo)
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -453,7 +453,7 @@ function remove_user_query ($pseudo)
 			Aucun utilisateur sélectionné !
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -488,7 +488,7 @@ function remove_user_query ($pseudo)
 		<p>
 			<input type="hidden" name="rmuser" value="yes" />
 			<input type="submit" value="Supprimer" />
-			',print_button ('Annuler', UrlTable::admin_admins ()),'
+			',Html::button ('Annuler', UrlTable::admin_admins ()),'
 		</p>
 	</form>';
 	
@@ -511,7 +511,7 @@ function remove_user ($pseudo)
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -532,7 +532,7 @@ function remove_user ($pseudo)
 			L\'administrateur ', $pseudo, ' a été supprimé avec succès.
 		</p>
 		<p>
-			',print_button ('Retour', UrlTable::admin_admins (),
+			',Html::button ('Retour', UrlTable::admin_admins (),
 			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
@@ -545,7 +545,7 @@ function remove_user ($pseudo)
 			Veuillez reporter ce problème à votre administrateur principal.
 		</p>
 		<p>
-			',print_button ('Retour', UrlTable::admin_admins (),
+			',Html::button ('Retour', UrlTable::admin_admins (),
 			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
@@ -565,7 +565,7 @@ function add_user_query()
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -596,7 +596,7 @@ function add_user_query()
 		</div>
 	</form>
 	<p>
-		',print_button ('Retour', UrlTable::admin_admins (),
+		',Html::button ('Retour', UrlTable::admin_admins (),
 		                'Retour à la gestion des administrateurs'),'
 	</p>';
 	
@@ -617,7 +617,7 @@ function add_user ($pseudo, $pass, $passconf, $level)
 			Vous n\'avez pas la permission d\'effectuer cette action.
 		</p>
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 		
@@ -656,7 +656,7 @@ function add_user ($pseudo, $pass, $passconf, $level)
 			<a href="',UrlTable::admin_admins ('show', $pseudo),'">Voir la fiche de ',$pseudo,'</a>
 		</p>
 		<p>
-			',print_button ('Retour', UrlTable::admin_admins (),
+			',Html::button ('Retour', UrlTable::admin_admins (),
 			                'Retour à la gestion des administrateurs'),'
 		</p>';
 	}
@@ -692,7 +692,7 @@ function add_user ($pseudo, $pass, $passconf, $level)
 		}
 		echo '
 		<p>
-			',print_backbutton ('Retour', UrlTable::admin_admins (),
+			',Html::backbutton ('Retour', UrlTable::admin_admins (),
 			                    'Retour à la page précédente'),'
 		</p>';
 	}

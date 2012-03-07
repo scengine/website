@@ -74,9 +74,9 @@
 
 <p class="links">
 	<?php if ($noreturn): ?>
-		<?php print_button ('Back', UrlTable::medias ()) ?>
+		<?php echo Html::button ('Back', UrlTable::medias ()) ?>
 	<?php else: ?>
-		<?php print_backbutton ('Back', UrlTable::medias ()) ?>
+		<?php echo Html::backbutton ('Back', UrlTable::medias ()) ?>
 	<?php endif ?>
 </p>
 

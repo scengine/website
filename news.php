@@ -30,6 +30,7 @@ define ('NEWS_BY_PAGE', 3);
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
+require_once ('lib/Html.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/BCode.php');
 
@@ -62,7 +63,7 @@ function print_new (array &$new, $more=false)
 			<div class="data" id="mn',$new['id'],'">
 				<h3 id="n',$new['id'],'">
 					<a href="',$permalink,'">',
-						escape_html_quotes ($new['title']),
+						Html::escape ($new['title']),
 					'</a>
 				</h3>
 				<div class="content">

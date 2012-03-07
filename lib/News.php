@@ -24,7 +24,7 @@ require_once ('lib/BCode.php');
 require_once ('include/defines.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/User.php');
-require_once ('lib/misc.php');
+require_once ('lib/Html.php');
 
 /* required JavaScript */
 //$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
@@ -37,8 +37,8 @@ abstract class News
 	                                   $id='', $redirect=null, $extra_buttons='',
 	                                   $extra_div_attrs='')
 	{
-		$title = escape_html_quotes ($title);
-		$source = htmlspecialchars ($source, ENT_COMPAT, 'UTF-8');
+		$title = Html::escape ($title);
+		$source = Html::escape ($source);
 		
 		if ($redirect)
 		{
@@ -56,14 +56,14 @@ abstract class News
 					<label for="tn',$id,'"><span class="u">C</span>ontent:</label>
 					<div class="bcode-editor">
 						<div class="form_toolbar">',
-							print_button_js ('+', "entry_more('tn$id')", 'Agrandir le formulaire'),
-							print_button_js ('-', "entry_lesser('tn$id')", 'Rapetisser le formulaire'),
-							print_button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insérer un lien (Alt+L)', 'l'),
-							print_button_js ('img', "textarea_insert('tn$id', '{{', '|Texte alternatif}}')", 'Insérer une image (Alt+H)', 'h'),
-							print_button_js ('<span class="b">G</span>', "textarea_insert_around('tn$id', '**')", 'Mettre en gras (Alt+B)', 'b'),
-							print_button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Mettre en italique (Alt+I)', 'i'),
-							print_button_js ('<span class="u">S</span>', "textarea_insert_around('tn$id', '__')", 'Souligner (Alt+U)', 'u'),
-							print_button_js ('<span class="s">B</span>', "textarea_insert_around('tn$id', '--')", 'Barrer (Alt+S)', 's'),
+							Html::button_js ('+', "entry_more('tn$id')", 'Agrandir le formulaire'),
+							Html::button_js ('-', "entry_lesser('tn$id')", 'Rapetisser le formulaire'),
+							Html::button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insérer un lien (Alt+L)', 'l'),
+							Html::button_js ('img', "textarea_insert('tn$id', '{{', '|Texte alternatif}}')", 'Insérer une image (Alt+H)', 'h'),
+							Html::button_js ('<span class="b">G</span>', "textarea_insert_around('tn$id', '**')", 'Mettre en gras (Alt+B)', 'b'),
+							Html::button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Mettre en italique (Alt+I)', 'i'),
+							Html::button_js ('<span class="u">S</span>', "textarea_insert_around('tn$id', '__')", 'Souligner (Alt+U)', 'u'),
+							Html::button_js ('<span class="s">B</span>', "textarea_insert_around('tn$id', '--')", 'Barrer (Alt+S)', 's'),
 						'</div>
 						<textarea name="content" cols="24" rows="16" accesskey="c" id="tn',$id,'">',
 							$source,

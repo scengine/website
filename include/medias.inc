@@ -21,6 +21,7 @@
 
 require_once ('lib/UrlTable.php');
 require_once ('lib/misc.php');
+require_once ('lib/Html.php');
 require_once ('lib/User.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/medias.php');
@@ -37,8 +38,8 @@ function print_return_link ($button=false)
 	}
 	else
 	{
-		print_button ('Retour', UrlTable::admin_medias (),
-		              'Retour à la gestion des médias');
+		echo Html::button ('Retour', UrlTable::admin_medias (),
+		                   'Retour à la gestion des médias');
 	}
 }
 
@@ -191,7 +192,7 @@ function print_media_tables ()
 {
 	echo '
 	<p>
-		',print_button ('Ajouter un média', UrlTable::admin_medias ('new')),'
+		',Html::button ('Ajouter un média', UrlTable::admin_medias ('new')),'
 	</p>';
 	
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);

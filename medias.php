@@ -27,7 +27,7 @@ define ('TITLE', 'Media');
 
 require_once ('include/defines.php');
 require_once ('lib/medias.php');
-require_once ('lib/misc.php');
+require_once ('lib/Html.php');
 require_once ('lib/User.php');
 require_once ('lib/PHPTemplate.php');
 
