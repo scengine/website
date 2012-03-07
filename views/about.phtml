@@ -1,0 +1,25 @@
+<div id="presentation">
+	<h2>About the SCEngine</h2>
+	<p>
+		Authors, miscellaneous information.
+	</p>
+</div>
+
+<div id="content">
+	<dl>
+		<dt>Current version:</dt>
+		<dd><a href="downloads.php"><?php echo $version ?></a></dd>
+	</dl>
+
+	<h3>Authors</h3>
+	<?php foreach ($roles as $role => $people): ?>
+		<?php if (! empty ($people)): ?>
+			<h4><?php echo $role ?></h4>
+			<ul>
+				<?php foreach ($people as $person): ?>
+					<li><?php echo $person ?></li>
+				<?php endforeach ?>
+			</ul>
+		<?php endif ?>
+	<?php endforeach ?>
+</div>

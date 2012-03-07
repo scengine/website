@@ -21,47 +21,32 @@
 
 
 define ('TITLE', 'About');
-require_once ('include/top.minc');
-require_once ('lib/Metadata.php'); /* gave MDI instance */
 
-?>
-	<div id="presentation">
-		<h2>About the SCEngine</h2>
-		<p>
-    Authors, miscellaneous information.
-		</p>
-	</div>
+require_once ('lib/Metadata.php'); /* gives MDI instance */
+require_once ('lib/PHPTemplate.php');
 
-	<div id="content">
-		<dl>
-                    <dt>Current version:</dt>
-			<dd><a href="downloads.php"><?php echo $MDI->get_version (); ?></a></dd>
-		</dl>
+
+class AboutTemplate extends PHPFileTemplate
+{
+	public function __construct ()
+	{
+		global $MDI;
 		
-		<h3>Authors</h3>
-		<?php 
-			$items = array (
-				array ('Engine development',  'get_authors'),
-				array ('Documentation', 'get_documenters'),
-				array ('Translation',   'get_translators'),
-				array ('Graphists',    'get_graphists'),
-				array ('Contributors', 'get_contributors'),
-			);
-			
-			foreach ($items as &$item) {
-				$a = $MDI->$item[1] ();
-				if ($a) {
-					echo '<h4>',$item[0],'</h4><ul>';
-					foreach ($a as &$i)
-						echo '<li>',$i,'</li>';
-					echo '</ul>';
-				}
-			}
-		?>
-	</div>
+		parent::__construct ('views/about.phtml');
+		$this->version = $MDI->get_version ();
+		$this->roles = array (
+			'Engine development'	=> $MDI->get_authors (),
+			'Documentation'				=> $MDI->get_documenters (),
+			'Translation'					=> $MDI->get_translators (),
+			'Graphists'						=> $MDI->get_graphists (),
+			'Contributors'				=> $MDI->get_contributors ()
+		);
+	}
+}
 
-<?php
 
+$tpl = new AboutTemplate ();
+
+require_once ('include/top.minc');
+$tpl->render ();
 require_once ('include/bottom.minc');
-
-?>
