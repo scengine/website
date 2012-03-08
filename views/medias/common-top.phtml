@@ -64,6 +64,6 @@
 <div id="content">
 	<?php if ($is_admin): ?>
 		<div class="admin">
-			<a href="<?php echo UrlTable::admin_medias ('new') ?>"><input type="button" value="Add a media"/></a>
+			<?php echo Html::button ('Add a media', UrlTable::admin_medias ('new')) ?>
 		</div>
 	<?php endif ?>

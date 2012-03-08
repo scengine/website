@@ -100,11 +100,11 @@ function print_news ($start=0) {
 	
 	// pour permetre aux admins d'ajouter une news
 	if (User::has_rights (ADMIN_LEVEL_NEWS)) {
-		echo '
-		<div>
-			<a href="',UrlTable::admin_news ('new'),'"
-			    onclick="return toggle_display (\'fld_nnew\', \'block\');"><button>Add a news</button></a>
-		</div>';
+		echo
+			'<div>',
+			Html::button_full ('Add a news', UrlTable::admin_news ('new'), null,
+		                     'return toggle_display (\'fld_nnew\', \'block\');'),
+			'</div>';
 	}
 	
 	if (User::has_rights (ADMIN_LEVEL_NEWS))
