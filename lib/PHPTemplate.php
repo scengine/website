@@ -111,6 +111,6 @@ class PHPStringTemplate extends PHPTemplate
 	public function render ()
 	{
 		extract ($this->vars);
-		eval ('?>'.$this->tpl.'<?php');
+		eval ('?>'.$this->tpl);
 	}
 }
