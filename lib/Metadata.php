@@ -59,7 +59,7 @@ class Metadata
 	
 	private function data_load () {
 		$szdata = @file_get_contents ($this->datafile);
-		if ($szdata) {
+		if ($szdata !== false) {
 			$data = unserialize ($szdata);
 			if (is_array ($data)) {
 				/* don't directly set $this->fields=$data to permit adding fields
@@ -84,7 +84,7 @@ class Metadata
 	private function data_write () {
 		$szdata = serialize ($this->fields);
 		if ($szdata) {
-			return file_put_contents ($this->datafile, $szdata) != false;
+			return file_put_contents ($this->datafile, $szdata, LOCK_EX) !== false;
 		}
 		
 		return false;
