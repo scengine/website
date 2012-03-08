@@ -21,6 +21,7 @@
 
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
+require_once ('lib/Html.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/PHPTemplate.php');
@@ -58,7 +59,7 @@ function feed_update_news ()
 			'title'         => $news['title'],
 			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 			 * the use HTML, even if it is not good as XHTML */
-			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'content'       => Html::escape ($news['content']),
 			'date'          => date ('c', $news['mdate']),
 			'alternate_url' => $alternate_url,
 			'id'            => $id,
@@ -66,7 +67,7 @@ function feed_update_news ()
 		);
 		$rss_items[] = array (
 			'title'         => $news['title'],
-			'content'       => htmlspecialchars ($news['content'], ENT_COMPAT, 'UTF-8'),
+			'content'       => Html::escape ($news['content']),
 			'date'          => date ('r', $news['mdate']),
 			'alternate_url' => $alternate_url,
 			'id'            => $id,

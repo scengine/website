@@ -20,6 +20,7 @@
  */
 
 require_once ('lib/FeedReader.php');
+require_once ('lib/Html.php');
 
 class FeedReaderAtom extends FeedReader {
 	private $item = null;
@@ -29,7 +30,7 @@ class FeedReaderAtom extends FeedReader {
 	private $escape_content = false;
 	
 	private function item_escape_prop ($prop) {
-		$this->item[$prop] = htmlspecialchars ($this->item[$prop]);
+		$this->item[$prop] = Html::escape ($this->item[$prop]);
 	}
 	
 	private function item_strtotime ($prop, $fallback_prop) {

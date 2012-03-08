@@ -20,7 +20,8 @@
  */
 
 require_once ('include/defines.php');
-require_once ('lib/Metadata.php'); /* gave MDI instance */
+require_once ('lib/Html.php');
+require_once ('lib/Metadata.php'); /* gives MDI instance */
 
 //$md = new Metadata (METADATA_FILE);
 
@@ -129,7 +130,7 @@ function print_team_table (array &$team, $project) {
 	$i = 0;
 	foreach ($team as $name => $flags) {
 		echo '<tr>
-			<td><input type="text" name="author',$i,'" value="',htmlspecialchars ($name),'" /></td>
+			<td><input type="text" name="author',$i,'" value="',Html::escape ($name),'" /></td>
 			<td><input type="checkbox" name="dev',$i,'"',($flags & TEAM_AUTH)?' checked="checked"':'',' /></td>
 			<td><input type="checkbox" name="doc',$i,'"',($flags & TEAM_DOC)?' checked="checked"':'',' /></td>
 			<td><input type="checkbox" name="trans',$i,'"',($flags & TEAM_TRANS)?' checked="checked"':'',' /></td>
@@ -167,9 +168,9 @@ if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 ?>
 			<form action="<?php echo UrlTable::admin (strtolower (PAGE)); ?>" method="post">
 				<div>
-					<label>Nom du projet&nbsp;:<br /><input type="text" name="name" value="<?php echo htmlspecialchars ($MDI->get_name ()); ?>" /></label><br />
-					<label>Version du projet&nbsp;:<br /><input type="text" name="version" value="<?php echo htmlspecialchars ($MDI->get_version ()); ?>" /></label><br />
-					<label>Licence du projet&nbsp;:<br /><input type="text" name="license" value="<?php echo htmlspecialchars ($MDI->get_license ()); ?>" /></label><br />
+					<label>Nom du projet&nbsp;:<br /><input type="text" name="name" value="<?php echo Html::escape ($MDI->get_name ()); ?>" /></label><br />
+					<label>Version du projet&nbsp;:<br /><input type="text" name="version" value="<?php echo Html::escape ($MDI->get_version ()); ?>" /></label><br />
+					<label>Licence du projet&nbsp;:<br /><input type="text" name="license" value="<?php echo Html::escape ($MDI->get_license ()); ?>" /></label><br />
 					<label><input type="checkbox" name="update_mdate" checked="checked" /> Mettre à jour la date de modification du projet</label><br />
 					<?php print_team_table ($team, $MDI->get_name ()); ?>
 				</div>

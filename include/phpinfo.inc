@@ -7,6 +7,9 @@
 <div id="content">
 
 <?php
+require_once ('lib/Html.php');
+
+
 if (isset ($_GET['phpinfo'])) {
 	phpinfo ();
 }
@@ -29,7 +32,7 @@ else {
 			
 			echo '<tr>
 						<td>', $key, '</td>
-						<td>', htmlspecialchars ($value), '</td>
+						<td>', Html::escape ($value), '</td>
 					</tr>';
 		}
 		
@@ -48,7 +51,7 @@ else {
 			
 			echo '<tr>
 						<td>', $key, '</td>
-						<td>', htmlspecialchars ($value), '</td>
+						<td>', Html::escape ($value), '</td>
 					</tr>';
 		}
 		
@@ -67,7 +70,7 @@ else {
 			
 			echo '<tr>
 						<td>', $key, '</td>
-						<td>', htmlspecialchars ($value), '</td>
+						<td>', Html::escape ($value), '</td>
 					</tr>';
 		}
 		
@@ -86,7 +89,7 @@ else {
 			
 			echo '<tr>
 						<td>', $key, '</td>
-						<td>', htmlspecialchars ($value), '</td>
+						<td>', Html::escape ($value), '</td>
 					</tr>';
 		}
 		

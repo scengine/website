@@ -68,8 +68,8 @@ function print_all_messages ()
 		</tfoot>
 		<tbody>';
 	foreach ($news as $new) {
-		$title = htmlspecialchars ($new['title']);
-		$author = htmlspecialchars ($new['author']);
+		$title = Html::escape ($new['title']);
+		$author = Html::escape ($new['author']);
 		
 		echo '
 		<tr>
@@ -122,7 +122,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			
 			if ($new !== false)
 			{
-				$title = htmlspecialchars ($new['title']);
+				$title = Html::escape ($new['title']);
 				
 				echo '<h2>Édition de «&nbsp;',$title,'&nbsp;»</h2>';
 				display_form_edit ($new['title'], $new['source'], $new['id']);
@@ -151,7 +151,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 			
 			if ($new !== false)
 			{
-				$title = htmlspecialchars ($new['title']);
+				$title = Html::escape ($new['title']);
 				echo '
 				<p>Voulez-vous vraiment supprimer «&nbsp;', $title, '&nbsp;»&nbsp;?</p>
 				<form method="post"
