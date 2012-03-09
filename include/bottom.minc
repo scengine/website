@@ -22,7 +22,6 @@
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
-require_once ('lib/CounterIP.php');
 
 
 ?>
@@ -82,18 +81,6 @@ require_once ('lib/CounterIP.php');
 			</p>
 			
 			<?php
-			/* visitor counter */
-				$counter = new CounterIP (false);
-				if (User::get_logged ()) {
-					$n = $counter->get_n_total ();
-					$nv = $counter->get_n_ip ();
-					
-					echo '<p>There was ',$n,' visits from ',$nv,' visitors</p>';
-				} else {
-					$counter->count ();
-				}
-				unset ($counter);
-				
 				if (User::get_logged ()) {
 					echo '<table><caption>SQL queries:</caption>';
 					foreach (MyDB::get_query_log () as $query) {
