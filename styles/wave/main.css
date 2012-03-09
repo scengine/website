@@ -75,17 +75,27 @@ font-size: 85%;
 .align_center {display: block; text-align: center;}
 
 
+.ok, .warning, .error {
+	border-style: solid;
+}
+p.ok, p.warning, p.error {
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-width: 1px;
+	padding: 0.2em 0.5em;
+}
 .ok {
-color: green;
-font-weight: bold;
+	background: #8ae234;
+	border-color: #4e9a09;
 }
 .warning {
-color: yellow;
-font-weight: bold;
+	background: #fcaf3e;
+	border-color: #ce5c00;
 }
 .error {
-color: red;
-font-weight: bold;
+	background: #ef2929;
+	border-color: #a40000;
 }
 
 
