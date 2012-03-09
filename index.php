@@ -300,7 +300,6 @@ $tpl = new PHPFileTemplate (
 				)
 			),
 			array (
-				new IndexModuleVersion (),
 				new IndexModuleMailingList ('scengine-request@lists.tuxfamily.org',
 				                            'http://listengine.tuxfamily.org/lists.tuxfamily.org/scengine/'),
 				new IndexModuleForum ()
