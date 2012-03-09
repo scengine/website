@@ -202,7 +202,7 @@ function print_media_tables ()
 		$medias = array ();
 		
 		$db->select ('*', array ('type' => $type));
-		while (($resp = $db->fetch_response ()) !== false)
+		while (($resp = $db->fetch_response ()))
 		{
 			media_unescape_db_array ($resp);
 			$medias[] = $resp;

@@ -186,7 +186,7 @@ function media_get_by_id ($media_id)
 	
 	$db->select ('*', array ('id' => $media_id));
 	$media = $db->fetch_response ();
-	if ($media !== false) {
+	if ($media) {
 		media_unescape_db_array ($media);
 	}
 	unset ($db);
@@ -335,7 +335,7 @@ function media_get_array ($type, $bytags=false, $seltags=null)
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	$db->select ('*', array ('type' => $type));
-	while (($resp = $db->fetch_response ()) !== false)
+	while (($resp = $db->fetch_response ()))
 	{
 		media_unescape_db_array ($resp);
 		if ($bytags)
@@ -379,7 +379,7 @@ function media_get_medias (array $types = array (),
 	
 	$db->select ('*', '('.$type_match.') AND ('.$tags_match.')', $sort);
 	
-	if (($rows = $db->fetch_all_responses ()) !== false) {
+	if (($rows = $db->fetch_all_responses ())) {
 		foreach ($rows as &$media) {
 			media_unescape_db_array ($media);
 		}
@@ -395,7 +395,7 @@ function media_get_all_tags ()
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (MEDIA_TABLE);
 	$db->select (array ('tags'));
-	while (($resp = $db->fetch_response ()) !== false) {
+	while (($resp = $db->fetch_response ())) {
 		/* FIXME: don't duplicate exploding with media_unescape_db_array() */
 		$tags = explode (',', $resp['tags']);
 		$list_tags = array_merge ($list_tags, $tags);

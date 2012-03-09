@@ -120,7 +120,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 		if (isset ($_GET['id'])) {
 			$new = News::get_by_id ($_GET['id']);
 			
-			if ($new !== false)
+			if ($new)
 			{
 				$title = Html::escape ($new['title']);
 				
@@ -149,7 +149,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 		{
 			$new = News::get_by_id ($_GET['id']);
 			
-			if ($new !== false)
+			if ($new)
 			{
 				$title = Html::escape ($new['title']);
 				echo '

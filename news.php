@@ -169,7 +169,7 @@ function print_one_news ($id)
 	<div id="content" class="nopresentation">
 		<?php
 		
-		if ($news !== false)
+		if ($news)
 			print_new ($news);
 		else
 		{

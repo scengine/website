@@ -55,7 +55,7 @@ function display_table()
 					<th></th>
 				</tr>';
 	
-	while (false !== ($response = $db->fetch_response ()))
+	while (($response = $db->fetch_response ()))
 	{
 		echo '<tr>
 			<td>

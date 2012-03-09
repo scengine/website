@@ -47,7 +47,7 @@ function feed_update_news ()
 	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 	$db->select_table (NEWS_TABLE);
 	$db->select ('*', '', array ('id' => 'DESC'), 0, 10);
-	while (($news = $db->fetch_response ()) !== false)
+	while (($news = $db->fetch_response ()))
 	*/
 	$all_news = News::get (0, 10);
 	foreach ($all_news as &$news) {

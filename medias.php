@@ -180,7 +180,7 @@ class MediasIndexTemplate extends MediasTemplate
 			)
 		);
 		
-		if ($medias !== false) {
+		if ($medias) {
 			/* adjust the medias array */
 			foreach ($medias as &$media) {
 				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
@@ -195,7 +195,8 @@ class MediasIndexTemplate extends MediasTemplate
 	{
 		$sections = array ();
 		
-		if (($medias = $this->get_display_medias ()) !== false) {
+		$medias = $this->get_display_medias ();
+		if ($medias) {
 			/* expand the medias to blocks of the same type */
 			$medias_by_types = array_chunk_callback (
 				$medias,
