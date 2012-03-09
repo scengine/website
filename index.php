@@ -250,17 +250,17 @@ class IndexModuleMailingList extends IndexModule {
 		$email = filter_input (INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 		$subscribe = filter_input (INPUT_POST, 'subscribe', FILTER_VALIDATE_BOOLEAN);
 		
-		$this->email = $_POST['email'];
+		$this->email = filter_input (INPUT_POST, 'email');
 		if ($email) {
 			if (! mail ($this->ml_request_email,
 			            $subscribe ? 'subscribe' : 'unsubscribe', '',
 			            'From: '.$email)) {
-				$this->set_message ('error', 'Failed to send confirmation email');
+				$this->set_message ('error', 'Failed to send confirmation email.');
 			} else {
-				$this->set_message ('info', 'A confirmation email has been sent to you');
+				$this->set_message ('info', 'A confirmation email has been sent to you.');
 			}
 		} else if (isset ($_POST['email'])) {
-			$this->set_message ('error', 'Invalid email address');
+			$this->set_message ('error', 'Invalid email address.');
 		} else {
 			$this->email = 'email@domain.tld';
 		}
