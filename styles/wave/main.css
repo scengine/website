@@ -494,7 +494,7 @@ img.bordered {
 	color: #949494;
 	background: #EBEBEB url(footer.png) bottom repeat-x;
 	border-top: 2px solid #C7C7C7;
-	margin-top: 20px;
+	margin-top: 80px; /* 20 + 60 */
 	/*padding: 10px 110px;*/
 	padding: 10px 60px;
 	font-size: 80%;
