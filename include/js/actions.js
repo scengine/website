@@ -116,6 +116,12 @@ function textarea_insert (area_id, before_sel, after_sel) {
   return false;
 }
 
+function select_all (element) {
+	if ((element.selectionStart - element.selectionEnd) == 0) {
+		element.setSelectionRange (0, element.value.length);
+	}
+}
+
 function textarea_insert_around (area_id, around_sel) {
   return textarea_insert (area_id, around_sel, around_sel);
 }

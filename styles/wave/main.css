@@ -441,6 +441,9 @@ img.bordered {
 #content .module:nth-child(odd)*/ {
 	clear: both;
 }
+#content .modules .module form {
+	font-size: 80%;
+}
 
 #menu {
 	width: 25%;

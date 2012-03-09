@@ -1,0 +1,18 @@
+<form method="post" action="">
+	<div>
+		<?php if ($message): ?>
+			<p class="<?php echo ($message['type'] == 'error') ? 'error' : 'ok' ?>">
+				<?php echo $message['message'] ?>
+			</p>
+		<?php endif ?>
+		
+		<input type="text" name="email" onfocus="select_all (this);"
+			value="<?php echo $email ?>"
+			title="The email that will receive messages from the mailing list " />
+		
+		<label><input type="radio" name="subscribe" value="true" checked="checked" />Subscribe</label>
+		<label><input type="radio" name="subscribe" value="false" />Unsubscribe</label>
+		
+		<input class="fright" type="submit" value="Submit" />
+	</div>
+</form>

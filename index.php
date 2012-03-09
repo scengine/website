@@ -29,6 +29,7 @@ define ('NEWS_PREVIEW_SIZE', 350);
 require_once ('include/defines.php');
 require_once ('lib/medias.php');
 require_once ('lib/UrlTable.php');
+require_once ('lib/Html.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/FluxBB.php');
@@ -218,6 +219,62 @@ class IndexModuleMainImage extends IndexModule {
 	}
 }
 
+class IndexModuleMailingList extends IndexModule {
+	public $name = 'Mailing list';
+	public $extra_classes = array ('ml', 'subscribe');
+	protected $view = 'views/index-modules/mailing-list.phtml';
+	
+	private $email;
+	private $ml_request_email;
+	private $message = array ();
+	
+	public function __construct ($ml_request_email, $ml_archives_url)
+	{
+		$this->ml_request_email = $ml_request_email;
+		
+		$this->links = array (
+			$ml_archives_url => 'Mailing List Archives'
+		);
+		
+		/* handle subscriptions */
+		$this->handle_user_request ();
+	}
+	
+	private function set_message ($type, $message)
+	{
+		$this->message = array ('type' => $type, 'message' => $message);
+	}
+	
+	private function handle_user_request ()
+	{
+		$email = filter_input (INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+		$subscribe = filter_input (INPUT_POST, 'subscribe', FILTER_VALIDATE_BOOLEAN);
+		
+		$this->email = $_POST['email'];
+		if ($email) {
+			if (! mail ($this->ml_request_email,
+			            $subscribe ? 'subscribe' : 'unsubscribe', '',
+			            'From: '.$email)) {
+				$this->set_message ('error', 'Failed to send confirmation email');
+			} else {
+				$this->set_message ('info', 'A confirmation email has been sent to you');
+			}
+		} else if (isset ($_POST['email'])) {
+			$this->set_message ('error', 'Invalid email address');
+		} else {
+			$this->email = 'email@domain.tld';
+		}
+	}
+	
+	protected function get_tpl_vars ()
+	{
+		return array (
+			'email'		=> Html::escape ($this->email),
+			'message'	=> $this->message,
+		);
+	}
+}
+
 
 
 /* Page body */
@@ -244,6 +301,8 @@ $tpl = new PHPFileTemplate (
 			),
 			array (
 				new IndexModuleVersion (),
+				new IndexModuleMailingList ('scengine-request@lists.tuxfamily.org',
+				                            'http://listengine.tuxfamily.org/lists.tuxfamily.org/scengine/'),
 				new IndexModuleForum ()
 			)
 		)
