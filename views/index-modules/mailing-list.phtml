@@ -1,11 +1,5 @@
 <form method="post" action="">
 	<div>
-		<?php if ($message): ?>
-			<p class="<?php echo ($message['type'] == 'error') ? 'error' : 'ok' ?>">
-				<?php echo $message['message'] ?>
-			</p>
-		<?php endif ?>
-		
 		<input type="text" name="email" onfocus="select_all (this);"
 			value="<?php echo $email ?>"
 			title="The email that will receive messages from the mailing list " />

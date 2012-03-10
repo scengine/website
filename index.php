@@ -30,6 +30,7 @@ require_once ('include/defines.php');
 require_once ('lib/medias.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/Html.php');
+require_once ('lib/Flash.php');
 require_once ('lib/News.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/FluxBB.php');
@@ -230,7 +231,6 @@ class IndexModuleMailingList extends IndexModule {
 	
 	private $email;
 	private $ml_request_email;
-	private $message = array ();
 	
 	public function __construct ($ml_request_email, $ml_archives_url)
 	{
@@ -244,11 +244,6 @@ class IndexModuleMailingList extends IndexModule {
 		$this->handle_user_request ();
 	}
 	
-	private function set_message ($type, $message)
-	{
-		$this->message = array ('type' => $type, 'message' => $message);
-	}
-	
 	private function handle_user_request ()
 	{
 		$email = filter_input (INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -259,12 +254,12 @@ class IndexModuleMailingList extends IndexModule {
 			if (! mail ($this->ml_request_email,
 			            $subscribe ? 'subscribe' : 'unsubscribe', '',
 			            'From: '.$email)) {
-				$this->set_message ('error', 'Failed to send confirmation email.');
+				Flash::add ('error', 'Failed to send confirmation email.');
 			} else {
-				$this->set_message ('info', 'A confirmation email has been sent to you.');
+				Flash::add ('info', 'A confirmation email has been sent to you.');
 			}
 		} else if (isset ($_POST['email'])) {
-			$this->set_message ('error', 'Invalid email address.');
+			Flash::add ('error', 'Invalid email address.');
 		} else {
 			$this->email = 'email@domain.tld';
 		}
@@ -273,8 +268,7 @@ class IndexModuleMailingList extends IndexModule {
 	protected function get_tpl_vars ()
 	{
 		return array (
-			'email'		=> Html::escape ($this->email),
-			'message'	=> $this->message,
+			'email'		=> Html::escape ($this->email)
 		);
 	}
 }
