@@ -130,7 +130,7 @@ class IndexModuleForum extends IndexModule {
 	
 	protected function get_tpl_vars ()
 	{
-		$reader = new IndexFeedReaderAtom ($this->feed);
+		$reader = new IndexFeedReaderAtom ($this->feed, 300 /* 5min cache */);
 		
 		return array (
 			'items' => $reader->get_items ()
