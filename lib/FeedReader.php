@@ -23,7 +23,7 @@ require_once ('lib/FileCache.php');
 
 /* feed cache settings */
 define ('FEED_READER_CACHE_DIR', BSE_CACHE_DIR.'feeds/');
-define ('FEED_READER_CACHE_TIME', 3600); /* cache time, in seconds */
+define ('FEED_READER_CACHE_TIME', 3600); /* default cache time, in seconds */
 
 define ('FEED_KEY_ID',        'id');
 define ('FEED_KEY_PUBLISHED', 'published');
@@ -75,11 +75,11 @@ abstract class FeedReader extends FileCache {
 		return $this->items;
 	}
 	
-	public function __construct ($feed_url) {
+	public function __construct ($feed_url, $cache_time = FEED_READER_CACHE_TIME) {
 		$this->feed_url = $feed_url;
 		parent::__construct ($this->feed_url,
 		                     FEED_READER_CACHE_DIR . urlencode ($feed_url),
-		                     FEED_READER_CACHE_TIME);
+		                     $cache_time);
 		$this->load ();
 	}
 	
