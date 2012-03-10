@@ -2,6 +2,12 @@
 	<p>No recent posts</p>
 <?php else: ?>
 	<ul>
-		<?php echo $items ?>
+		<?php foreach ($items as $item): ?>
+			<li>
+				<a href="<?php echo Html::escape ($item['link']) ?>"
+					 title="By <?php echo Html::escape ($item['author']) ?> on <?php echo date ('Y-m-d H:i', $item['published']) ?>"
+				><?php echo $item['title'] ?></a>
+			</li>
+		<?php endforeach ?>
 	</ul>
 <?php endif ?>

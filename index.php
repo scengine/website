@@ -129,7 +129,11 @@ class IndexModuleForum extends IndexModule {
 	
 	protected function get_tpl_vars ()
 	{
-		return array ('items' => FluxBB::get_recent_list (array ('show' => 20)));
+		$reader = new IndexFeedReaderAtom ($this->feed);
+		
+		return array (
+			'items' => $reader->get_items ()
+		);
 	}
 }
 
