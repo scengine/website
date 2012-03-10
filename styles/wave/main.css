@@ -75,17 +75,17 @@ font-size: 85%;
 .align_center {display: block; text-align: center;}
 
 
-.ok, .warning, .error {
+.ok, .info, .warning, .error {
 	border-style: solid;
 }
-p.ok, p.warning, p.error {
+p.ok, p.info, p.warning, p.error {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 	border-width: 1px;
 	padding: 0.2em 0.5em;
 }
-.ok {
+.ok, .info {
 	background: #8ae234;
 	border-color: #4e9a09;
 }

@@ -27,6 +27,7 @@
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
+require_once ('lib/Flash.php');
 require_once ('lib/string.php');
 require_once ('lib/Metadata.php'); /* gives MDI instance */
 
@@ -117,3 +118,13 @@ function print_head_adds (&$adds) {
 		</div>
 
 		<div id="body">
+
+<?php if (($messages = Flash::get_messages ())): ?>
+		<div class="messages">
+			<?php foreach ($messages as $message): ?>
+				<p class="message <?php echo $message['type'] ?>">
+					<?php echo $message['message'] ?>
+				</p>
+			<?php endforeach ?>
+		</div>
+<?php endif ?>
