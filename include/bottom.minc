@@ -33,7 +33,7 @@ require_once ('lib/User.php');
 				<ul>
 						<li><a href="<?php echo BSE_BASE_PATH; ?>forums/">Forum</a></li>
 						<li><a href="<?php echo BSE_BASE_PATH; ?>doc/">Documentation</a></li>
-						<li><a href="<?php echo BSE_BASE_PATH, UrlTable::tuto (); ?>">Tutorial</a></li>
+						<li><a href="<?php echo UrlTable::tuto (); ?>">Tutorial</a></li>
 				</ul>
 			</div>
 			
@@ -49,7 +49,7 @@ require_once ('lib/User.php');
 			<div class="module">
 				<h3>Miscellaneous</h3>
 				<ul>
-					<li><a href="<?php echo BSE_BASE_PATH, UrlTable::license (); ?>">License</a></li>
+					<li><a href="<?php echo UrlTable::license (); ?>">License</a></li>
 				</ul>
 			</div>
 			

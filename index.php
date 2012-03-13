@@ -287,7 +287,7 @@ $tpl = new PHPFileTemplate (
 		'columns' => array (
 			array (
 				new IndexModuleCommits (
-					BSE_BASE_URL.UrlTable::feed ('commits.atom'),
+					BSE_SITE_URL.UrlTable::feed ('commits.atom'),
 					array (
 						'http://git.tuxfamily.org/scengine/utils.git' => 'Utils',
 						'http://git.tuxfamily.org/scengine/core.git' => 'Core',

@@ -59,8 +59,9 @@ define ('COUNTER_TABLE', 'bse_counter');
 /* Base site URL for getting absolute links to site pages right.
  * It is not really needed but provides nice features.
  * This path must be a complete prefix, with trailing slash, or be empty. */
+define ('BSE_SITE_URL', 'http://www.mysite.com');
 define ('BSE_BASE_PATH', '/');
-define ('BSE_BASE_URL', 'http://www.mysite.com'.BSE_BASE_PATH);
+define ('BSE_BASE_URL', BSE_SITE_URL.BSE_BASE_PATH);
 
 /* File to store metadatas */
 define ('METADATA_FILE', dirname (__FILE__).'/../data/metadatas');

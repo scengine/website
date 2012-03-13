@@ -36,7 +36,7 @@ abstract class UrlTable
 		else
 			$link .= '.html';
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	
 	public static function get_script ($uri)
@@ -112,7 +112,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	public static function medias_tags (array $type=null, array $tags=null)
 	{
@@ -145,7 +145,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	
 	public static function downloads ()
@@ -185,7 +185,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	protected static function generic_admin_action_id ($module, $action, $id)
 	{
@@ -214,7 +214,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	public static function admin_news ($action=null, $id=false)
 	{
@@ -251,7 +251,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	
 	public static function news ($id=false, $title=null)
@@ -279,7 +279,7 @@ abstract class UrlTable
 			$link .= '.html';
 		}
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	public static function news_page ($page)
 	{
@@ -290,32 +290,32 @@ abstract class UrlTable
 		else
 			$link = 'news-page'.$page.'.html';
 		
-		return $link;
+		return BSE_BASE_PATH.$link;
 	}
 	
 	public static function login ()
 	{
 		if (! BSE_ENABLE_URL_REWRITING)
-			return 'connexion.php';
+			return BSE_BASE_PATH.'connexion.php';
 		else
-			return 'login.html';
+			return BSE_BASE_PATH.'login.html';
 	}
 	
 	public static function logout ()
 	{
 		if (! BSE_ENABLE_URL_REWRITING)
-			return 'connexion.php?act=logout';
+			return BSE_BASE_PATH.'connexion.php?act=logout';
 		else
-			return 'logout.html';
+			return BSE_BASE_PATH.'logout.html';
 	}
 	
 	public static function feed ($feed)
 	{
 		if (! BSE_ENABLE_URL_REWRITING && ($feed == 'commits.atom' ||
 		                                   $feed == 'commits.rss')) {
-			return 'commits-feed.php?format=' . filename_getext ($feed);
+			return BSE_BASE_PATH.'commits-feed.php?format=' . filename_getext ($feed);
 		}
 		
-		return 'feeds/' . $feed;
+		return BSE_BASE_PATH.'feeds/' . $feed;
 	}
 }

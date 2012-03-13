@@ -197,7 +197,7 @@ function print_home ()
 		<h2>News
 			<span class="fright">
 				<a href="<?php echo NEWS_ATOM_FEED_FILE; ?>" title="Subscribe to the Atom Feed">
-					<img src="styles/<?php echo STYLE; ?>/feed.png" alt="Atom Feed" />
+					<img src="<?php echo BSE_BASE_PATH ?>styles/<?php echo STYLE; ?>/feed.png" alt="Atom Feed" />
 				</a>
 			</span>
 		</h2>

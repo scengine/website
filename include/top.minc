@@ -65,7 +65,7 @@ function print_head_adds (&$adds) {
 		<link rel="alternate" title="Actualités (RSS)"
 			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,NEWS_RSS_FEED_FILE; ?>" />
 		
-		<script type="text/javascript" src="include/js/actions.js"></script>
+		<script type="text/javascript" src="<?php echo BSE_BASE_PATH ?>include/js/actions.js"></script>
 <?php
 			if (isset ($HEAD_ADDS) && is_array ($HEAD_ADDS)) {
 				print_head_adds ($HEAD_ADDS);
@@ -87,8 +87,8 @@ function print_head_adds (&$adds) {
 						UrlTable::news ()       => 'News',
 						UrlTable::medias ()     => 'Medias',
 						UrlTable::downloads ()  => 'Downloads',
-						'forums/'               => 'Forums',
-						'doc/'                  => 'Documentation',
+						BSE_BASE_PATH.'forums/' => 'Forums',
+						BSE_BASE_PATH.'doc/'    => 'Documentation',
 						/*UrlTable::tuto ()       => 'Tutorial',
 						UrlTable::license ()    => 'License',*/
 						UrlTable::about ()      => 'About'
