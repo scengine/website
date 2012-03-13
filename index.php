@@ -157,7 +157,7 @@ class IndexModuleNews extends IndexModule {
 		return array (
 			'title' => $news['title'],
 			'content' => xmlstr_shortcut ($news['content'], NEWS_PREVIEW_SIZE,
-			                              '… <a href="'.$permalink.'" class="more">lire la suite</a>'),
+			                              '… <a href="'.$permalink.'" class="more">read more</a>'),
 			'permalink' => $permalink
 		);
 	}
