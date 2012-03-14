@@ -1,0 +1,13 @@
+<div id="content" class="nopresentation">
+	<?php if (! $news): ?>
+			<h2>No such news</h2>
+			<p>
+				The news you're searching for doesn't exist or has been deleted or moved.
+			</p>
+			<p>
+				<a href="<?php $news_url ?>">Back to news list</a>
+			</p>
+	<?php endif ?>
+	
+	<?php include 'common-view.phtml' ?>
+</div>

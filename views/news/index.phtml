@@ -1,0 +1,28 @@
+<div id="presentation">
+	<h2>News
+		<span class="fright">
+			<a href="<?php echo $feed_url ?>" title="Subscribe to the Atom Feed">
+				<img src="<?php echo BSE_BASE_PATH ?>styles/<?php echo STYLE ?>/feed.png" alt="Atom Feed" />
+			</a>
+		</span>
+	</h2>
+	<p>
+		News index. Browse and read old stuff; you may rapidly find french posts.
+	</p>
+</div>
+
+<div id="content">
+	<?php if ($is_admin): ?>
+		<div>
+			<?php echo Html::button_full ('Add a news', $add_news_url, null,
+			                              'return toggle_display (\'fn\', \'block\')') ?>
+		</div>
+		<?php include "common-form.phtml" ?>
+	<?php endif ?>
+	
+	<?php foreach ($news as $news): ?>
+		<?php include 'common-view.phtml' ?>
+	<?php endforeach ?>
+	
+	<div class="paging"><?php echo $paging ?></div>
+</div>

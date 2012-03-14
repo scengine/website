@@ -1,0 +1,55 @@
+<?php
+	/* support not to have a news */
+	$_action	= isset ($news['id']) ? 'edit' : 'new';
+	$_id			= isset ($news['id']) ? $news['id'] : '';
+	$_title		= isset ($news['title']) ? $news['title'] : '';
+	$_source	= isset ($news['source']) ? $news['source'] : '';
+?>
+<div class="formedit" id="fn<?php echo $_id ?>" <?php if ($hidden_forms): ?>style="display:none;"<?php endif ?>>
+	<form method="post" action="<?php echo BSE_BASE_PATH ?>post.php?sec=news&amp;act=<?php echo $_action ?>&amp;id=<?php echo $_id ?>">
+		<div>
+			<label><span class="u">T</span>itle:<br />
+				<input type="text" name="title" accesskey="t" value="<?php echo Html::escape ($_title) ?>" />
+			</label>
+			<br />
+			<label for="tn<?php echo $_id ?>"><span class="u">C</span>ontent:</label>
+			<div class="bcode-editor">
+				<div class="form_toolbar">
+					<button onclick="entry_more('tn<?php echo $_id ?>')"
+						ondblclick=""
+						title="Enlarge the form">+</button>
+					<button onclick="entry_lesser('tn<?php echo $_id ?>')"
+						ondblclick=""
+						title="Shrink the form">-</button>
+					<button onclick="textarea_insert('tn<?php echo $_id ?>', '[[', ']]')"
+						ondblclick=""
+						accesskey="L"
+						title="Insert Link (Alt+L)">http://</button>
+					<button onclick="textarea_insert('tn<?php echo $_id ?>', '{{', '|Alternative text}}')"
+						ondblclick=""
+						accesskey="H"
+						title="Insert Image (Alt+H)">img</button>
+					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '**')"
+						ondblclick=""
+						accesskey="B"
+						title="Bold (Alt+B)"><span class="b">G</span></button>
+					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '//')"
+						ondblclick=""
+						accesskey="I"
+						title="Italic (Alt+I)"><span class="i">I</span></button>
+					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '__')"
+						ondblclick=""
+						accesskey="U"
+						title="Underline (Alt+U)"><span class="u">U</span></button>
+					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '--')"
+						ondblclick=""
+						accesskey="S"
+						title="Strikethrough (Alt+S)"><span class="s">S</span></button>
+				</div>
+				<textarea name="content" cols="24" rows="16" accesskey="C" id="tn<?php echo $_id ?>"><?php echo $_source ?></textarea>
+			</div>
+			<input type="submit" value="Post" accesskey="P" title="Post (Alt+P)" />
+			<!--input type="reset" value="Reset" accesskey="X" title="Reset Form (Alt+X)" /-->
+		</div>
+	</form>
+</div>

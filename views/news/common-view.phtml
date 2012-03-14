@@ -1,0 +1,36 @@
+<div class="news">
+	<?php if ($is_admin): ?>
+		<?php include "common-form.phtml" ?>
+	<?php endif ?>
+	
+	<div>
+		<div class="data" id="mn<?php echo $news['id'] ?>">
+			<h3 id="n<?php echo $news['id'] ?>">
+				<a href="<?php echo $news['permalink'] ?>"><?php echo Html::escape ($news['title']) ?></a>
+			</h3>
+			<div class="content">
+				<?php echo $news['content'] ?>
+			</div>
+			<div class="date">
+				Posted by <span class="b"><?php echo $news['author'] ?></span>
+				on <?php echo date ('Y-m-d H:i', $news['date']) ?>
+				<?php if ($news['mdate'] > $news['date']): ?>
+					&mdash;
+					last updated by <span class="b"><?php echo $news['mauthor'] ?></span>
+					on <?php echo date ('Y-m-d H:i', $news['mdate']) ?>
+				<?php endif ?>
+			</div>
+		</div>
+		<div class="links">
+			<ul>
+				<li><a href="<?php echo $news['permalink'] ?>">Permalink</a></li>
+				<?php if ($is_admin): ?>
+					<li><a href="<?php echo UrlTable::admin_news ('edit', $news['id']) ?>"
+						     onclick="return news_edit ('n<?php echo $news['id'] ?>', this);">Edit</a></li>
+					<li><a href="<?php echo UrlTable::admin_news ('rm', $news['id']) ?>"
+						     onclick="return news_delete ('n<?php echo $news['id'] ?>');">Delete</a></li>
+				<?php endif ?>
+			</ul>
+		</div>
+	</div>
+</div>
