@@ -421,10 +421,16 @@ img.bordered {
 	/*-moz-border-radius: 0 0 10px 10px;*/
 	text-align: justify;
 }
+#content .modules .module .data ul {
+	text-align: left;
+}
 #content .modules .module .data .links {
 	margin-top: 5px;
 	border-top: 1px solid #C7C7C7;
 	clear: both; /* for inline floating data not to overflow */
+}
+#content .modules .module .data .links,
+#content .modules .module .data .links ul {
 	text-align: right;
 }
 #content .modules .module .data .date {
