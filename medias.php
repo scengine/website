@@ -175,7 +175,7 @@ class MediasIndexTemplate extends MediasTemplate
 			$this->get_types_filter (),
 			$this->get_tags_filter (),
 			array (
-				'type' => 'ASC',
+				'type' => 'DESC',
 				'mdate' => 'DESC'
 			)
 		);
