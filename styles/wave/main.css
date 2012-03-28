@@ -321,6 +321,14 @@ img.bordered {
 	/*color: #0081BF;*/
 	padding: 10px 10px 3px 10px;
 }
+#menubar ul>li,
+#menubar a {
+	-webkit-transition-duration: 0.05s;
+	-moz-transition-duration: 0.05s;
+	-ms-transition-duration: 0.05s;
+	-o-transition-duration: 0.05s;
+	transition-duration: 0.05s;
+}
 
 #navbar {
 	clear: both;
