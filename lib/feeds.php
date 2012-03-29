@@ -40,9 +40,9 @@ function feed_update ($file, $data)
 function feed_update_news ()
 {
 	$vars = array (
-		'language'      => 'fr',
-		'title'         => 'News du SCEngine',
-		'description'   => 'Site officiel du SCEngine',
+		'language'      => 'en',
+		'title'         => 'SCEngine News',
+		'description'   => 'News from the SCEngine website',
 		'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
 		'site_url'      => BSE_BASE_URL,
 		'alternate_url' => BSE_SITE_URL.UrlTable::news (),
@@ -56,7 +56,7 @@ function feed_update_news ()
 		$alternate_url = UrlTable::news ($news['id']);
 		
 		$vars['items'][] = array (
-			'lang'          => 'fr',
+			'lang'          => 'en',
 			'title'         => $news['title'],
 			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 			 * the use HTML, even if it is not good as XHTML */
