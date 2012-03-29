@@ -6,7 +6,7 @@
 	<title><?php echo $title ?></title>
 	<link rel="self" href="<?php echo $self_url ?>" />
 	<link rel="alternate" href="<?php echo $alternate_url ?>" />
-	<updated><?php echo $date ?></updated>
+	<updated><?php echo date ('c', $date) ?></updated>
 	<id><?php echo $id ?></id>
 <?php foreach ($items as $item): ?>
 	<entry>
@@ -14,7 +14,7 @@
 		<content type="html" xml:lang="<?php echo $item['lang'] ?>">
 			<?php echo $item['content'] ?>
 		</content>
-		<updated><?php echo $item['date'] ?></updated>
+		<updated><?php echo date ('c', $item['date']) ?></updated>
 		<link rel="alternate" href="<?php echo $item['alternate_url'] ?>" />
 		<id><?php echo $item['id'] ?></id>
 		<author>

@@ -23,7 +23,6 @@ require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/Html.php');
 require_once ('lib/News.php');
-require_once ('lib/MyDB.php');
 require_once ('lib/PHPTemplate.php');
 
 
@@ -40,67 +39,40 @@ function feed_update ($file, $data)
 
 function feed_update_news ()
 {
-	$atom_items = array ();
-	$rss_items = array ();
+	$vars = array (
+		'language'      => 'fr',
+		'title'         => 'News du SCEngine',
+		'description'   => 'Site officiel du SCEngine',
+		'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
+		'site_url'      => BSE_BASE_URL,
+		'alternate_url' => BSE_SITE_URL.UrlTable::news (),
+		'date'          => time (),
+		'id'            => BSE_BASE_URL,
+		'items'         => array ()
+	);
 	
-	/*
-	$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
-	$db->select_table (NEWS_TABLE);
-	$db->select ('*', '', array ('id' => 'DESC'), 0, 10);
-	while (($news = $db->fetch_response ()))
-	*/
 	$all_news = News::get (0, 10);
 	foreach ($all_news as &$news) {
 		$alternate_url = UrlTable::news ($news['id']);
-		$id = /*sha1 (*/$alternate_url/*)*/;
 		
-		$atom_items[] = array (
+		$vars['items'][] = array (
 			'lang'          => 'fr',
 			'title'         => $news['title'],
 			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 			 * the use HTML, even if it is not good as XHTML */
 			'content'       => Html::escape ($news['content']),
-			'date'          => date ('c', $news['mdate']),
+			'date'          => $news['mdate'],
 			'alternate_url' => $alternate_url,
-			'id'            => $id,
-			'author'        => $news['author']
-		);
-		$rss_items[] = array (
-			'title'         => $news['title'],
-			'content'       => Html::escape ($news['content']),
-			'date'          => date ('r', $news['mdate']),
-			'alternate_url' => $alternate_url,
-			'id'            => $id,
+			'id'            => $alternate_url,
 			'author'        => $news['author']
 		);
 	}
-	unset ($db);
 	
-	$atom_data = new PHPFileTemplate (
-		'views/feeds/news.atom.phtml',
-		array (
-			'title'         => 'News du SCEngine',
-			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
-			'self_url'      => BSE_BASE_URL.NEWS_ATOM_FEED_FILE,
-			'alternate_url' => BSE_BASE_URL.'index.php',
-			'date'          => date ('c'),
-			'id'            => BSE_BASE_URL,
-			'items'         => &$atom_items
-		)
-	);
-	$rss_data = new PHPFileTemplate (
-		'views/feeds/news.rss.phtml',
-		array (
-			'title'         => 'News du SCEngine',
-			'description'   => 'Site officiel du SCEngine',
-			'self_url'      => BSE_BASE_URL.NEWS_RSS_FEED_FILE,
-			'site_url'      => BSE_BASE_URL,
-			'language'      => 'fr',
-			'date'          => date ('r'),
-			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
-			'items'         => &$rss_items
-		)
-	);
+	$atom_data = new PHPFileTemplate ('views/feeds/news.atom.phtml', $vars);
+	$atom_data->self_url = BSE_BASE_URL.NEWS_ATOM_FEED_FILE;
+	
+	$rss_data = new PHPFileTemplate ('views/feeds/news.rss.phtml', $vars);
+	$rss_data->self_url = BSE_BASE_URL.NEWS_RSS_FEED_FILE;
 	
 	return feed_update (NEWS_ATOM_FEED_FILE, (string) $atom_data) &&
 	       feed_update (NEWS_RSS_FEED_FILE, (string) $rss_data);
