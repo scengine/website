@@ -417,8 +417,6 @@ function __media_print_code_snippet_textarea ($content)
 
 function media_print_code_snippets (array &$media)
 {
-	$uri = MEDIA_DIR_R.'/'.$media['uri'];
-	$tb_uri = MEDIA_DIR_R.'/'.$media['tb_uri'];
 	static $n = 1;
 	
 	?>
@@ -448,7 +446,7 @@ function media_print_code_snippets (array &$media)
 				echo
 					__media_print_code_snippet_textarea (
 						'[['.UrlTable::medias ($media['id'], false, $media['desc']).'#watch|{{'.
-						$tb_uri.'|'.$media['desc'].'}}]]'
+						$media['tb_uri'].'|'.$media['desc'].'}}]]'
 					);
 				?>
 			</div>
@@ -457,7 +455,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'[url='.UrlTable::medias ($media['id'], false, $media['desc']).'#watch][img]'.
-						$tb_uri.'[/img][/url]'
+						$media['tb_uri'].'[/img][/url]'
 					);
 				?>
 			</div>
@@ -466,7 +464,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'<lien url="'.UrlTable::medias ($media['id'], false, $media['desc']).
-						'#watch"><image>'.$tb_uri.'</image></lien>'
+						'#watch"><image>'.$media['tb_uri'].'</image></lien>'
 					);
 				?>
 			</div>
@@ -475,7 +473,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'<a href="'.UrlTable::medias ($media['id'], false, $media['desc']).
-						'#watch"><img src="'.$tb_uri.'" alt="'.$media['desc'].'" /></a>'
+						'#watch"><img src="'.$media['tb_uri'].'" alt="'.$media['desc'].'" /></a>'
 					);
 				?>
 			</div>
@@ -494,25 +492,25 @@ function media_print_code_snippets (array &$media)
 			<div class="code_snippet">
 				BBanCode/DokuWiki&nbsp;:
 				<?php
-					__media_print_code_snippet_textarea ('[['.$uri.'|'.$media['desc'].']]');
+					__media_print_code_snippet_textarea ('[['.$media['uri'].'|'.$media['desc'].']]');
 				?>
 			</div>
 			<div class="code_snippet">
 				BBCode&nbsp;:
 				<?php
-					__media_print_code_snippet_textarea ('[url='.$uri.']'.$media['desc'].'[/url]');
+					__media_print_code_snippet_textarea ('[url='.$media['uri'].']'.$media['desc'].'[/url]');
 				?>
 			</div>
 			<div class="code_snippet">
 				ZCode&nbsp;:
 				<?php
-					__media_print_code_snippet_textarea ('<lien url="'.$uri.'">'.$media['desc'].'</lien>');
+					__media_print_code_snippet_textarea ('<lien url="'.$media['uri'].'">'.$media['desc'].'</lien>');
 				?>
 			</div>
 			<div class="code_snippet">
 				XHTML&nbsp;:
 				<?php
-					__media_print_code_snippet_textarea ('<a href="'.$uri.'">'.$media['desc'].'</a>');
+					__media_print_code_snippet_textarea ('<a href="'.$media['uri'].'">'.$media['desc'].'</a>');
 				?>
 			</div>
 		</div>
@@ -533,7 +531,7 @@ function media_print_code_snippets (array &$media)
 				echo
 					__media_print_code_snippet_textarea (
 						'[['.UrlTable::medias ($media['id'], false, $media['desc']).'#watch|{{'.
-						$uri.'|'.$media['desc'].'}}]]'
+						$media['uri'].'|'.$media['desc'].'}}]]'
 					);
 				?>
 			</div>
@@ -542,7 +540,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'[url='.UrlTable::medias ($media['id'], false, $media['desc']).'#watch][img]'.
-						$uri.'[/img][/url]'
+						$media['uri'].'[/img][/url]'
 					);
 				?>
 			</div>
@@ -551,7 +549,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'<lien url="'.UrlTable::medias ($media['id'], false, $media['desc']).
-						'#watch"><image>'.$uri.'</image></lien>'
+						'#watch"><image>'.$media['uri'].'</image></lien>'
 					);
 				?>
 			</div>
@@ -560,7 +558,7 @@ function media_print_code_snippets (array &$media)
 				<?php
 					__media_print_code_snippet_textarea (
 						'<a href="'.UrlTable::medias ($media['id'], false, $media['desc']).
-						'#watch"><img src="'.$uri.'" alt="'.$media['desc'].'" /></a>'
+						'#watch"><img src="'.$media['uri'].'" alt="'.$media['desc'].'" /></a>'
 					);
 				?>
 			</div>
