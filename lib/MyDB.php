@@ -34,7 +34,7 @@ $__MyDB_internal__query_log = array ();
 
 class MyDB extends mysqli
 {
-	protected $response;
+	protected $response = false;
 	protected $table;
 	
 	public function __construct ($host, $username, $password, $db=null, $charset=null)
@@ -58,7 +58,7 @@ class MyDB extends mysqli
 		global $__MyDB_internal__query_log;
 		$__MyDB_internal__query_log[] = $query;
 		
-		if ($this->response) { /* is this REALLY needed!? */
+		if (is_object ($this->response)) { /* is this REALLY needed!? */
 			$this->response->free ();
 		}
 		$this->response = parent::query ($query) or die ($this->error ());
