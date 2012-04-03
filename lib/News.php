@@ -35,7 +35,7 @@ abstract class News
 	/* Prints a news form */
 	public static function print_form ($title='', $source='', $action='new',
 	                                   $id='', $redirect=null, $extra_buttons='',
-	                                   $extra_div_attrs='')
+	                                   $extra_div_attrs='', $publish = true)
 	{
 		$title = Html::escape ($title);
 		$source = Html::escape ($source);
@@ -69,6 +69,12 @@ abstract class News
 							$source,
 						'</textarea>
 					</div>
+					<div class="options">
+						<ul>
+							<li><label title="Whether the news should be visible to all"><input type="checkbox" name="publish" ', ($publish) ? 'checked="checked"' : '' , ' />Publish</label></li>',
+							($action == 'edit') ? '<li><label title="Whether not to update modification date and author"><input type="checkbox" name="noupdate" checked="checked" />Hide edition</label></li>' : '',
+						'</ul>
+					</div>
 					<input type="submit" value="Poster" accesskey="p" title="Poster (Alt + P)" />
 					<!--input type="reset" value="Réinitialiser" accesskey="x" title="Vider le forumlaire (Alt + X)" /-->
 					',$extra_buttons,'
@@ -79,6 +85,15 @@ abstract class News
 	
 	
 	/*** Retriving of data from the DB ***/
+	
+	protected static function get_published_filter ()
+	{
+		if (User::has_rights (ADMIN_LEVEL_NEWS)) {
+			return array ();
+		} else {
+			return array ('published' => 1);
+		}
+	}
 	
 	/* Gets a list of news
 	 * \param $start_offset number of news (from the last one) to skip
@@ -91,7 +106,8 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', '', array ('id' => 'DESC'), $start_offset, $n)) {
+		if ($db->select ('*', self::get_published_filter (),
+			               array ('id' => 'DESC'), $start_offset, $n)) {
 			$news = $db->fetch_all_responses ();
 		}
 		
@@ -109,7 +125,8 @@ abstract class News
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', array ('id' => $id))) {
+		if ($db->select ('*', array_merge (self::get_published_filter (),
+			                                 array ('id' => $id)))) {
 			return $db->fetch_response ();
 		} else {
 			return false;
@@ -121,6 +138,6 @@ abstract class News
 	{
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		return $db->count ();
+		return $db->count (self::get_published_filter ());
 	}
 }

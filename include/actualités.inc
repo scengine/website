@@ -29,17 +29,18 @@ require_once ('lib/News.php');
 
 
 /* this function display a form containg or not values. */
-function display_form ($title='', $source='', $action='new', $id='') {
+function display_form ($title='', $source='', $action='new', $id='', $publish=true) {
 	News::print_form ($title, $source, $action, $id, UrlTable::admin (strtolower (PAGE)), 
-	                  Html::button ('Annuler', UrlTable::admin (strtolower (PAGE))));
+	                  Html::button ('Annuler', UrlTable::admin (strtolower (PAGE))),
+	                  '', $publish);
 }
 
 function display_form_new () {
 	display_form ();
 }
 
-function display_form_edit ($title='', $source='', $id='') {
-	display_form ($title, $source, 'edit', $id);
+function display_form_edit ($title='', $source='', $id='', $publish=true) {
+	display_form ($title, $source, 'edit', $id, $publish);
 }
 
 function print_all_messages ()
@@ -55,6 +56,7 @@ function print_all_messages ()
 				<th>Titre</th>
 				<th>Auteur</th>
 				<th>Date</th>
+				<th>Published</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -63,6 +65,7 @@ function print_all_messages ()
 				<th>Titre</th>
 				<th>Auteur</th>
 				<th>Date</th>
+				<th>Published</th>
 				<th></th>
 			</tr>
 		</tfoot>
@@ -86,6 +89,7 @@ function print_all_messages ()
 				</a>
 			</td>
 			<td>', date ('d/m/y (H:i)', $new['date']), '</td>
+			<td>', $new['published'] ? 'Yes' : 'No' ,'</td>
 			<td>
 				<a href="',UrlTable::admin_news ('rm', $new['id']),'"
 				   onclick="return news_delete (\'',$new['id'],'\')"
@@ -125,7 +129,7 @@ if (User::has_rights (ADMIN_LEVEL_NEWS)) {
 				$title = Html::escape ($new['title']);
 				
 				echo '<h2>Édition de «&nbsp;',$title,'&nbsp;»</h2>';
-				display_form_edit ($new['title'], $new['source'], $new['id']);
+				display_form_edit ($new['title'], $new['source'], $new['id'], $new['published']);
 			}
 			else {
 				echo '

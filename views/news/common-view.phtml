@@ -12,7 +12,8 @@
 				<?php echo $news['content'] ?>
 			</div>
 			<div class="date">
-				Posted by <span class="b"><?php echo $news['author'] ?></span>
+				<?php if ($news['published']): ?>Posted<?php else: ?>Draft<?php endif ?>
+				by <span class="b"><?php echo $news['author'] ?></span>
 				on <?php echo date ('Y-m-d H:i', $news['date']) ?>
 				<?php if ($news['mdate'] > $news['date']): ?>
 					&mdash;

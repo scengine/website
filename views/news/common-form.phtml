@@ -4,6 +4,7 @@
 	$_id			= isset ($news['id']) ? $news['id'] : '';
 	$_title		= isset ($news['title']) ? $news['title'] : '';
 	$_source	= isset ($news['source']) ? $news['source'] : '';
+	$_publish	= isset ($news['published']) ? $news['published'] : true;
 ?>
 <div class="formedit" id="fn<?php echo $_id ?>" <?php if ($hidden_forms): ?>style="display:none;"<?php endif ?>>
 	<form method="post" action="<?php echo BSE_BASE_PATH ?>post.php?sec=news&amp;act=<?php echo $_action ?>&amp;id=<?php echo $_id ?>">
@@ -47,6 +48,14 @@
 						title="Strikethrough (Alt+S)"><span class="s">S</span></button>
 				</div>
 				<textarea name="content" cols="24" rows="16" accesskey="C" id="tn<?php echo $_id ?>"><?php echo $_source ?></textarea>
+			</div>
+			<div class="options">
+				<ul>
+					<li><label title="Whether the news should be visible to all"><input type="checkbox" name="publish" <?php if ($_publish): ?>checked="checked"<?php endif ?> />Publish</label></li>
+					<?php if ($_action == 'edit'): ?>
+					<li><label title="Whether not to update modification date and author"><input type="checkbox" name="noupdate" checked="checked" />Hide edition</label></li>
+					<?php endif ?>
+				</ul>
 			</div>
 			<input type="submit" value="Post" accesskey="P" title="Post (Alt+P)" />
 			<!--input type="reset" value="Reset" accesskey="X" title="Reset Form (Alt+X)" /-->

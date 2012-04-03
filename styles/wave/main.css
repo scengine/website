@@ -663,6 +663,10 @@ img.bordered {
 
 
 
+.formedit .options ul {
+	list-style-type: none;
+	margin-left: 0;
+}
 
 label {
 	font-weight: bold;

@@ -72,14 +72,15 @@ $dialog = new TypedDialog (DIALOG_TYPE_INFO, $refresh);
 abstract class PostNews {
 	/*
 	 * Table shape:
-	 *  - id       INT(11) PRIMARY KEY AUTO_INCREMENT
-	 *  - date     BIGINT(20) NOT NULL
-	 *  - mdate    BIGINT(20) NOT NULL
-	 *  - title    VARCHAR(256) NOT NULL
-	 *  - content  TEXT NOT NULL
-	 *  - source   TEXT NOT NULL
-	 *  - author   VARCHAR(256) NOT NULL
-	 *  - mauthor  VARCHAR(256) NOT NULL
+	 *  - id        INT(11) PRIMARY KEY AUTO_INCREMENT
+	 *  - date      BIGINT(20) NOT NULL
+	 *  - mdate     BIGINT(20) NOT NULL
+	 *  - title     VARCHAR(256) NOT NULL
+	 *  - content   TEXT NOT NULL
+	 *  - source    TEXT NOT NULL
+	 *  - author    VARCHAR(256) NOT NULL
+	 *  - mauthor   VARCHAR(256) NOT NULL
+	 *  - published BOOLEAN NOT NULL
 	 */
 	const SECTION = 'news';
 	private static $table = NEWS_TABLE;
@@ -88,7 +89,7 @@ abstract class PostNews {
 		feed_update_news ();
 	}
 	
-	public static function save ($title, $content) {
+	public static function save ($title, $content, $publish = false) {
 		global $dialog;
 		
 		//$content = parse ($content);
@@ -103,7 +104,8 @@ abstract class PostNews {
 			if ($db->insert (array ('date' => $date, 'mdate' => $date,
 				                      'title' => $title, 'content' => $content,
 				                      'source' => $source, 'author' => $author,
-				                      'mauthor' => $author))) {
+				                      'mauthor' => $author,
+				                      'published' => ($publish == true)))) {
 				$dialog->add_info_message ('News postée avec succès.');
 				
 				self::update_feed ();
@@ -142,7 +144,7 @@ abstract class PostNews {
 		}
 	}
 	
-	public static function edit ($id, $title, $content) {
+	public static function edit ($id, $title, $content, $update_mdate = true, $publish = false) {
 		global $dialog;
 		
 		$source = $content;
@@ -150,15 +152,29 @@ abstract class PostNews {
 		$title = $title;
 		
 		if (! empty ($id) && ! empty ($title) && ! empty ($content)) {
-			$mdate = time ();
-			$mauthor = User::get_name ();
+			$data = array ('title' => $title,
+			               'content' => $content,
+			               'source' => $source,
+			               'published' => ($publish == true));
+			
+			if ($update_mdate) {
+				$data['mdate'] = time ();
+				$data['mauthor'] = User::get_name ();
+			}
 			
 			$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 			$db->select_table (self::$table);
-			if ($db->update (array ('mdate' => $mdate, 'title' => $title,
-			                        'content' => $content, 'source' => $source,
-			                        'mauthor' => $mauthor),
-			                 array ('id' => $id))) {
+			
+			/* if we publish for the first time, update date */
+			if ($publish) {
+				$db->select ('published', array ('id' => $id));
+				$resp = $db->fetch_response ();
+				if (! $resp['published']) {
+					$data['date'] = $data['mdate'] = time ();
+				}
+			}
+			
+			if ($db->update ($data, array ('id' => $id))) {
 				$dialog->add_info_message  ('News éditée avec succès.');
 				
 				self::update_feed ();
@@ -187,15 +203,19 @@ if (User::get_logged ())
 	{
 		if (User::has_rights (ADMIN_LEVEL_NEWS))
 		{
+			$publish = filter_input (INPUT_POST, 'publish', FILTER_VALIDATE_BOOLEAN);
+			
 			// new news
 			if ($_GET['act'] == 'new')
-				PostNews::save ($_POST['title'], $_POST['content']);
+				PostNews::save ($_POST['title'], $_POST['content'], $publish);
 			
 			// edit an existing news
 			else if ($_GET['act'] == 'edit')
 			{
 				if (!empty ($_GET['id']))
-					PostNews::edit ($_GET['id'], $_POST['title'], $_POST['content']);
+					PostNews::edit ($_GET['id'], $_POST['title'], $_POST['content'],
+					                ! filter_input (INPUT_POST, 'noupdate'),
+					                $publish);
 				else
 					$dialog->add_error_message ('Aucun ID spécifié');
 			}
