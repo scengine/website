@@ -86,9 +86,9 @@ abstract class News
 	
 	/*** Retriving of data from the DB ***/
 	
-	protected static function get_published_filter ()
+	protected static function get_published_filter ($admin_show_unpublished = true)
 	{
-		if (User::has_rights (ADMIN_LEVEL_NEWS)) {
+		if ($admin_show_unpublished && User::has_rights (ADMIN_LEVEL_NEWS)) {
 			return array ();
 		} else {
 			return array ('published' => 1);
@@ -100,13 +100,13 @@ abstract class News
 	 * \param $n            number of news to get from $start_offset
 	 * \returns an array of news or false on failure.
 	 */
-	public static function get ($start_offset=0, $n=0)
+	public static function get ($start_offset=0, $n=0, $admin_show_unpublished = true)
 	{
 		$news = false;
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', self::get_published_filter (),
+		if ($db->select ('*', self::get_published_filter ($admin_show_unpublished),
 			               array ('id' => 'DESC'), $start_offset, $n)) {
 			$news = $db->fetch_all_responses ();
 		}
@@ -119,13 +119,13 @@ abstract class News
 	 * \param $id the ID of the news to get
 	 * \returns a news or false on failure.
 	 */
-	public static function get_by_id ($id)
+	public static function get_by_id ($id, $admin_show_unpublished = true)
 	{
 		$id = intval ($id);
 		
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		if ($db->select ('*', array_merge (self::get_published_filter (),
+		if ($db->select ('*', array_merge (self::get_published_filter ($admin_show_unpublished),
 			                                 array ('id' => $id)))) {
 			return $db->fetch_response ();
 		} else {
@@ -134,10 +134,10 @@ abstract class News
 	}
 	
 	/* Gets the total number of news */
-	public static function get_n ()
+	public static function get_n ($admin_show_unpublished = true)
 	{
 		$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
 		$db->select_table (NEWS_TABLE);
-		return $db->count (self::get_published_filter ());
+		return $db->count (self::get_published_filter ($admin_show_unpublished));
 	}
 }

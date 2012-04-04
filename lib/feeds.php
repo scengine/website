@@ -51,7 +51,7 @@ function feed_update_news ()
 		'items'         => array ()
 	);
 	
-	$all_news = News::get (0, 10);
+	$all_news = News::get (0, 10, false);
 	foreach ($all_news as &$news) {
 		$alternate_url = UrlTable::news ($news['id']);
 		
