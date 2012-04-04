@@ -766,9 +766,17 @@ function add_media_query ()
 					               $mdate, $_POST['type'], $_POST['uid'], 
 					               $_POST['tags'], $_POST['desc'], $_POST['comment']))
 					{
+						/* HAXX */
+						$db = new MyDB (DB_SERVER, DB_USER, DB_PASSWORD, DB_NAME, DB_TRANSFERT_ENCODING);
+						$db->select_table (MEDIA_TABLE);
+						/* just hope the media with the highest ID is the right one :):) */
+						$db->select (array ('id'), array (), array ('id' => 'DESC'), 0, 1);
+						$media = $db->fetch_response ();
+						
 						echo '
 						<p class="ok">
 							"',basename ($file_old_name),'" has been sucessully stored in the folder "',dirname ($w_path),'".
+							<a href="',UrlTable::medias($media['id']),'">View the new media</a>.
 						</p>';
 					}
 					else
