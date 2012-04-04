@@ -1,4 +1,4 @@
-<div class="news">
+<div class="news<?php if (! $news['published']): ?> draft<?php endif ?>">
 	<?php if ($is_admin): ?>
 		<?php include "common-form.phtml" ?>
 	<?php endif ?>

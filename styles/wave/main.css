@@ -622,6 +622,10 @@ img.bordered {
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
 }
+#content .news.draft .data {
+	background-image: url(images/draft-bg.svg);
+	background-repeat: repeat;
+}
 
 
 #content .profile,
