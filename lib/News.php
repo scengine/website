@@ -56,14 +56,14 @@ abstract class News
 					<label for="tn',$id,'"><span class="u">C</span>ontent:</label>
 					<div class="bcode-editor">
 						<div class="form_toolbar">',
-							Html::button_js ('+', "entry_more('tn$id')", 'Agrandir le formulaire'),
-							Html::button_js ('-', "entry_lesser('tn$id')", 'Rapetisser le formulaire'),
-							Html::button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insérer un lien (Alt+L)', 'l'),
-							Html::button_js ('img', "textarea_insert('tn$id', '{{', '|Texte alternatif}}')", 'Insérer une image (Alt+H)', 'h'),
-							Html::button_js ('<span class="b">G</span>', "textarea_insert_around('tn$id', '**')", 'Mettre en gras (Alt+B)', 'b'),
-							Html::button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Mettre en italique (Alt+I)', 'i'),
-							Html::button_js ('<span class="u">S</span>', "textarea_insert_around('tn$id', '__')", 'Souligner (Alt+U)', 'u'),
-							Html::button_js ('<span class="s">B</span>', "textarea_insert_around('tn$id', '--')", 'Barrer (Alt+S)', 's'),
+							Html::button_js ('+', "entry_more('tn$id')", 'Enlarge the form'),
+							Html::button_js ('-', "entry_lesser('tn$id')", 'Shrink the form'),
+							Html::button_js ('http://', "textarea_insert('tn$id', '[[', ']]')", 'Insert Link (Alt+L)', 'l'),
+							Html::button_js ('img', "textarea_insert('tn$id', '{{', '|Alternative text}}')", 'Insert Image (Alt+H)', 'h'),
+							Html::button_js ('<span class="b">B</span>', "textarea_insert_around('tn$id', '**')", 'Bold (Alt+B)', 'b'),
+							Html::button_js ('<span class="i">I</span>', "textarea_insert_around('tn$id', '//')", 'Italic (Alt+I)', 'i'),
+							Html::button_js ('<span class="u">U</span>', "textarea_insert_around('tn$id', '__')", 'Underline (Alt+U)', 'u'),
+							Html::button_js ('<span class="s">S</span>', "textarea_insert_around('tn$id', '--')", 'Strikethrough (Alt+S)', 's'),
 						'</div>
 						<textarea name="content" cols="24" rows="16" accesskey="c" id="tn',$id,'">',
 							$source,

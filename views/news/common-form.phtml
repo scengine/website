@@ -16,36 +16,16 @@
 			<label for="tn<?php echo $_id ?>"><span class="u">C</span>ontent:</label>
 			<div class="bcode-editor">
 				<div class="form_toolbar">
-					<button onclick="entry_more('tn<?php echo $_id ?>')"
-						ondblclick=""
-						title="Enlarge the form">+</button>
-					<button onclick="entry_lesser('tn<?php echo $_id ?>')"
-						ondblclick=""
-						title="Shrink the form">-</button>
-					<button onclick="textarea_insert('tn<?php echo $_id ?>', '[[', ']]')"
-						ondblclick=""
-						accesskey="L"
-						title="Insert Link (Alt+L)">http://</button>
-					<button onclick="textarea_insert('tn<?php echo $_id ?>', '{{', '|Alternative text}}')"
-						ondblclick=""
-						accesskey="H"
-						title="Insert Image (Alt+H)">img</button>
-					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '**')"
-						ondblclick=""
-						accesskey="B"
-						title="Bold (Alt+B)"><span class="b">G</span></button>
-					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '//')"
-						ondblclick=""
-						accesskey="I"
-						title="Italic (Alt+I)"><span class="i">I</span></button>
-					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '__')"
-						ondblclick=""
-						accesskey="U"
-						title="Underline (Alt+U)"><span class="u">U</span></button>
-					<button onclick="textarea_insert_around('tn<?php echo $_id ?>', '--')"
-						ondblclick=""
-						accesskey="S"
-						title="Strikethrough (Alt+S)"><span class="s">S</span></button>
+				<?php
+					echo Html::button_js ('+', "entry_more('tn$_id')", 'Enlarge the form');
+					echo Html::button_js ('-', "entry_lesser('tn$_id')", 'Shrink the form');
+					echo Html::button_js ('http://', "textarea_insert('tn$_id', '[[', ']]')", 'Insert Link (Alt+L)', 'l');
+					echo Html::button_js ('img', "textarea_insert('tn$_id', '{{', '|Alternative text}}')", 'Insert Image (Alt+H)', 'h');
+					echo Html::button_js ('<span class="b">B</span>', "textarea_insert_around('tn$_id', '**')", 'Bold (Alt+B)', 'b');
+					echo Html::button_js ('<span class="i">I</span>', "textarea_insert_around('tn$_id', '//')", 'Italic (Alt+I)', 'i');
+					echo Html::button_js ('<span class="u">U</span>', "textarea_insert_around('tn$_id', '__')", 'Underline (Alt+U)', 'u');
+					echo Html::button_js ('<span class="s">S</span>', "textarea_insert_around('tn$_id', '--')", 'Strikethrough (Alt+S)', 's');
+				?>
 				</div>
 				<textarea name="content" cols="24" rows="16" accesskey="C" id="tn<?php echo $_id ?>"><?php echo $_source ?></textarea>
 			</div>
