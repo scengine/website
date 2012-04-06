@@ -784,3 +784,23 @@ fieldset.noframe {
 .paging span.current {
 	color: #bf1800;
 }
+
+
+/* special cases for mdownized pages */
+.mdownized .contents {
+	float: right;
+	padding: 0.5em;
+	margin: 1em 0 1em 1em;
+	border: 1px solid #eee;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+.mdownized h1,
+.mdownized h2,
+.mdownized h3,
+.mdownized h4,
+.mdownized h5,
+.mdownized h6 {
+	clear: none;
+}
