@@ -2,7 +2,9 @@
 <p>No media to display</p>
 <?php else: ?>
 <div id="main-image-box">
-	<img id="main-image" src="<?php echo $urls[0] ?>" alt="" />
+	<a href="<?php echo UrlTable::medias () ?>">
+		<img id="main-image" src="<?php echo $urls[0] ?>" alt="" />
+	</a>
 </div>
 <script type="text/javascript">
 	<!--
