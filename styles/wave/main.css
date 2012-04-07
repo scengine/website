@@ -405,6 +405,19 @@ img.bordered {
 	/*max-height: 300px;*/
 	overflow: hidden;
 }
+#content .main-modules .module.image .data {
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	/* god only knows why there is a 4px space under the image without this */
+	font-size: 0;
+}
+#content .main-modules .module.image .data p {
+	font-size: 20px;
+	text-align: center;
+	font-style: italic;
+	padding: 2em;
+}
 #content .main-modules .module.image img {
 	width: 100%;
 	margin: 0;

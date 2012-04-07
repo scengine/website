@@ -145,3 +145,60 @@ function unobfuscate_email (root) {
 	window.location = url;
 	return false;
 }
+
+/* sets an element's opacity in a portable way */
+function set_opacity (element, value) {
+	element.style.opacity = value;
+	element.style.MozOpacity = value;
+	element.style.WebkitOpacity = value;
+}
+
+/* changes the uri of an image with a fade */
+function image_fade (image, uri, fade_out_ms) {
+	var tmp = new Image ();
+	tmp.src = uri;
+	tmp.onload = function () {
+		image.parentNode.style.backgroundImage = 'url('+tmp.src+')';
+		image.parentNode.style.backgroundSize = '100%';
+		image.parentNode.style.backgroundRepeat = 'no-repeat';
+		
+		var interval = 50;
+		var opacity = 100;
+		var step = opacity / (fade_out_ms * 1.0 / interval);
+		var fade_id = setInterval (function () {
+			opacity -= step;
+			if (opacity > 0) {
+				set_opacity (image, opacity / 100.0);
+			} else {
+				image.src = tmp.src;
+				set_opacity (image, 1.0);
+				clearInterval (fade_id);
+			}
+		}, interval);
+	}
+}
+
+/* Starts a slideshow on image @element
+ * @element: the image to change
+ * @uris: and array of image uris to display
+ * @display_ms: display duration for each image
+ * @fade_ms: fade duration between two images
+ * 
+ * Returns: the interval ID of the slideshow, which can be used to stop it
+ * with e.g. clearInterval().
+ */
+function slideshow (element, uris, display_ms, fade_ms) {
+	/* don't launch a slideshow if there is only one image */
+	if (uris.length < 2) {
+		return;
+	}
+	
+	var current = 0;
+	return setInterval (function () {
+		if (++current >= uris.length) {
+			current = 0;
+		}
+		var uri = uris[current];
+		image_fade (element, uri, fade_ms);
+	}, display_ms);
+}

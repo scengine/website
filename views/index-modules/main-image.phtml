@@ -1,1 +1,15 @@
-<img src="<?php echo $url ?>" alt="" />
+<?php if (empty ($urls)): ?>
+<p>No media to display</p>
+<?php else: ?>
+<img id="main-image" src="<?php echo $urls[0] ?>" alt="" />
+<script type="text/javascript">
+	<!--
+	slideshow (
+		document.getElementById ('main-image'),
+		Array('<?php echo implode ('\',\'', $urls) ?>'),
+		5000,
+		1000
+	);
+	//-->
+</script>
+<?php endif ?>

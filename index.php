@@ -32,6 +32,7 @@ require_once ('lib/UrlTable.php');
 require_once ('lib/Html.php');
 require_once ('lib/Flash.php');
 require_once ('lib/News.php');
+require_once ('lib/medias.php');
 require_once ('lib/MyDB.php');
 require_once ('lib/FluxBB.php');
 require_once ('lib/FeedReader.php');
@@ -209,18 +210,21 @@ class IndexModuleVersion extends IndexModule {
 }
 
 class IndexModuleMainImage extends IndexModule {
-	private $image_url;
+	private $urls = array ();
 	protected $view = 'views/index-modules/main-image.phtml';
 	public $extra_classes = array ('image');
 	
-	public function __construct ($url)
+	public function __construct ($tag)
 	{
-		$this->image_url = $url;
+		$medias = media_get_medias (array (MediaType::SCREENSHOT), array ($tag));
+		foreach ($medias as $media) {
+			$this->urls[] = MEDIA_DIR_R.'/'.$media['uri'];
+		}
 	}
 	
 	protected function get_tpl_vars ()
 	{
-		return array ('url' => $this->image_url);
+		return array ('urls' => $this->urls);
 	}
 }
 
@@ -281,7 +285,7 @@ $tpl = new PHPFileTemplate (
 	'views/index.phtml',
 	array (
 		'modules' => array (
-			new IndexModuleMainImage (MEDIA_DIR_R.'/screens/sce009a_011_02-03-09.jpg'),
+			new IndexModuleMainImage ('.home'),
 			new IndexModuleNews ()
 		),
 		'columns' => array (
