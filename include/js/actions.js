@@ -153,6 +153,24 @@ function set_opacity (element, value) {
 	element.style.WebkitOpacity = value;
 }
 
+function Timer (callback, interval) {
+	this.interval = interval;
+	this.callback = callback;
+	this.id = undefined;
+	
+	this.start = function () {
+		if (this.id == undefined) {
+			this.id = setInterval (this.callback, this.interval);
+		}
+	}
+	this.pause = function () {
+		if (this.id != undefined) {
+			clearInterval (this.id);
+			this.id = undefined;
+		}
+	}
+}
+
 /* changes the uri of an image with a fade */
 function image_fade (image, box, uri, fade_out_ms) {
 	var tmp = new Image ();
@@ -186,8 +204,8 @@ function image_fade (image, box, uri, fade_out_ms) {
  * @display_ms: display duration for each image
  * @fade_ms: fade duration between two images
  * 
- * Returns: the interval ID of the slideshow, which can be used to stop it
- * with e.g. clearInterval().
+ * Returns: the Timer object used by the slideshow, which can be used to
+ * control the slideshow.
  */
 function slideshow (element, box, uris, display_ms, fade_ms) {
 	/* don't launch a slideshow if there is only one image */
@@ -196,11 +214,16 @@ function slideshow (element, box, uris, display_ms, fade_ms) {
 	}
 	
 	var current = 0;
-	return setInterval (function () {
+	var timer = new Timer (function () {
 		if (++current >= uris.length) {
 			current = 0;
 		}
 		var uri = uris[current];
 		image_fade (element, box, uri, fade_ms);
 	}, display_ms);
+	window.addEventListener ('blur', function () { timer.pause (); }, false);
+	window.addEventListener ('focus', function () { timer.start (); }, false);
+	timer.start ();
+	
+	return timer;
 }
