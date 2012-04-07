@@ -90,6 +90,20 @@ abstract class MediasTemplate extends PHPFileTemplate
 		);
 	}
 	
+	protected static function is_hidden_tag ($tag)
+	{
+		return strlen ($tag) > 0 && $tag[0] == '.';
+	}
+	
+	protected static function remove_hidden_tags (&$media)
+	{
+		foreach ($media['tags'] as $k => $t) {
+			if (self::is_hidden_tag ($t)) {
+				unset ($media['tags'][$k]);
+			}
+		}
+	}
+	
 	private $_types_filter = null;
 	protected function get_types_filter ()
 	{
@@ -146,11 +160,13 @@ abstract class MediasTemplate extends PHPFileTemplate
 		if ($this->_all_tags === null) {
 			$this->_all_tags = array ();
 			foreach (media_get_all_tags () as $tag) {
-				$this->_all_tags[] = array (
-					'id'			=> $tag,
-					'name'		=> ($tag == '' ? 'Not tagged' : $tag),
-					'checked'	=> in_array ($tag, $this->get_tags_filter ())
-				);
+				if (! $this->is_hidden_tag ($tag)) {
+					$this->_all_tags[] = array (
+						'id'			=> $tag,
+						'name'		=> ($tag == '' ? 'Not tagged' : $tag),
+						'checked'	=> in_array ($tag, $this->get_tags_filter ())
+					);
+				}
 			}
 		}
 		
@@ -185,6 +201,7 @@ class MediasIndexTemplate extends MediasTemplate
 			foreach ($medias as &$media) {
 				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
 				$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
+				$this->remove_hidden_tags ($media);
 			}
 		}
 		
@@ -252,6 +269,7 @@ class MediasViewTemplate extends MediasTemplate
 			$media['tb_uri']		= MEDIA_DIR_R.'/'.$media['tb_uri'];
 			$media['mime_type']	= filename_get_mime_type ($media['uri']);
 			
+			$this->remove_hidden_tags ($media);
 			/* make sure media type is useful for us */
 			$this->fix_media_type ($media);
 		}
