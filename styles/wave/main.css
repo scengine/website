@@ -405,7 +405,7 @@ img.bordered {
 	/*max-height: 300px;*/
 	overflow: hidden;
 }
-#content .main-modules .module.image .data {
+#content .main-modules .module.image .data #main-image-box {
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
@@ -413,7 +413,7 @@ img.bordered {
 	font-size: 0;
 }
 #content .main-modules .module.image .data p {
-	font-size: 20px;
+	font-size: 1.2em;
 	text-align: center;
 	font-style: italic;
 	padding: 2em;

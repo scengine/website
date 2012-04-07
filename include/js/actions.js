@@ -154,13 +154,13 @@ function set_opacity (element, value) {
 }
 
 /* changes the uri of an image with a fade */
-function image_fade (image, uri, fade_out_ms) {
+function image_fade (image, box, uri, fade_out_ms) {
 	var tmp = new Image ();
 	tmp.src = uri;
 	tmp.onload = function () {
-		image.parentNode.style.backgroundImage = 'url('+tmp.src+')';
-		image.parentNode.style.backgroundSize = '100%';
-		image.parentNode.style.backgroundRepeat = 'no-repeat';
+		box.style.backgroundImage = 'url('+tmp.src+')';
+		box.style.backgroundSize = '100%';
+		box.style.backgroundRepeat = 'no-repeat';
 		
 		var interval = 50;
 		var opacity = 100;
@@ -180,6 +180,8 @@ function image_fade (image, uri, fade_out_ms) {
 
 /* Starts a slideshow on image @element
  * @element: the image to change
+ * @box: a parent block element that should pack the image only (but that can
+ *       contain anything that doesn't take screen space)
  * @uris: and array of image uris to display
  * @display_ms: display duration for each image
  * @fade_ms: fade duration between two images
@@ -187,7 +189,7 @@ function image_fade (image, uri, fade_out_ms) {
  * Returns: the interval ID of the slideshow, which can be used to stop it
  * with e.g. clearInterval().
  */
-function slideshow (element, uris, display_ms, fade_ms) {
+function slideshow (element, box, uris, display_ms, fade_ms) {
 	/* don't launch a slideshow if there is only one image */
 	if (uris.length < 2) {
 		return;
@@ -199,6 +201,6 @@ function slideshow (element, uris, display_ms, fade_ms) {
 			current = 0;
 		}
 		var uri = uris[current];
-		image_fade (element, uri, fade_ms);
+		image_fade (element, box, uri, fade_ms);
 	}, display_ms);
 }
