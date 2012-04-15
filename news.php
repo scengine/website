@@ -43,6 +43,7 @@ abstract class NewsTemplate extends PHPFileTemplate
 			$this->view,
 			array (
 				'is_admin'			=> User::has_rights (ADMIN_LEVEL_NEWS),
+				'news_url'			=> UrlTable::news (),
 				'add_news_url'	=> UrlTable::admin_news ('new'),
 				'hidden_forms'	=> true,
 			)
