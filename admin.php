@@ -21,22 +21,16 @@
 
 /* admin :: accueil */
 
-session_start();
+session_start ();
 
 require_once ('lib/User.php');
 require_once ('lib/Header.php');
 require_once ('include/defines.php');
-require_once ('lib/Metadata.php'); /* gave MDI instance */
 
 // si l'utilisateur n'est pas loggué, on l'envois chier :D
 if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 	Header::h404 ();
 }
-
-
-
-//define ('TITLE', 'Administration - '.ENGINE);
-//define ('DESCRIPTION', 'Administration du '.$MDI->get_name ());
 
 
 $name = (isset ($_GET['page'])) ? urldecode ($_GET['page']) : '__dummy__';

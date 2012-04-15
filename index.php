@@ -200,10 +200,8 @@ class IndexModuleVersion extends IndexModule {
 	
 	protected function get_tpl_vars ()
 	{
-		global $MDI;
-		
 		return array (
-			'version' => $MDI->get_version (),
+			'version' => Metadata::get_instance ()->get_version (),
 			'url'     => UrlTable::downloads ()
 		);
 	}

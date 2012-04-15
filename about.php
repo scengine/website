@@ -22,7 +22,7 @@
 
 define ('TITLE', 'About');
 
-require_once ('lib/Metadata.php'); /* gives MDI instance */
+require_once ('lib/Metadata.php');
 require_once ('lib/PHPTemplate.php');
 
 
@@ -30,7 +30,7 @@ class AboutTemplate extends PHPFileTemplate
 {
 	public function __construct ()
 	{
-		global $MDI;
+		$MDI = Metadata::get_instance ();
 		
 		parent::__construct ('views/about.phtml');
 		$this->version = $MDI->get_version ();

@@ -21,10 +21,9 @@
 
 require_once ('include/defines.php');
 require_once ('lib/Html.php');
-require_once ('lib/Metadata.php'); /* gives MDI instance */
+require_once ('lib/Metadata.php');
 
-//$md = new Metadata (METADATA_FILE);
-
+$MDI = Metadata::get_instance ();
 
 if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 	/* si on doit enregistrer les données */

@@ -29,7 +29,7 @@ require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
 require_once ('lib/Flash.php');
 require_once ('lib/string.php');
-require_once ('lib/Metadata.php'); /* gives MDI instance */
+require_once ('lib/Metadata.php');
 
 
 function print_head_adds (&$adds) {
@@ -51,7 +51,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
 	<head>
-		<title><?php echo TITLE,' - ',$MDI->get_name (); ?></title>
+		<title><?php echo TITLE,' - ',Metadata::get_instance ()->get_name (); ?></title>
 		
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<meta name="description" content="<?php echo DESCRIPTION; ?>" />
@@ -77,7 +77,7 @@ header('Content-Type: text/html; charset=UTF-8');
 	<body>
 		<div id="header">
 			<div id="banner">
-				<h1><a href="<?php echo UrlTable::home (); ?>" accesskey="1"><?php echo $MDI->get_name (); ?></a></h1>
+				<h1><a href="<?php echo UrlTable::home (); ?>" accesskey="1"><?php echo Metadata::get_instance ()->get_name (); ?></a></h1>
 			</div>
 
 			<div id="menubar">

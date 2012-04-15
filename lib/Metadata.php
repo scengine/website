@@ -21,11 +21,12 @@
 
 
 require_once ('include/defines.php');
+require_once ('lib/Singleton.php');
 
 /**
  * \brief A class to manage metadata of a project
  */
-class Metadata
+class Metadata extends Singleton
 {
 	protected $fields = array (
 		'name'         => 'Project name', //!< project name
@@ -42,7 +43,8 @@ class Metadata
 	);
 	private $datafile = 'metadatas';
 	
-	public function __construct ($datafile='metadatas') {
+	public function __construct ($datafile=METADATA_FILE) {
+		parent::__construct ();
 		if (is_string ($datafile))
 			$this->datafile = $datafile;
 		
@@ -125,26 +127,6 @@ class Metadata
 			if ($val === $value)
 				unset ($a[$key]);
 		}
-		
-		/*$arr = array ();
-		
-		foreach ($this->fields[$array] as $val) {
-			if ($val !== $value)
-				$arr[] = $val;
-		}
-		
-		$this->fields[$array] = $arr;
-		*/
-		
-		/*
-		function my_filter ($v) {
-			$value;
-			echo "=== $value ===\n";
-			return ($v !== $value);
-		}
-		
-		$this->fields[$array] = array_filter ($this->fields[$array], 'my_filter');
-		*/
 	}
 	/** Sets an array field
 	 * \param array the name of the array field
@@ -345,7 +327,7 @@ class Metadata
 
 /* insrance par défaut.
  * Cette classe pouraît être un calsse abstraite je pense, il faudrait voir */
-$MDI = new Metadata (METADATA_FILE);
+//$MDI = Metadata::get_instance ();
 
 /*
 $md = new Metadata ('/tmp/metadata');
