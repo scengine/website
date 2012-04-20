@@ -23,33 +23,53 @@
 
 session_start ();
 
+require_once ('include/defines.php');
 require_once ('lib/User.php');
 require_once ('lib/Header.php');
-require_once ('include/defines.php');
+require_once ('lib/PHPTemplate.php');
+
+class AdminPage
+{
+	private $path;
+	
+	public function __construct ($name)
+	{
+		$path = $this->get_path ($name);
+		/* if page doesn't exists or user not logged, go home */
+		if (! file_exists ($path) && User::get_logged ()) {
+			$name = 'accueil';
+			$path = $this->get_path ($name);
+		}
+		
+		define ('TITLE', ucfirst ($name).' - Administration');
+		define ('PAGE', $name);
+		$this->path = $path;
+	}
+	
+	private function get_path ($name)
+	{
+		return './include/'.$name.'.inc';
+	}
+	
+	public function render ()
+	{
+		include ($this->path);
+	}
+}
 
 // si l'utilisateur n'est pas loggué, on l'envois chier :D
 if (! User::has_rights (ADMIN_LEVEL_MINIMAL)) {
 	Header::h404 ();
 }
 
-
 $name = (isset ($_GET['page'])) ? urldecode ($_GET['page']) : '__dummy__';
+$page = new AdminPage ($name);
 
-// on vérifie que la page existe et que l'admin est loggué :
-$page = './include/'.$name.'.inc';
-if (file_exists ($page) && User::get_logged ()) {
-	define ('TITLE', ucfirst ($name).' - Administration');
-	define ('PAGE', $name);
-}
-else {
-	$page = './include/accueil.inc';
-	
-	define ('TITLE', 'Accueil - Administration');
-	define ('PAGE', 'accueil');
-}
-
-include('include/top.minc');
-include($page);
-include('include/bottom.minc');
-
-?>
+$layout = new PHPFileTemplate (
+	'views/layout.phtml',
+	array (
+		'controller' => 'admin.php',
+		'template' => $page
+	)
+);
+$layout->render ();

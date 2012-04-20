@@ -19,26 +19,16 @@
  * 
  */
 
-define ('TITLE', 'Downloads');
-
-require_once ('lib/UrlTable.php');
+require_once ('lib/Controller.php');
 require_once ('lib/User.php');
 require_once ('lib/medias.php');
 require_once ('lib/misc.php');
 require_once ('lib/Html.php');
-require_once ('lib/PHPTemplate.php');
 
 
-class DownloadsTemplate extends PHPFileTemplate
+class DownloadsModel
 {
-	public function __construct ()
-	{
-		parent::__construct ('views/downloads.phtml');
-		$this->is_admin = User::has_rights (ADMIN_LEVEL_MEDIA);
-		$this->medias = $this->get_medias ();
-	}
-	
-	private function get_medias ()
+	public function find ()
 	{
 		$medias = media_get_medias (
 			array (MediaType::RELEASE),
@@ -63,9 +53,18 @@ class DownloadsTemplate extends PHPFileTemplate
 	}
 }
 
-
-$tpl = new DownloadsTemplate ();
-
-require_once ('include/top.minc');
-$tpl->render ();
-require_once ('include/bottom.minc');
+class DownloadsController extends Controller
+{
+	public function __construct ()
+	{
+		$this->Downloads = new DownloadsModel ();
+	}
+	
+	public function index ()
+	{
+		return array (
+			'is_admin'	=> User::has_rights (ADMIN_LEVEL_MEDIA),
+			'medias'		=> $this->Downloads->find ()
+		);
+	}
+}

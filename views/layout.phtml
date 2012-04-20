@@ -19,17 +19,15 @@
  * 
  */
 
-/*
- * top of all pages
- * the "top" contain HTML header, left & right menus
- */
+/* layout for all pages */
 
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
+require_once ('lib/Route.php');
 require_once ('lib/Flash.php');
 require_once ('lib/string.php');
-require_once ('lib/Metadata.php');
+require_once ('lib/Metadata.php'); /* gives MDI instance */
 
 
 function print_head_adds (&$adds) {
@@ -84,30 +82,30 @@ header('Content-Type: text/html; charset=UTF-8');
 				<ul>
 				<?php
 					$menubar = array (
-						UrlTable::home ()       => 'Home',
-						UrlTable::news ()       => 'News',
-						UrlTable::medias ()     => 'Medias',
-						UrlTable::downloads ()  => 'Downloads',
-						BSE_BASE_PATH.'forums/' => 'Forums',
-						BSE_BASE_PATH.'doc/'    => 'Documentation',
-						/*UrlTable::tuto ()       => 'Tutorial',
-						UrlTable::license ()    => 'License',*/
-						UrlTable::about ()      => 'About'
+						'Home'          => 'index',
+						'News'          => 'news',
+						'Medias'        => 'medias',
+						'Downloads'     => 'downloads',
+						'Forums'        => 'forums/',
+						'Documentation' => 'doc/',
+						//'Tutorial'      => 'tutorial',
+						//'License'       => 'license',
+						'About'         => 'about'
 					);
 					
 					if (User::get_logged ()) {
-						$menubar[UrlTable::admin ()] = 'Admin';
+						$menubar['Admin'] = 'admin.php';
 					}
 					
-					$script = basename ($_SERVER['SCRIPT_NAME']);
-					foreach ($menubar as $link => $title) {
+					foreach ($menubar as $title => $link) {
+						$route = new Route ($link);
 						$current = '';
 						
-						if (UrlTable::get_script ($link) == $script) {
+						if ($controller == $route->controller) {
 							$current = 'class="current"';
 						}
 						
-						echo '<li ',$current,'><a href="',$link,'">',$title,'</a></li>';
+						echo '<li ',$current,'><a href="',$route,'">',$title,'</a></li>';
 					}
 				?>
 				</ul>
@@ -129,3 +127,80 @@ header('Content-Type: text/html; charset=UTF-8');
 			<?php endforeach ?>
 		</div>
 <?php endif ?>
+
+<?php
+if (is_object ($template)) {
+	$template->render ();
+} else {
+	echo $template;
+}
+?>
+
+		</div> <!-- body -->
+
+		<div id="footer">
+			<div class="module">
+				<h3>Support</h3>
+				<ul>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>forums/">Forum</a></li>
+						<li><a href="<?php echo BSE_BASE_PATH; ?>doc/">Documentation</a></li>
+						<li><a href="<?php echo UrlTable::tuto (); ?>">Tutorial</a></li>
+				</ul>
+			</div>
+			
+			<!--div class="module">
+				<h3>Contributing</h3>
+				<ul>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>tracker">Bug tracker</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>docs/contributing">How to help?</a></li>
+					<li><a href="<?php echo BSE_BASE_PATH; ?>about/donation">Make a donation</a></li>
+				</ul>
+			</div-->
+			
+			<div class="module">
+				<h3>Miscellaneous</h3>
+				<ul>
+					<li><a href="<?php echo UrlTable::license (); ?>">License</a></li>
+				</ul>
+			</div>
+			
+			<div class="module">
+				<h3>Administration</h3>
+				<ul>
+				<?php if (User::get_logged ()) { ?>
+					<li><a href="<?php echo UrlTable::admin (); ?>">Administration</a></li>
+					<li><a href="<?php echo UrlTable::admin ('actualités'); ?>">Manage news</a></li>
+					<li><a href="<?php echo UrlTable::admin ('medias'); ?>">Manage medias</a></li>
+					<li><a href="<?php echo UrlTable::admin ('administrateurs'); ?>">Manage users</a></li>
+					<li><a href="<?php echo UrlTable::logout (); ?>">Log out</a></li>
+				<?php } else { ?>
+					<li><a href="<?php echo UrlTable::login (); ?>">Log in</a></li>
+				<?php } ?>
+				</ul>
+			</div>
+			
+			<div class="clearer"></div>
+			
+			<!--p><a href="http://validator.w3.org/check?uri=referer">xHTML 1.0</a></p-->
+			<p>
+				<a href="<?php echo BSE_TAR_FILE; ?>">BanSE</a>,
+				Copyright &copy; 2007-2012 Colomban Wendling &lt;<?php echo obfuscate_email ('ban@herbesfolles.org'); ?>&gt;
+				This whole site is licensed under the GNU GPL v3 or later.
+				See <a href="<?php echo LICENSE_URL; ?>" accesskey="8">license</a> for more details.
+				&mdash;
+				Kindly hosted by <a href="http://www.tuxfamily.org">TuxFamily</a>.
+			</p>
+			
+			<?php
+				if (User::get_logged ()) {
+					echo '<table><caption>SQL queries:</caption>';
+					foreach (MyDB::get_query_log () as $query) {
+						echo '<tr><td>',$query,'</td></tr>';
+					}
+					echo '</table>';
+				}
+			?>
+		</div>
+
+	</body>
+</html>

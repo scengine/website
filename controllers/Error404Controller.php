@@ -19,18 +19,15 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
+require_once ('include/defines.php');
+require_once ('lib/string.php');
+require_once ('lib/Route.php');
+require_once ('lib/Controller.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-
-define ('TITLE', $dispatcher->controller->get_title ());
-$layout = new PHPFileTemplate (
-	'views/layout.phtml',
-	array (
-		'controller' => $dispatcher->route->controller,
-		'template' => $dispatcher->run ()
-	)
-);
-$layout->render ();
+class Error404Controller extends Controller
+{
+	public function index ($query = '')
+	{
+		return array ('url' => $query);
+	}
+}

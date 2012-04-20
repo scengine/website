@@ -19,41 +19,29 @@
  * 
  */
 
-
-define ('TITLE', 'Licence');
-require_once ('lib/string.php');
-require_once ('lib/Html.php');
-require_once ('include/top.minc');
-
 //define ('LICENSE_FILE', 'http://www.gnu.org/licenses/gpl.txt');
 define ('LICENSE_FILE', 'COPYING');
 
-function print_gpl () {
-	$gpl = @file_get_contents (LICENSE_FILE);
-	if ($gpl)
-		echo nls2p (Html::escape ($gpl));
-	else
+require_once ('lib/string.php');
+require_once ('lib/Html.php');
+require_once ('lib/Controller.php');
+
+
+class LicenseController extends Controller
+{
+	public function index ()
 	{
-		echo '
-		The <a href="http://www.gnu.org/">GNU website</a> is currently down.
-		Please try later or check the license on the
-		<a href="http://www.fsf.org/licensing/licenses/gpl.html">
-		Free Software Foundation website</a>.';
+		$license = @file_get_contents (LICENSE_FILE);
+		if ($license) {
+			$license = nls2p (Html::escape ($license));
+		} else {
+			$license = '
+			The <a href="http://www.gnu.org/">GNU website</a> is currently down.
+			Please try later or check the license on the
+			<a href="http://www.fsf.org/licensing/licenses/gpl.html">
+			Free Software Foundation website</a>.';
+		}
+		
+		return array ('license' => $license);
 	}
 }
-
-?>
-			<div id="presentation">
-				<h2>License of the SCEngine</h2>
-			</div>
-
-			<div id="content">
-				<h2>GNU <abbr title="General Public License">GPL</abbr> License</h2>
-				<p>
-					<?php print_gpl (); ?>
-				</p>
-			</div>
-
-<?php
-
-require_once ('include/bottom.minc');

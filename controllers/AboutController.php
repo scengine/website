@@ -19,34 +19,24 @@
  * 
  */
 
-
-define ('TITLE', 'About');
-
+require_once ('lib/Controller.php');
 require_once ('lib/Metadata.php');
-require_once ('lib/PHPTemplate.php');
 
-
-class AboutTemplate extends PHPFileTemplate
+class AboutController extends Controller
 {
-	public function __construct ()
+	public function index ()
 	{
 		$MDI = Metadata::get_instance ();
 		
-		parent::__construct ('views/about.phtml');
-		$this->version = $MDI->get_version ();
-		$this->roles = array (
-			'Engine development'	=> $MDI->get_authors (),
-			'Documentation'				=> $MDI->get_documenters (),
-			'Translation'					=> $MDI->get_translators (),
-			'Graphists'						=> $MDI->get_graphists (),
-			'Contributors'				=> $MDI->get_contributors ()
+		return array (
+			'version' => $MDI->get_version (),
+			'roles' => array (
+				'Engine development' => $MDI->get_authors (),
+				'Documentation' => $MDI->get_documenters (),
+				'Translation' => $MDI->get_translators (),
+				'Graphists' => $MDI->get_graphists (),
+				'Contributors' => $MDI->get_contributors ()
+			)
 		);
 	}
 }
-
-
-$tpl = new AboutTemplate ();
-
-require_once ('include/top.minc');
-$tpl->render ();
-require_once ('include/bottom.minc');

@@ -19,18 +19,17 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-
-define ('TITLE', $dispatcher->controller->get_title ());
-$layout = new PHPFileTemplate (
-	'views/layout.phtml',
-	array (
-		'controller' => $dispatcher->route->controller,
-		'template' => $dispatcher->run ()
-	)
-);
-$layout->render ();
+class Controller
+{
+	public function get_title ()
+	{
+		$className = preg_replace ('/Controller$/', '', get_class ($this));
+		return preg_replace ('/([a-z])([A-Z0-9])/', '\1 \2', $className);
+	}
+	
+	public function index ()
+	{
+		return array ();
+	}
+}
