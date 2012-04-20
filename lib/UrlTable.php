@@ -22,6 +22,7 @@
 /* provides functions to get URL to pages */
 
 require_once ('include/defines.php');
+require_once ('lib/Route.php');
 require_once ('lib/string.php');
 
 
@@ -41,16 +42,11 @@ abstract class UrlTable
 	
 	protected static function controller ($controller, $action = 'index', array $args = array ())
 	{
-		$link = BSE_ENABLE_URL_REWRITING ? '' : 'index.php?url=';
-		
-		$link .= $controller;
-		if (! empty ($args)) {
-			$link .= '/'.$action.'/'.implode ('/', $args);
-		} else if ($action != 'index') {
-			$link .= '/'.$action;
-		}
-		
-		return BSE_BASE_PATH.$link;
+		return (string) new Route (array (
+			'controller' => $controller,
+			'action' => $action,
+			'args' => $args
+		));
 	}
 	
 	public static function home ()
