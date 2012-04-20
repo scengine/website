@@ -39,6 +39,20 @@ abstract class UrlTable
 		return BSE_BASE_PATH.$link;
 	}
 	
+	protected static function controller ($controller, $action = 'index', array $args = array ())
+	{
+		$link = BSE_ENABLE_URL_REWRITING ? '' : 'index.php?url=';
+		
+		$link .= $controller;
+		if (! empty ($args)) {
+			$link .= '/'.$action.'/'.implode ('/', $args);
+		} else if ($action != 'index') {
+			$link .= '/'.$action;
+		}
+		
+		return BSE_BASE_PATH.$link;
+	}
+	
 	public static function get_script ($uri)
 	{
 		$name = basename ($uri);
@@ -79,78 +93,41 @@ abstract class UrlTable
 	
 	public static function home ()
 	{
-		return self::basic_php_html ('index');
+		return self::controller ('index');
 	}
 	
 	public static function medias ($id=false, $noreturn=false, $title=null)
 	{
-		$link;
+		$action = 'index';
+		$args = array ();
 		
-		if (! BSE_ENABLE_URL_REWRITING)
-		{
-			$link = 'medias.php';
-			$sep = '?';
-			if ($id !== false)
-			{
-				$link .= $sep.'watch='.$id;
-				$sep = '&amp;';
+		if ($id !== false) {
+			$action = 'view';
+			$args[] = $id;
+			if ($title) {
+				$args[] = normalize_string_for_url ($title);
 			}
-			if ($noreturn)
-				$link .= $sep.'noreturn=1';
-		}
-		else
-		{
-			$link = 'media';
-			if ($id !== false)
-				$link .= '-'.$id;
-			else
-				$link .= 's';
-			if ($noreturn)
-				$link .= '-1';
-			if ($title)
-				$link .= '-'.normalize_string_for_url ($title);
-			$link .= '.html';
 		}
 		
-		return BSE_BASE_PATH.$link;
+		return self::controller ('medias', $action, $args);
 	}
 	public static function medias_tags (array $type=null, array $tags=null)
 	{
-		$link;
+		$args = array ();
 		
-		if ($type !== null)
-			$type = implode (',', $type);
-		if ($tags !== null)
-			$tags = implode (',', $tags);
-		
-		if (! BSE_ENABLE_URL_REWRITING)
-		{
-			$link = 'medias.php';
-			if ($type !== null)
-			{
-				$link .= '?type='.$type;
-				if ($tags !== null)
-					$link .= '&showtag='.$tags;
+		if ($type !== null) {
+			$args[] = implode (',', $type);
+			if ($tags !== null) {
+				$args[] = implode (',', $tags);
 			}
 		}
-		else
-		{
-			$link = 'medias';
-			if ($type !== null)
-			{
-				$link .= '-'.$type;
-				if ($tags !== null)
-					$link .= '-'.$tags;
-			}
-			$link .= '.html';
-		}
 		
-		return BSE_BASE_PATH.$link;
+		return self::controller ('medias', 'index', $args);
 	}
 	
 	public static function downloads ()
 	{
-		return self::basic_php_html ('downloads');
+		return self::controller ('downloads');
 	}
 	
 	public static function tuto ()
@@ -160,12 +137,12 @@ abstract class UrlTable
 	
 	public static function license ()
 	{
-		return self::basic_php_html ('license');
+		return self::controller ('license');
 	}
 	
 	public static function about ()
 	{
-		return self::basic_php_html ('about');
+		return self::controller ('about');
 	}
 	
 	public static function admin ($page=null)
@@ -256,41 +233,22 @@ abstract class UrlTable
 	
 	public static function news ($id=false, $title=null)
 	{
-		$link;
+		$action = 'index';
+		$args = array ();
 		
-		if (! BSE_ENABLE_URL_REWRITING)
-		{
-			$link = 'news.php';
-			if ($id !== false)
-				$link .= '?shownews='.$id;
-		}
-		else
-		{
-			if ($id !== false)
-			{
-				/* link of form news-NEWSID[-name-of-the-news].html */
-				$link = 'news-'.$id;
-				
-				if ($title)
-					$link .= '-'.normalize_string_for_url ($title);
+		if ($id !== false) {
+			$action = 'view';
+			$args[] = $id;
+			if ($title) {
+				$args[] = normalize_string_for_url ($title);
 			}
-			else
-				$link = 'news';
-			$link .= '.html';
 		}
 		
-		return BSE_BASE_PATH.$link;
+		return self::controller ('news', $action, $args);
 	}
 	public static function news_page ($page)
 	{
-		$link;
-		
-		if (! BSE_ENABLE_URL_REWRITING)
-			$link = 'news.php?page='.$page;
-		else
-			$link = 'news-page'.$page.'.html';
-		
-		return BSE_BASE_PATH.$link;
+		return self::controller ('news', 'index', array ($page));
 	}
 	
 	public static function login ()
