@@ -83,7 +83,8 @@ class Route
 				'args' => $this->args
 			);
 		}
-		$url = implode_r ('/', $query);
+		$url = BSE_ENABLE_URL_REWRITING ? '' : 'index.php?url=';
+		$url .= implode_r ('/', $query);
 		if ($abs) {
 			return BSE_BASE_URL.$url;
 		} else {
