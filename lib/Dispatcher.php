@@ -37,11 +37,10 @@ class Dispatcher
 		$this->check_controller_action ();
 	}
 	
-	public function run ()
+	public function dispatch ()
 	{
-		$vars = $this->call_controller_method ($this->route->action, $this->route->args);
-		$tpl_file = 'views/'.$this->route->controller.'/'.$this->route->action.'.phtml';
-		return new PHPFileTemplate ($tpl_file, $vars);
+		$data = $this->call_controller_method ($this->route->action, $this->route->args);
+		$this->controller->render ($this->route, $data);
 	}
 	
 	private function controller_class_name ($controller_name)

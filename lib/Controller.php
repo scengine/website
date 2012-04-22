@@ -22,10 +22,27 @@
 
 class Controller
 {
+	public $layout = 'views/layout.phtml';
+	
 	public function get_title ()
 	{
 		$className = preg_replace ('/Controller$/', '', get_class ($this));
 		return preg_replace (array ('/([a-z])([A-Z0-9])/', '/([0-9])([a-zA-Z])/'), '\1 \2', $className);
+	}
+	
+	public function render ($route, $action_data)
+	{
+		$tpl_file = 'views/'.$route->controller.'/'.$route->action.'.phtml';
+		
+		define ('TITLE', $this->get_title ());
+		$layout = new PHPFileTemplate (
+			$this->layout,
+			array (
+				'controller' => $route->controller,
+				'template' => new PHPFileTemplate ($tpl_file, $action_data)
+			)
+		);
+		$layout->render ();
 	}
 	
 	public function index ()

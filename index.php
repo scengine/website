@@ -24,13 +24,4 @@ require_once ('lib/PHPTemplate.php');
 
 
 $dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-
-define ('TITLE', $dispatcher->controller->get_title ());
-$layout = new PHPFileTemplate (
-	'views/layout.phtml',
-	array (
-		'controller' => $dispatcher->route->controller,
-		'template' => $dispatcher->run ()
-	)
-);
-$layout->render ();
+$dispatcher->dispatch ();
