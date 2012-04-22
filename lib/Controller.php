@@ -25,7 +25,7 @@ class Controller
 	public function get_title ()
 	{
 		$className = preg_replace ('/Controller$/', '', get_class ($this));
-		return preg_replace ('/([a-z])([A-Z0-9])/', '\1 \2', $className);
+		return preg_replace (array ('/([a-z])([A-Z0-9])/', '/([0-9])([a-zA-Z])/'), '\1 \2', $className);
 	}
 	
 	public function index ()
