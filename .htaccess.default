@@ -8,7 +8,8 @@ RewriteRule ^login\.html$ connexion.php [L]
 RewriteRule ^logout\.html$ connexion.php?act=logout [L]
 
 # commits feed
-RewriteRule ^feeds/commits\.(atom|rss)$ commits-feed.php?format=$1 [L]
+RewriteRule ^commits-feed.php?format=(.*)$ commits/$1
+RewriteRule ^feeds/commits\.(atom|rss)$ commits/$1
 
 # admin-actualités-ACTION[-ID].html
 RewriteRule ^admin-(actualités|medias)-([^-]+)(?:-([0-9]+))?\.html$ admin.php?page=$1&action=$2&id=$3 [L]

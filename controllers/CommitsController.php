@@ -24,6 +24,8 @@ require_once ('lib/Cache.php');
 require_once ('lib/FeedReader.php');
 require_once ('lib/FeedReaderAtom.php');
 require_once ('lib/PHPTemplate.php');
+require_once ('lib/Html.php');
+require_once ('lib/Controller.php');
 
 
 define ('N_COMMITS', 20);
@@ -92,8 +94,8 @@ class AtomCommitsCache extends CommitsCache
 		return array (
 			'title'         => 'SCEngine Commits',
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
-			'self_url'      => BSE_BASE_URL.'commits-feed.php',
-			'alternate_url' => BSE_BASE_URL.'index.php',
+			'self_url'      => Html::url (array ('controller' => 'commits','action' => 'atom'), true),
+			'alternate_url' => Html::url (array ('controller' => 'index'), true),
 			'date'          => date ('c'),
 			'id'            => BSE_BASE_URL.'commits',
 			'entries'       => &$items
@@ -123,8 +125,8 @@ class RSSCommitsCache extends CommitsCache
 		return array (
 			'title'         => 'SCEngine Commits',
 			'description'   => 'SCEngine Commits From All Repositories',
-			'self_url'      => BSE_BASE_URL.'commits-feed.php?format=rss',
-			'site_url'      => BSE_BASE_URL,
+			'self_url'      => Html::url (array ('controller' => 'commits', 'action' => 'rss'), true),
+			'site_url'      => Html::url (array ('controller' => 'index'), true),
 			'language'      => 'en',
 			'date'          => date ('r'),
 			'icon'          => BSE_BASE_URL.'styles/'.STYLE.'/icon.png',
@@ -134,10 +136,25 @@ class RSSCommitsCache extends CommitsCache
 }
 
 
-if (isset ($_GET['format']) && $_GET['format'] == 'rss') {
-	$cache = new RSSCommitsCache ('feeds/commits.rss', CACHE_TIME);
-} else {
-	$cache = new AtomCommitsCache ('feeds/commits.atom', CACHE_TIME);
+class CommitsController extends Controller
+{
+	public function atom ()
+	{
+		return new AtomCommitsCache ('feeds/commits.atom', CACHE_TIME);
+	}
+	
+	public function rss ()
+	{
+		return new RSSCommitsCache ('feeds/commits.rss', CACHE_TIME);
+	}
+	
+	public function index ()
+	{
+		return $this->atom ();
+	}
+	
+	public function render ($route, $action_data)
+	{
+		echo $action_data->load ();
+	}
 }
-
-echo $cache->load ();
