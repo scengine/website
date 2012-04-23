@@ -45,6 +45,11 @@ class Controller
 		$layout->render ();
 	}
 	
+	public function get_hidden_methods ()
+	{
+		return array ('get_title', 'render', 'get_hidden_methods');
+	}
+	
 	public function index ()
 	{
 		return array ();

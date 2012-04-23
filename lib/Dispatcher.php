@@ -76,7 +76,8 @@ class Dispatcher
 	
 	private function check_controller_action ()
 	{
-		if (! method_exists ($this->controller, $this->route->action)) {
+		if ($this->is_hidden_controller_method ($this->route->action) ||
+		    ! is_callable (array ($this->controller, $this->route->action))) {
 			$this->route = $this->route_404 ();
 			$this->controller = $this->instantiate_controller ();
 		}
@@ -85,5 +86,11 @@ class Dispatcher
 	private function call_controller_method ($method, $args = array ())
 	{
 		return call_user_func_array (array ($this->controller, $method), $args);
+	}
+	
+	private function is_hidden_controller_method ($method)
+	{
+		return (str_has_prefix ($method, '__') /* magic methods */ ||
+		        in_array ($method, $this->controller->get_hidden_methods ()));
 	}
 }
