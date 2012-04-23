@@ -21,6 +21,8 @@
 
 /* HTML helpers */
 
+require_once ('lib/Route.php');
+
 abstract class Html
 {
 	/* wraps htmlspecialchars() to use UTF-8 */
@@ -58,5 +60,35 @@ abstract class Html
 	public static function button_js ($label, $js, $title=null, $accesskey=null)
 	{
 		return self::button_full ($label, '#', $title, $js, $accesskey);
+	}
+	
+	public static function tag ($name, $data = null, $attrs = array ())
+	{
+		$tag = '<'.$name;
+		
+		foreach ($attrs as $attr => $value) {
+			$tag .= ' '.$attr.'="'.self::escape ($value).'"';
+		}
+		if ($data !== null) {
+			$tag .= '>'.$data.'</'.$name.'>';
+		} else {
+			$tag .= '/>';
+		}
+		
+		return $tag;
+	}
+	
+	public static function url ($url, $abs = false)
+	{
+		if (is_array ($url)) {
+			$route = new Route ($url);
+			$url = $route->to_url ($abs);
+		}
+		return $url;
+	}
+	
+	public static function link ($title, $url = array ())
+	{
+		return self::tag ('a', self::escape ($title), array ('href' => self::url ($url)));
 	}
 }
