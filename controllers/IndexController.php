@@ -275,9 +275,14 @@ class IndexModuleMailingList extends IndexModule {
 /* Controller */
 class IndexController extends LayoutController
 {
-	protected function get_title ($route, $action_data)
+	protected function get_layout_vars ($route, $action_data)
 	{
-		return 'Home';
+		return array_merge (
+			parent::get_layout_vars ($route, $action_data),
+			array (
+				'page_title' => 'Home'
+			)
+		);
 	}
 	
 	public function index ()

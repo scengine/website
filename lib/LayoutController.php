@@ -20,30 +20,36 @@
  */
 
 require_once ('lib/Controller.php');
+require_once ('lib/Metadata.php');
 
 
 class LayoutController extends Controller
 {
 	public $layout = 'views/layout.phtml';
 	
-	protected function get_title ($route, $action_data)
+	private function get_title ()
 	{
 		$className = preg_replace ('/Controller$/', '', get_class ($this));
 		return preg_replace (array ('/([a-z])([A-Z0-9])/', '/([0-9])([a-zA-Z])/'), '\1 \2', $className);
 	}
 	
-	public function render ($route, $action_data)
+	protected function get_layout_vars ($route, $action_data)
 	{
 		$tpl_file = 'views/'.$route->controller.'/'.$route->action.'.phtml';
 		
-		define ('TITLE', $this->get_title ($route, $action_data));
-		$layout = new PHPFileTemplate (
-			$this->layout,
-			array (
-				'controller' => $route->controller,
-				'template' => new PHPFileTemplate ($tpl_file, $action_data)
-			)
+		return array (
+			'controller'  => $route->controller,
+			'template'    => new PHPFileTemplate ($tpl_file, $action_data),
+			'site_title'  => Metadata::get_instance()->get_name (),
+			'page_title'  => $this->get_title ()
 		);
+	}
+	
+	public function render ($route, $action_data)
+	{
+		$vars = $this->get_layout_vars ($route, $action_data);
+		define ('TITLE', $vars['page_title']); /* temporary compatibility */
+		$layout = new PHPFileTemplate ($this->layout, $vars);
 		$layout->render ();
 	}
 }
