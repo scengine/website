@@ -27,7 +27,7 @@ require_once ('include/defines.php');
 require_once ('lib/medias.php');
 require_once ('lib/Html.php');
 require_once ('lib/User.php');
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 
 
 /* Splits an array in chunks according to $callback
@@ -143,7 +143,7 @@ class MediasModel
 	}
 }
 
-class MediasController extends Controller
+class MediasController extends LayoutController
 {
 	private $Medias;
 	

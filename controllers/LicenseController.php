@@ -24,10 +24,10 @@ define ('LICENSE_FILE', 'COPYING');
 
 require_once ('lib/string.php');
 require_once ('lib/Html.php');
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 
 
-class LicenseController extends Controller
+class LicenseController extends LayoutController
 {
 	public function index ()
 	{

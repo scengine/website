@@ -20,34 +20,13 @@
  */
 
 
-class Controller
+abstract class Controller
 {
-	public $layout = 'views/layout.phtml';
-	
-	protected function get_title ($route, $action_data)
-	{
-		$className = preg_replace ('/Controller$/', '', get_class ($this));
-		return preg_replace (array ('/([a-z])([A-Z0-9])/', '/([0-9])([a-zA-Z])/'), '\1 \2', $className);
-	}
-	
-	public function render ($route, $action_data)
-	{
-		$tpl_file = 'views/'.$route->controller.'/'.$route->action.'.phtml';
-		
-		define ('TITLE', $this->get_title ($route, $action_data));
-		$layout = new PHPFileTemplate (
-			$this->layout,
-			array (
-				'controller' => $route->controller,
-				'template' => new PHPFileTemplate ($tpl_file, $action_data)
-			)
-		);
-		$layout->render ();
-	}
+	public abstract function render ($route, $action_data);
 	
 	public function get_hidden_methods ()
 	{
-		return array ('get_title', 'render', 'get_hidden_methods');
+		return array ('render', 'get_hidden_methods');
 	}
 	
 	public function index ()

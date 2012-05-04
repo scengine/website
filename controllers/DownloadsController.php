@@ -19,7 +19,7 @@
  * 
  */
 
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 require_once ('lib/User.php');
 require_once ('lib/medias.php');
 require_once ('lib/misc.php');
@@ -53,7 +53,7 @@ class DownloadsModel
 	}
 }
 
-class DownloadsController extends Controller
+class DownloadsController extends LayoutController
 {
 	public function __construct ()
 	{

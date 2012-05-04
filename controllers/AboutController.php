@@ -19,10 +19,10 @@
  * 
  */
 
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 require_once ('lib/Metadata.php');
 
-class AboutController extends Controller
+class AboutController extends LayoutController
 {
 	public function index ()
 	{

@@ -22,9 +22,9 @@
 require_once ('include/defines.php');
 require_once ('lib/string.php');
 require_once ('lib/Route.php');
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 
-class Error404Controller extends Controller
+class Error404Controller extends LayoutController
 {
 	public function index ($query = '')
 	{

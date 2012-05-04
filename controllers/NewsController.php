@@ -23,7 +23,7 @@ define ('NEWS_PREVIEW_SIZE', 250);
 define ('NEWS_BY_PAGE', 3);
 
 require_once ('include/defines.php');
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/News.php');
 require_once ('lib/Html.php');
@@ -59,7 +59,7 @@ class NewsModel
 	}
 }
 
-class NewsController extends Controller
+class NewsController extends LayoutController
 {
 	private $News = null;
 	

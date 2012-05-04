@@ -34,7 +34,7 @@ require_once ('lib/FeedReader.php');
 require_once ('lib/FeedReaderAtom.php');
 require_once ('lib/Metadata.php');
 require_once ('lib/PHPTemplate.php');
-require_once ('lib/Controller.php');
+require_once ('lib/LayoutController.php');
 
 
 class IndexFeedReaderAtom extends FeedReaderAtom  {
@@ -273,7 +273,7 @@ class IndexModuleMailingList extends IndexModule {
 
 
 /* Controller */
-class IndexController extends Controller
+class IndexController extends LayoutController
 {
 	protected function get_title ($route, $action_data)
 	{
