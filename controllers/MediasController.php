@@ -269,7 +269,10 @@ class MediasController extends LayoutController
 		$vars = parent::get_layout_vars ($route, $action_data);
 		
 		if ($route->action == 'view') {
-			$vars['page_title'] = Html::escape ($action_data['media']['desc']).' &mdash; '.$vars['page_title'];
+			$media_title = $action_data['media']['desc'];
+			if (strlen ($media_title) > 0) {
+				$vars['page_title'] = Html::escape ($media_title).' &mdash; '.$vars['page_title'];
+			}
 		}
 		
 		return $vars;
