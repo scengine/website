@@ -122,6 +122,17 @@ class NewsController extends LayoutController
 		return $pager;
 	}
 	
+	protected function get_layout_vars ($route, $action_data)
+	{
+		$vars = parent::get_layout_vars ($route, $action_data);
+		
+		if ($route->action == 'view') {
+			$vars['page_title'] = Html::escape ($action_data['news']['title']).' &mdash; '.$vars['page_title'];
+		}
+		
+		return $vars;
+	}
+	
 	/* actions */
 	
 	public function index ($page = 1)

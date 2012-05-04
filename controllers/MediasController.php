@@ -264,6 +264,17 @@ class MediasController extends LayoutController
 		return $sections;
 	}
 	
+	protected function get_layout_vars ($route, $action_data)
+	{
+		$vars = parent::get_layout_vars ($route, $action_data);
+		
+		if ($route->action == 'view') {
+			$vars['page_title'] = Html::escape ($action_data['media']['desc']).' &mdash; '.$vars['page_title'];
+		}
+		
+		return $vars;
+	}
+	
 	/* actions */
 	
 	public function index ($types = null, $tags = null)
