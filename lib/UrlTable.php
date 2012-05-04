@@ -88,11 +88,6 @@ abstract class UrlTable
 		return self::controller ('downloads');
 	}
 	
-	public static function tuto ()
-	{
-		return self::basic_php_html ('tuto');
-	}
-	
 	public static function license ()
 	{
 		return self::controller ('license');
