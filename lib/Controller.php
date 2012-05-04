@@ -24,7 +24,7 @@ class Controller
 {
 	public $layout = 'views/layout.phtml';
 	
-	public function get_title ()
+	protected function get_title ($route, $action_data)
 	{
 		$className = preg_replace ('/Controller$/', '', get_class ($this));
 		return preg_replace (array ('/([a-z])([A-Z0-9])/', '/([0-9])([a-zA-Z])/'), '\1 \2', $className);
@@ -34,7 +34,7 @@ class Controller
 	{
 		$tpl_file = 'views/'.$route->controller.'/'.$route->action.'.phtml';
 		
-		define ('TITLE', $this->get_title ());
+		define ('TITLE', $this->get_title ($route, $action_data));
 		$layout = new PHPFileTemplate (
 			$this->layout,
 			array (

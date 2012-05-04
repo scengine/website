@@ -275,7 +275,7 @@ class IndexModuleMailingList extends IndexModule {
 /* Controller */
 class IndexController extends Controller
 {
-	public function get_title ()
+	protected function get_title ($route, $action_data)
 	{
 		return 'Home';
 	}
