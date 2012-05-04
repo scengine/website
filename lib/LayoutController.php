@@ -48,7 +48,6 @@ class LayoutController extends Controller
 	public function render ($route, $action_data)
 	{
 		$vars = $this->get_layout_vars ($route, $action_data);
-		define ('TITLE', $vars['page_title']); /* temporary compatibility */
 		$layout = new PHPFileTemplate ($this->layout, $vars);
 		$layout->render ();
 	}

@@ -24,6 +24,7 @@
 session_start ();
 
 require_once ('include/defines.php');
+require_once ('lib/Metadata.php');
 require_once ('lib/User.php');
 require_once ('lib/Header.php');
 require_once ('lib/PHPTemplate.php');
@@ -31,6 +32,7 @@ require_once ('lib/PHPTemplate.php');
 class AdminPage
 {
 	private $path;
+	private $title;
 	
 	public function __construct ($name)
 	{
@@ -41,7 +43,7 @@ class AdminPage
 			$path = $this->get_path ($name);
 		}
 		
-		define ('TITLE', ucfirst ($name).' - Administration');
+		$this->title = ucfirst ($name).' - Administration';
 		define ('PAGE', $name);
 		$this->path = $path;
 	}
@@ -49,6 +51,11 @@ class AdminPage
 	private function get_path ($name)
 	{
 		return './include/'.$name.'.inc';
+	}
+	
+	public function get_title ()
+	{
+		return $this->title;
 	}
 	
 	public function render ()
@@ -69,7 +76,9 @@ $layout = new PHPFileTemplate (
 	'views/layout.phtml',
 	array (
 		'controller' => 'admin.php',
-		'template' => $page
+		'template' => $page,
+		'site_title' => Metadata::get_instance ()->get_name (),
+		'page_title' => $page->get_title ()
 	)
 );
 $layout->render ();
