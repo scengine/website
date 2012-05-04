@@ -277,12 +277,12 @@ class IndexController extends LayoutController
 {
 	protected function get_layout_vars ($route, $action_data)
 	{
-		return array_merge (
-			parent::get_layout_vars ($route, $action_data),
-			array (
-				'page_title' => 'Home'
-			)
-		);
+		$vars = parent::get_layout_vars ($route, $action_data);
+		
+		$vars['page_title'] = 'Home';
+		$vars['site_title'] .= ', '.Metadata::get_instance ()->get_description ();
+		
+		return $vars;
 	}
 	
 	public function index ()
