@@ -46,14 +46,4 @@ class LayoutController extends Controller
 		);
 		$layout->render ();
 	}
-	
-	public function get_hidden_methods ()
-	{
-		return array_merge (
-			parent::get_hidden_methods (),
-			array (
-				'get_title'
-			)
-		);
-	}
 }
