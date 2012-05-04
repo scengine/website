@@ -30,20 +30,6 @@ require_once ('lib/string.php');
 require_once ('lib/Metadata.php'); /* gives MDI instance */
 
 
-function print_head_adds (&$adds) {
-	$added = array ();
-	
-	foreach ($adds as $add) {
-		if (! in_array ($add, $added)) {
-			echo $add;
-			$added[] = $add;
-		}
-	}
-	
-	unset ($added, $add);
-}
-
-
 header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -65,11 +51,6 @@ header('Content-Type: text/html; charset=UTF-8');
 			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,NEWS_RSS_FEED_FILE; ?>" />
 		
 		<script type="text/javascript" src="<?php echo BSE_BASE_PATH ?>include/js/actions.js"></script>
-<?php
-			if (isset ($HEAD_ADDS) && is_array ($HEAD_ADDS)) {
-				print_head_adds ($HEAD_ADDS);
-			}
-?>
 	</head>
 
 	<body>
