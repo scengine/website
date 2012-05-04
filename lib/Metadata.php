@@ -30,6 +30,7 @@ class Metadata extends Singleton
 {
 	protected $fields = array (
 		'name'         => 'Project name', //!< project name
+		'short_desc'   => 'Short description', //!< project's short description
 		'version'      => '0.1', //!< project version
 		'authors'      => array (), //!< array of project's authors
 		'contributors' => array (),
@@ -184,6 +185,19 @@ class Metadata extends Singleton
 	public function set_name ($name) {
 		if (is_string ($name))
 			$this->fields['name'] = $name;
+		else
+			return false;
+		
+		return true;
+	}
+	
+	/* Short description filed */
+	public function get_description () {
+		return $this->fields['short_desc'];
+	}
+	public function set_description ($desc) {
+		if (is_string ($desc))
+			$this->fields['short_desc'] = $desc;
 		else
 			return false;
 		
