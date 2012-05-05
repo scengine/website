@@ -155,7 +155,9 @@ class IndexModuleNews extends IndexModule {
 			'title' => $news['title'],
 			'content' => xmlstr_shortcut ($news['content'], NEWS_PREVIEW_SIZE,
 			                              '… <a href="'.$permalink.'" class="more">read more</a>'),
-			'permalink' => $permalink
+			'permalink' => $permalink,
+			'author' => $news['author'],
+			'date' => $news['date']
 		);
 	}
 }

@@ -469,6 +469,18 @@ img.bordered {
 #content .modules .module .data .date {
 	font-size: 90%;
 }
+#content .main-modules .module .data .date {
+	float: right;
+	color: #aaa;
+	margin: 0;
+	padding-top: 0.90em;
+	font-size: 75%;
+	text-align: right;
+	font-style: italic;
+}
+#content .main-modules .module .data h4 {
+	clear: none;
+}
 #content .cut_module {
 	/*clear: left;
 	clear: both;*/
