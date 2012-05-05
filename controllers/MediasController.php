@@ -103,13 +103,16 @@ class MediasModel
 		return $medias;
 	}
 	
+	private function is_visible_tag ($t)
+	{
+		return ! $this->is_hidden_tag ($t);
+	}
+	
 	public function find_tags ()
 	{
 		return array_filter (
 			media_get_all_tags (),
-			function ($t) {
-				return ! $this->is_hidden_tag ($t);
-			}
+			array ($this, 'is_visible_tag')
 		);
 	}
 	
