@@ -26,9 +26,6 @@ require_once ('lib/MyDB.php');
 require_once ('lib/User.php');
 require_once ('lib/Html.php');
 
-/* required JavaScript */
-//$HEAD_ADDS[] = '<script type="text/javascript" src="include/js/actions.js"></script>';
-
 
 abstract class News
 {

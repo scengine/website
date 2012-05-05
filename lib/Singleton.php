@@ -19,9 +19,34 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-$dispatcher->dispatch ();
+class Singleton
+{
+	private static $instance;
+	
+	protected function __construct ()
+	{
+		if (self::$instance) {
+			trigger_error (sprintf ('Cannot instantiate %s twice', __CLASS__), E_USER_ERROR);
+		}
+	}
+	
+	public static function get_instance ()
+	{
+		if (! isset (self::$instance)) {
+			$class = get_called_class ();
+			self::$instance = new $class ();
+		}
+		return self::$instance;
+	}
+	
+	public function __clone ()
+	{
+		trigger_error (sprintf ('Cannot clone %s', __CLASS__), E_USER_ERROR);
+	}
+	
+	public function __wakeup ()
+	{
+		trigger_error (sprintf ('Cannot unserialize %s', __CLASS__), E_USER_ERROR);
+	}
+}

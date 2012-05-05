@@ -20,16 +20,14 @@
  */
 
 /*
- * Media gesture (screenshots & movies)
+ * Media management (screenshots & movies)
  */
-
-define ('TITLE', 'Media');
 
 require_once ('include/defines.php');
 require_once ('lib/medias.php');
 require_once ('lib/Html.php');
 require_once ('lib/User.php');
-require_once ('lib/PHPTemplate.php');
+require_once ('lib/LayoutController.php');
 
 
 /* Splits an array in chunks according to $callback
@@ -71,31 +69,14 @@ function array_chunk_callback (array $array, $callback)
 }
 
 
-/* Base medias template with code shared by all views */
-abstract class MediasTemplate extends PHPFileTemplate
+class MediasModel
 {
-	protected $view;
-	
-	public function __construct ()
-	{
-		parent::__construct (
-			$this->view,
-			array (
-				'is_admin'			=> User::has_rights (ADMIN_LEVEL_MEDIA),
-				'display_types'	=> $this->get_types_filter (),
-				'display_tags'	=> $this->get_tags_filter (),
-				'all_types'			=> $this->get_all_types (),
-				'all_tags'			=> $this->get_all_tags ()
-			)
-		);
-	}
-	
-	protected static function is_hidden_tag ($tag)
+	public static function is_hidden_tag ($tag)
 	{
 		return strlen ($tag) > 0 && $tag[0] == '.';
 	}
 	
-	protected static function remove_hidden_tags (&$media)
+	public static function remove_hidden_tags (&$media)
 	{
 		foreach ($media['tags'] as $k => $t) {
 			if (self::is_hidden_tag ($t)) {
@@ -104,14 +85,81 @@ abstract class MediasTemplate extends PHPFileTemplate
 		}
 	}
 	
+	public function find (array $types = array (),
+	                      array $tags = array (),
+	                      array $sort = array ('type' => 'ASC',
+	                                           'mdate' => 'DESC'))
+	{
+		$medias = media_get_medias ($types, $tags, $sort);
+		if ($medias) {
+			/* adjust the medias array */
+			foreach ($medias as &$media) {
+				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
+				$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
+				$this->remove_hidden_tags ($media);
+			}
+		}
+		
+		return $medias;
+	}
+	
+	public function find_tags ()
+	{
+		return array_filter (
+			media_get_all_tags (),
+			function ($t) {
+				return ! $this->is_hidden_tag ($t);
+			}
+		);
+	}
+	
+	private function fix_media_type (array &$media)
+	{
+		if ($media['type'] != MediaType::SCREENSHOT &&
+				$media['type'] != MediaType::MOVIE) {
+			/* try to map to a known type if possible */
+			if (str_has_prefix ($media['mime_type'], 'image/')) {
+				$media['type'] = MediaType::SCREENSHOT;
+			} else if (str_has_prefix ($media['mime_type'], 'video/')) {
+				$media['type'] = MediaType::MOVIE;
+			}
+		}
+	}
+	
+	public function get ($id)
+	{
+		$media = media_get_by_id ($id);
+		if ($media) {
+			$media['uri']				= MEDIA_DIR_R.'/'.$media['uri'];
+			$media['tb_uri']		= MEDIA_DIR_R.'/'.$media['tb_uri'];
+			$media['mime_type']	= filename_get_mime_type ($media['uri']);
+			
+			$this->remove_hidden_tags ($media);
+			/* make sure media type is useful for us */
+			$this->fix_media_type ($media);
+		}
+		
+		return $media;
+	}
+}
+
+class MediasController extends LayoutController
+{
+	private $Medias;
+	
+	public function __construct ()
+	{
+		$this->Medias = new MediasModel ();
+	}
+	
 	private $_types_filter = null;
-	protected function get_types_filter ()
+	protected function get_types_filter ($types = null)
 	{
 		if ($this->_types_filter === null) {
 			if (isset ($_POST['type']) && is_array ($_POST['type'])) {
 				$this->_types_filter = $_POST['type'];
-			} else if (isset ($_GET['type'])) {
-				$this->_types_filter = explode (',', $_GET['type']);
+			} else if ($types !== null) {
+				$this->_types_filter = explode (',', $types);
 			} else {
 				/* Defaults to screenshots & videos */
 				$this->_types_filter = array (MediaType::SCREENSHOT, MediaType::MOVIE);
@@ -122,13 +170,13 @@ abstract class MediasTemplate extends PHPFileTemplate
 	}
 	
 	private $_tags_filter = null;
-	protected function get_tags_filter ()
+	protected function get_tags_filter ($tags = null)
 	{
 		if ($this->_tags_filter === null) {
 			if (isset ($_POST['showtag']) && is_array ($_POST['showtag'])) {
 				$this->_tags_filter = $_POST['showtag'];
-			} else if (isset ($_GET['showtag'])) {
-				$this->_tags_filter = explode (',', $_GET['showtag']);
+			} else if ($tags !== null) {
+				$this->_tags_filter = explode (',', $tags);
 			} else {
 				$this->_tags_filter = array ();
 			}
@@ -159,60 +207,41 @@ abstract class MediasTemplate extends PHPFileTemplate
 	{
 		if ($this->_all_tags === null) {
 			$this->_all_tags = array ();
-			foreach (media_get_all_tags () as $tag) {
-				if (! $this->is_hidden_tag ($tag)) {
-					$this->_all_tags[] = array (
-						'id'			=> $tag,
-						'name'		=> ($tag == '' ? 'Not tagged' : $tag),
-						'checked'	=> in_array ($tag, $this->get_tags_filter ())
-					);
-				}
+			foreach ($this->Medias->find_tags () as $tag) {
+				$this->_all_tags[] = array (
+					'id'			=> $tag,
+					'name'		=> ($tag == '' ? 'Not tagged' : $tag),
+					'checked'	=> in_array ($tag, $this->get_tags_filter ())
+				);
 			}
 		}
 		
 		return $this->_all_tags;
 	}
-}
-
-/* Main template displaying the medias index */
-class MediasIndexTemplate extends MediasTemplate
-{
-	protected $view = 'views/medias/index.phtml';
 	
-	public function __construct ()
+	private function get_common_vars ($types = null, $tags = null)
 	{
-		parent::__construct ();
-		$this->sections = $this->get_sections ();
+		return array (
+			'is_admin'			=> User::has_rights (ADMIN_LEVEL_MEDIA),
+			'display_types'	=> $this->get_types_filter ($types),
+			'display_tags'	=> $this->get_tags_filter ($tags),
+			'all_types'			=> $this->get_all_types (),
+			'all_tags'			=> $this->get_all_tags ()
+		);
 	}
 	
-	private function get_display_medias ()
+	private function get_sections ($types = null, $tags = null)
 	{
-		$medias = media_get_medias (
-			$this->get_types_filter (),
-			$this->get_tags_filter (),
+		$sections = array ();
+		
+		$medias = $this->Medias->find (
+			$this->get_types_filter ($types),
+			$this->get_tags_filter ($tags),
 			array (
 				'type' => 'DESC',
 				'mdate' => 'DESC'
 			)
 		);
-		
-		if ($medias) {
-			/* adjust the medias array */
-			foreach ($medias as &$media) {
-				$media['uri'] = MEDIA_DIR_R.'/'.$media['uri'];
-				$media['tb_uri'] = MEDIA_DIR_R.'/'.$media['tb_uri'];
-				$this->remove_hidden_tags ($media);
-			}
-		}
-		
-		return $medias;
-	}
-	
-	private function get_sections ()
-	{
-		$sections = array ();
-		
-		$medias = $this->get_display_medias ();
 		if ($medias) {
 			/* expand the medias to blocks of the same type */
 			$medias_by_types = array_chunk_callback (
@@ -234,66 +263,39 @@ class MediasIndexTemplate extends MediasTemplate
 		
 		return $sections;
 	}
-}
-
-/* View template for viewing a particular media */
-class MediasViewTemplate extends MediasTemplate
-{
-	protected $view = 'views/medias/view.phtml';
 	
-	public function __construct ($media_id)
+	protected function get_layout_vars ($route, $action_data)
 	{
-		parent::__construct ();
-		$this->media = $this->get_media ($media_id);
-		$this->noreturn = filter_input (INPUT_GET, 'noreturn', FILTER_VALIDATE_BOOLEAN);
-	}
-	
-	private function fix_media_type (array &$media)
-	{
-		if ($media['type'] != MediaType::SCREENSHOT &&
-				$media['type'] != MediaType::MOVIE) {
-			/* try to map to a known type if possible */
-			if (str_has_prefix ($media['mime_type'], 'image/')) {
-				$media['type'] = MediaType::SCREENSHOT;
-			} else if (str_has_prefix ($media['mime_type'], 'video/')) {
-				$media['type'] = MediaType::MOVIE;
+		$vars = parent::get_layout_vars ($route, $action_data);
+		
+		if ($route->action == 'view') {
+			$media_title = $action_data['media']['desc'];
+			if (strlen ($media_title) > 0) {
+				$vars['page_title'] = Html::escape ($media_title).' &mdash; '.$vars['page_title'];
 			}
 		}
+		
+		return $vars;
 	}
 	
-	private function get_media ($id)
+	/* actions */
+	
+	public function index ($types = null, $tags = null)
 	{
-		$media = media_get_by_id ($id);
-		if ($media) {
-			$media['uri']				= MEDIA_DIR_R.'/'.$media['uri'];
-			$media['tb_uri']		= MEDIA_DIR_R.'/'.$media['tb_uri'];
-			$media['mime_type']	= filename_get_mime_type ($media['uri']);
-			
-			$this->remove_hidden_tags ($media);
-			/* make sure media type is useful for us */
-			$this->fix_media_type ($media);
-		}
-		
-		return $media;
+		return array_merge (
+			$this->get_common_vars ($types, $tags),
+			array ('sections' => $this->get_sections ($types, $tags))
+		);
+	}
+	
+	public function view ($media_id = -1, $noreturn = false)
+	{
+		return array_merge (
+			$this->get_common_vars (),
+			array (
+				'media' => $this->Medias->get ($media_id),
+				'noreturn' => $noreturn == true
+			)
+		);
 	}
 }
-
-
-
-/******************************************************************************/
-
-/* compatibility with old API */
-if (isset ($_GET['watch']) && settype ($_GET['watch'], 'int')) {
-	$_GET['view'] = $_GET['watch'];
-}
-
-if (isset ($_GET['view']) && settype ($_GET['view'], 'int')) {
-	$tpl = new MediasViewTemplate ($_GET['view']);
-} else {
-	$tpl = new MediasIndexTemplate ();
-}
-
-
-require_once ('include/top.minc');
-$tpl->render ();
-require_once ('include/bottom.minc');

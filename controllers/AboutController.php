@@ -2,7 +2,7 @@
 /* LICENSE
  * 
  * BanSE - a site base (designed to be the SCEngine website)
- * Copyright (C) 2012 Colomban Wendling <ban@herbesfolles.org>
+ * Copyright (C) 2007-2012 Colomban Wendling <ban@herbesfolles.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,24 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
+require_once ('lib/LayoutController.php');
+require_once ('lib/Metadata.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-$dispatcher->dispatch ();
+class AboutController extends LayoutController
+{
+	public function index ()
+	{
+		$MDI = Metadata::get_instance ();
+		
+		return array (
+			'version' => $MDI->get_version (),
+			'roles' => array (
+				'Engine development' => $MDI->get_authors (),
+				'Documentation' => $MDI->get_documenters (),
+				'Translation' => $MDI->get_translators (),
+				'Graphists' => $MDI->get_graphists (),
+				'Contributors' => $MDI->get_contributors ()
+			)
+		);
+	}
+}

@@ -73,11 +73,11 @@ define ('METADATA_FILE', dirname (__FILE__).'/../data/metadatas');
  * use of link snippets feature
  * Also note that some browser and/or embedded video players doesn't handle
  * paths nicely, so it's definitely better to set this to an absolute URL */
-define ('MEDIA_DIR_R', BSE_BASE_URL.'medias');
+define ('MEDIA_DIR_R', BSE_BASE_URL.'data/medias');
 /* Path/URI where write medias. It is used to upload medias and thumbnails.
  * This is quite rarely used, meaning I/O are done not often. Obviously, this
  * needs write access. */
-define ('MEDIA_DIR_W', './medias');
+define ('MEDIA_DIR_W', './data/medias');
 
 /* Whether to use URL rewriting. This value should be true unless your host
  * doesn't support rewriting */

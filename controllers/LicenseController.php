@@ -19,34 +19,29 @@
  * 
  */
 
+//define ('LICENSE_FILE', 'http://www.gnu.org/licenses/gpl.txt');
+define ('LICENSE_FILE', 'COPYING');
 
-define ('TITLE', 'About');
+require_once ('lib/string.php');
+require_once ('lib/Html.php');
+require_once ('lib/LayoutController.php');
 
-require_once ('lib/Metadata.php'); /* gives MDI instance */
-require_once ('lib/PHPTemplate.php');
 
-
-class AboutTemplate extends PHPFileTemplate
+class LicenseController extends LayoutController
 {
-	public function __construct ()
+	public function index ()
 	{
-		global $MDI;
+		$license = @file_get_contents (LICENSE_FILE);
+		if ($license) {
+			$license = nls2p (Html::escape ($license));
+		} else {
+			$license = '
+			The <a href="http://www.gnu.org/">GNU website</a> is currently down.
+			Please try later or check the license on the
+			<a href="http://www.fsf.org/licensing/licenses/gpl.html">
+			Free Software Foundation website</a>.';
+		}
 		
-		parent::__construct ('views/about.phtml');
-		$this->version = $MDI->get_version ();
-		$this->roles = array (
-			'Engine development'	=> $MDI->get_authors (),
-			'Documentation'				=> $MDI->get_documenters (),
-			'Translation'					=> $MDI->get_translators (),
-			'Graphists'						=> $MDI->get_graphists (),
-			'Contributors'				=> $MDI->get_contributors ()
-		);
+		return array ('license' => $license);
 	}
 }
-
-
-$tpl = new AboutTemplate ();
-
-require_once ('include/top.minc');
-$tpl->render ();
-require_once ('include/bottom.minc');

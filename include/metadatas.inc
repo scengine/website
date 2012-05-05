@@ -21,15 +21,15 @@
 
 require_once ('include/defines.php');
 require_once ('lib/Html.php');
-require_once ('lib/Metadata.php'); /* gives MDI instance */
+require_once ('lib/Metadata.php');
 
-//$md = new Metadata (METADATA_FILE);
-
+$MDI = Metadata::get_instance ();
 
 if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 	/* si on doit enregistrer les données */
 	if (isset ($_POST['name'])) {
 		$MDI->set_name ($_POST['name']);
+		$MDI->set_description ($_POST['short_desc']);
 		$MDI->set_version ($_POST['version']);
 		$MDI->set_license ($_POST['license']);
 		
@@ -169,6 +169,7 @@ if (User::has_rights (ADMIN_LEVEL_METADATA)) {
 			<form action="<?php echo UrlTable::admin (strtolower (PAGE)); ?>" method="post">
 				<div>
 					<label>Nom du projet&nbsp;:<br /><input type="text" name="name" value="<?php echo Html::escape ($MDI->get_name ()); ?>" /></label><br />
+					<label>Description courte&nbsp;:<br /><input type="text" name="short_desc" value="<?php echo Html::escape ($MDI->get_description ()); ?>" /></label><br />
 					<label>Version du projet&nbsp;:<br /><input type="text" name="version" value="<?php echo Html::escape ($MDI->get_version ()); ?>" /></label><br />
 					<label>Licence du projet&nbsp;:<br /><input type="text" name="license" value="<?php echo Html::escape ($MDI->get_license ()); ?>" /></label><br />
 					<label><input type="checkbox" name="update_mdate" checked="checked" /> Mettre à jour la date de modification du projet</label><br />

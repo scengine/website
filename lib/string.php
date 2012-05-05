@@ -322,3 +322,27 @@ function implode_quoted ($quote, $sep, array $array)
 {
 	return $quote.implode ($quote.$sep.$quote, $array).$quote;
 }
+
+function implode_r ($glue, array $pieces)
+{
+	foreach ($pieces as &$piece) {
+		if (is_array ($piece)) {
+			$piece = implode_r ($glue, $piece);
+		}
+	}
+	return implode ($glue, $pieces);
+}
+
+/**
+ * \brief Camelize a string
+ * \param $str A string
+ * \returns The CamelCase form of $str
+ * 
+ * 
+ */
+function camelize ($str)
+{
+	$str = str_replace (array ('_', '-'), ' ', $str);
+	$str = ucwords ($str);
+	return str_replace (' ', '', $str);
+}

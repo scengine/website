@@ -19,12 +19,107 @@
  * 
  */
 
+/* layout for all pages */
+
 require_once ('include/defines.php');
 require_once ('lib/UrlTable.php');
 require_once ('lib/User.php');
+require_once ('lib/Route.php');
+require_once ('lib/Flash.php');
+require_once ('lib/string.php');
+require_once ('lib/Metadata.php'); /* gives MDI instance */
 
 
+header('Content-Type: text/html; charset=UTF-8');
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
+	<head>
+		<title>
+			<?php echo $page_title ?>
+			&mdash;
+			<?php echo $site_title ?>
+		</title>
+		
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta name="description" content="<?php echo DESCRIPTION; ?>" />
+		
+		<link rel="start" title="Accueil" href="<?php echo UrlTable::home (); ?>" />
+		<link rel="icon" href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/icon.png" type="image/png" />
+		<link rel="stylesheet" media="screen" type="text/css" title="default"
+			href="<?php echo BSE_BASE_PATH,'styles/',STYLE; ?>/main.css" />
+		
+		<link rel="alternate" title="Actualités (Atom)"
+			type="application/atom+xml" href="<?php echo BSE_BASE_PATH,NEWS_ATOM_FEED_FILE; ?>" />
+		<link rel="alternate" title="Actualités (RSS)"
+			type="application/rss+xml" href="<?php echo BSE_BASE_PATH,NEWS_RSS_FEED_FILE; ?>" />
+		
+		<script type="text/javascript" src="<?php echo BSE_BASE_PATH ?>include/js/actions.js"></script>
+	</head>
+
+	<body>
+		<div id="header">
+			<div id="banner">
+				<h1><a href="<?php echo UrlTable::home (); ?>" accesskey="1"><?php echo Metadata::get_instance ()->get_name (); ?></a></h1>
+			</div>
+
+			<div id="menubar">
+				<ul>
+				<?php
+					$menubar = array (
+						'Home'          => 'index',
+						'News'          => 'news',
+						'Medias'        => 'medias',
+						'Downloads'     => 'downloads',
+						'Forums'        => 'forums/',
+						'Documentation' => 'doc/',
+						//'License'       => 'license',
+						'About'         => 'about'
+					);
+					
+					if (User::get_logged ()) {
+						$menubar['Admin'] = 'admin.php';
+					}
+					
+					foreach ($menubar as $title => $link) {
+						$route = new Route ($link);
+						$current = '';
+						
+						if ($controller == $route->controller) {
+							$current = 'class="current"';
+						}
+						
+						echo '<li ',$current,'><a href="',$route,'">',$title,'</a></li>';
+					}
+				?>
+				</ul>
+			</div>
+
+			<!--div id="navbar">
+				You are here: 
+			</div-->
+		</div>
+
+		<div id="body">
+
+<?php if (($messages = Flash::get_messages ())): ?>
+		<div class="messages">
+			<?php foreach ($messages as $message): ?>
+				<p class="message <?php echo $message['type'] ?>">
+					<?php echo $message['message'] ?>
+				</p>
+			<?php endforeach ?>
+		</div>
+<?php endif ?>
+
+<?php
+if (is_object ($template)) {
+	$template->render ();
+} else {
+	echo $template;
+}
+?>
+
 		</div> <!-- body -->
 
 		<div id="footer">
@@ -33,7 +128,6 @@ require_once ('lib/User.php');
 				<ul>
 						<li><a href="<?php echo BSE_BASE_PATH; ?>forums/">Forum</a></li>
 						<li><a href="<?php echo BSE_BASE_PATH; ?>doc/">Documentation</a></li>
-						<li><a href="<?php echo UrlTable::tuto (); ?>">Tutorial</a></li>
 				</ul>
 			</div>
 			
@@ -76,7 +170,8 @@ require_once ('lib/User.php');
 				Copyright &copy; 2007-2012 Colomban Wendling &lt;<?php echo obfuscate_email ('ban@herbesfolles.org'); ?>&gt;
 				This whole site is licensed under the GNU GPL v3 or later.
 				See <a href="<?php echo LICENSE_URL; ?>" accesskey="8">license</a> for more details.
-				&mdash;
+			</p>
+			<p>
 				Kindly hosted by <a href="http://www.tuxfamily.org">TuxFamily</a>.
 			</p>
 			

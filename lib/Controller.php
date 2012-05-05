@@ -19,9 +19,18 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-$dispatcher->dispatch ();
+abstract class Controller
+{
+	public abstract function render ($route, $action_data);
+	
+	public function get_hidden_methods ()
+	{
+		return array ('render', 'get_hidden_methods');
+	}
+	
+	public function index ()
+	{
+		return array ();
+	}
+}

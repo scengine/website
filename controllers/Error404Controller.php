@@ -19,9 +19,15 @@
  * 
  */
 
-require_once ('lib/Dispatcher.php');
-require_once ('lib/PHPTemplate.php');
+require_once ('include/defines.php');
+require_once ('lib/string.php');
+require_once ('lib/Route.php');
+require_once ('lib/LayoutController.php');
 
-
-$dispatcher = new Dispatcher (isset ($_GET['url']) ? $_GET['url'] : 'index');
-$dispatcher->dispatch ();
+class Error404Controller extends LayoutController
+{
+	public function index ($query = '')
+	{
+		return array ('url' => $query);
+	}
+}

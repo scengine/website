@@ -3,26 +3,13 @@ RewriteEngine On
 # Not always needed, depending on your hosting
 RewriteBase /
 
-# basic pages
-RewriteRule ^(index|news|medias|downloads|tuto|license|about|admin)\.html$ $1.php [L]
 # connexion pages
 RewriteRule ^login\.html$ connexion.php [L]
 RewriteRule ^logout\.html$ connexion.php?act=logout [L]
 
-# news-pageNUM[.html]
-RewriteRule ^news-page([0-9]+)(?:\.html)?$ news.php?page=$1 [L]
-# news-ID[...[.html]]
-RewriteRule ^news-([0-9]+)(?:-.*)?(?:\.html)?$ news.php?shownews=$1 [L]
-
-# devel-pageNUM[.html]
-RewriteRule ^devel-page([0-9]+)(?:\.html)?$ news.php?devel_page=$1 [L]
-
-# medias-TYPE[.html]
-RewriteRule ^medias-([0-9,]*)(?:\.html)?$ medias.php?type=$1 [L]
-# medias-TYPE-TAGS.html
-RewriteRule ^medias-([0-9,]*)-(.*)\.html$ medias.php?type=$1&showtag=$2 [L]
-# media-ID[-NOTRETURN[...[.html]]]
-RewriteRule ^media-([0-9]+)(?:-([01]))?(?:-.*)?(?:\.html)?$ medias.php?watch=$1&noreturn=$2 [L]
+# commits feed
+RewriteRule ^commits-feed.php?format=(.*)$ commits/$1
+RewriteRule ^feeds/commits\.(atom|rss)$ commits/$1
 
 # admin-actualités-ACTION[-ID].html
 RewriteRule ^admin-(actualités|medias)-([^-]+)(?:-([0-9]+))?\.html$ admin.php?page=$1&action=$2&id=$3 [L]
@@ -31,5 +18,27 @@ RewriteRule ^admin-(administrateurs)-([^-]+)(?:-(.+))?\.html$ admin.php?page=$1&
 # admin-PAGE.html
 RewriteRule ^admin-(.+)\.html$ admin.php?page=$1 [L]
 
-# commits feed
-RewriteRule ^feeds/commits\.(atom|rss)$ commits-feed.php?format=$1
+### Start backward compatibility rewrites
+
+# news-pageNUM[.html]
+RewriteRule ^news-page([0-9]+)(?:\.html)?$ news/index/$1
+# news-ID[...[.html]]
+RewriteRule ^news-([0-9]+)(?:-.*)?(?:\.html)?$ news/view/$1
+
+# medias-TYPE[.html]
+RewriteRule ^medias-([0-9,]*)(?:\.html)?$ medias/index/$1
+# medias-TYPE-TAGS.html
+RewriteRule ^medias-([0-9,]*)-(.*)\.html$ medias/index/$1/$2
+# media-ID[-NOTRETURN[...[.html]]]
+RewriteRule ^media-([0-9]+)(?:-([01]))?(?:-.*)?(?:\.html)?$ medias/view/$1/$2
+
+# strip .html and .php suffix in the page name
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^/]*)\.(?:html|php)(/.*)?$ $1$2
+
+### End backward compatibility rewrites
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
