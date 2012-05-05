@@ -551,13 +551,19 @@ img.bordered {
 	padding: 10px 60px;
 	font-size: 80%;
 }
-#footer p {
-	text-align: center;
-}
 #footer a {
 	color: inherit;
 }
 #footer a:hover {
+	text-decoration: underline;
+}
+#footer p {
+	font-size: 80%;
+	text-align: center;
+	width: 50%;
+	margin: 0 25%;
+}
+#footer p a {
 	text-decoration: underline;
 }
 #footer .module {
