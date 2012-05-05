@@ -57,7 +57,7 @@ function feed_update_news ()
 		
 		$vars['items'][] = array (
 			'lang'          => 'en',
-			'title'         => $news['title'],
+			'title'         => Html::escape ($news['title']),
 			/* FIXME: the content is XHTML but it doesn't work with &nbsp;s...
 			 * the use HTML, even if it is not good as XHTML */
 			'content'       => Html::escape ($news['content']),
